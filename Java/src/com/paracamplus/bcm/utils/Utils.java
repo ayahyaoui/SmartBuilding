@@ -1,4 +1,4 @@
-package utils;
+package com.paracamplus.bcm.utils;
 
 public class Utils {
     public static final long DEFAULT_SLEEP_TIME = 1000L;

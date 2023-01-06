@@ -1,7 +1,9 @@
-package cvm;
+package com.paracamplus.bcm.cvm;
+
+import com.paracamplus.bcm.utils.Utils;
 
 import fr.sorbonne_u.components.cvm.AbstractCVM;
-import utils.Utils;
+
 
 public class SmartBuildingCVM extends AbstractCVM{
 

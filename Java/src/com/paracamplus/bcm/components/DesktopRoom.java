@@ -1,4 +1,4 @@
-package components;
+package com.paracamplus.bcm.components;
 
 import java.util.ArrayList;
 
