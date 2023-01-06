@@ -13,5 +13,6 @@
 	<classpathentry kind="lib" path="Java/jars/trang.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="/mnt/nfs/homes/anyahyao/Downloads/BCM4Java-19092022.jar"/>
+	<classpathentry kind="lib" path="/mnt/nfs/homes/anyahyao/Downloads/BCM4Java-CyPhy-28112022.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

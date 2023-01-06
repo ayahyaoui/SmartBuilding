@@ -1,8 +1,8 @@
-
+fire(P,C)
 {
 	let t = 52;
-	if t > 50.0 and t < 100.0;
+	if t > 50.0;
 	let d = 3;
-	let o =false;
+	let o = false;
 	if ! o;
 }
