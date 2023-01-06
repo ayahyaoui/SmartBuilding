@@ -40,9 +40,9 @@ prog returns [com.paracamplus.ilp1.interfaces.IASTprogram node]
     
     // Fonction globale
 globalFunDef returns [com.paracamplus.ilp1.interfaces.IASTfunctionDefinition node]
-    : 'def' name=IDENT '(' vars+=IDENT? (',' vars+=IDENT)* ')' '{'
+    : 'def' name=IDENT '(' vars+=IDENT? (',' vars+=IDENT)* ')' 
         body=expr
-        '}'
+        
     ;
     
 /*
@@ -65,11 +65,8 @@ globalFunDef returns [com.paracamplus.ilp2.interfaces.IASTfunctionDefinition nod
  */
 expr returns [com.paracamplus.ilp1.interfaces.IASTexpression node]
 
-
-
-
 // séquence d'instructions
-    : '(' exprs+=expr (';'? exprs+=expr)* ';'? ')' # Sequence
+    : '{' exprs+=expr (';'? exprs+=expr)* ';'? '}' # Sequence
 
 // invocation
     | fun=expr '(' args+=expr? (',' args+=expr)* ')' # Invocation
@@ -90,16 +87,21 @@ expr returns [com.paracamplus.ilp1.interfaces.IASTexpression node]
     | floatConst=FLOAT # ConstFloat
     | stringConst=STRING # ConstString
 
-// variables
+    // affectation de variable
+    | 'let' var=IDENT '=' val=expr # VariableAssign
+	// variables
     | var=IDENT # Variable
 
-// déclaration de variable locale
-    | 'let' vars+=IDENT '=' vals+=expr //('and' vars+=IDENT '=' vals+=expr)* 
+/* *
+ * / déclaration de variable locale
+    | 'let' vars+=IDENT '=' vals+=expr # Binding //('and' vars+=IDENT '=' vals+=expr)* 
       //'in' body=expr # Binding
- 
+ */
  // alternative (if then else)
-    | 'if' condition=expr 'then' consequence=expr 
-        ('else' alternant=expr)? # Alternative
+    | 'if' condition=expr # Alternative
+    /* 'then' consequence=expr 
+        ('else' alternant=expr)? # Alternative*/
+    | obj=expr '.' field=IDENT # ReadField
     ;
     
        

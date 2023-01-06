@@ -12,8 +12,12 @@ import com.paracamplus.ilp1.interfaces.IASTblock;
 import com.paracamplus.ilp1.interfaces.IASTexpression;
 import com.paracamplus.ilp1.interfaces.IASTvariable;
 
+
 import antlr4.ILPMLgrammar1Listener;
 import antlr4.ILPMLgrammar1Parser.GlobalFunDefContext;
+import antlr4.ILPMLgrammar1Parser.ReadFieldContext;
+import antlr4.ILPMLgrammar1Parser.VariableAssignContext;
+
 
 import static antlr4.ILPMLgrammar1Parser.*;
 
@@ -72,26 +76,21 @@ public class ILPMLListener implements ILPMLgrammar1Listener {
 			ConstIntegerContext ctx) { 
 		ctx.node = factory.newIntegerConstant(ctx.intConst.getText());
 	}
-
+/*
 	@Override 
 	public void exitBinding(BindingContext ctx) { 
 		ctx.node = factory.newBlock(
 				toBindings(ctx.vars, ctx.vals),
 				ctx.body.node);
 	}
-
+*/
 	@Override 
-	public void exitAlternative(
-			AlternativeContext ctx) { 
-		ctx.node = factory.newAlternative(
-				ctx.condition.node, 
-				ctx.consequence.node, 
-				(ctx.alternant == null ? null : ctx.alternant.node));
+	public void exitAlternative(AlternativeContext ctx) { 
+		ctx.node = factory.newAlternative(ctx.condition.node);
 	}
 
 	@Override 
-	public void exitSequence(
-			SequenceContext ctx) {
+	public void exitSequence(SequenceContext ctx) {
 		ctx.node = factory.newSequence(toExpressions(ctx.exprs));
 	}
 
@@ -191,12 +190,12 @@ public class ILPMLListener implements ILPMLgrammar1Listener {
 		}
 		return r;
 	}
-
+/*
 	protected IASTblock.IASTbinding[] toBindings(
 			List<Token> vars, 
 			List<ExprContext> exprs) {
 		if (vars == null) return new IASTblock.IASTbinding[0];
-		/* par construction, vars et ctxs ont la même taille */
+		// par construction, vars et ctxs ont la même taille 
 		assert(vars.size() == exprs.size());
 		IASTblock.IASTbinding[] r = new IASTblock.IASTbinding[exprs.size()];
 		int pos = 0;
@@ -209,7 +208,7 @@ public class ILPMLListener implements ILPMLgrammar1Listener {
 		}
 		return r;			
 	}
-
+*/
 	@Override	public void enterEveryRule(ParserRuleContext arg0) {}
 	@Override	public void exitEveryRule(ParserRuleContext arg0) {}
 	@Override	public void visitErrorNode(ErrorNode arg0) {}
@@ -223,7 +222,7 @@ public class ILPMLListener implements ILPMLgrammar1Listener {
 	@Override	public void enterConstFalse(ConstFalseContext ctx) {}
 	@Override	public void enterSequence(SequenceContext ctx) {}
 	@Override	public void enterConstTrue(ConstTrueContext ctx) {}
-	@Override	public void enterBinding(BindingContext ctx) {}
+	//@Override	public void enterBinding(BindingContext ctx) {}
 	@Override	public void enterConstString(ConstStringContext ctx) {}
 	@Override	public void enterUnary(UnaryContext ctx) {}
 	@Override	public void enterInvocation(InvocationContext ctx) {}
@@ -240,6 +239,33 @@ public class ILPMLListener implements ILPMLgrammar1Listener {
 	public void exitGlobalFunDef(GlobalFunDefContext ctx) {
 		System.out.println("exitGlobalFunct ilpml");
 		
+	}
+
+
+	@Override
+	public void enterVariableAssign(VariableAssignContext ctx) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void exitVariableAssign(VariableAssignContext ctx) {
+		ctx.node = factory.newAssignment(
+				factory.newVariable(ctx.var.getText()),
+				ctx.val.node);		
+	}
+
+
+	@Override
+	public void enterReadField(ReadFieldContext ctx) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	// TODO changer factorynewStringConst
+	@Override
+	public void exitReadField(ReadFieldContext ctx) {
+		ctx.node = factory.newReadField(ctx.obj.getText(), factory.newStringConstant(ctx.field.getText()));		
 	}
 
 }

@@ -53,4 +53,9 @@ public class EmptyLexicalEnvironment implements ILexicalEnvironment {
 	public ILexicalEnvironment getNext() throws EvaluationException {
         throw new EvaluationException("Completely empty environment");
     }
+
+	@Override
+	public int size() {
+		return 0;
+	}
 }

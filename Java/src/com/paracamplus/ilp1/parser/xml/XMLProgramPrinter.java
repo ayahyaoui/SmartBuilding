@@ -1,19 +1,23 @@
 package com.paracamplus.ilp1.parser.xml;
 
 import com.paracamplus.ilp1.interfaces.IASTalternative;
+import com.paracamplus.ilp1.interfaces.IASTassignment;
 import com.paracamplus.ilp1.interfaces.IASTbinaryOperation;
 import com.paracamplus.ilp1.interfaces.IASTblock;
 import com.paracamplus.ilp1.interfaces.IASTboolean;
 import com.paracamplus.ilp1.interfaces.IASTexpression;
 import com.paracamplus.ilp1.interfaces.IASTfloat;
+import com.paracamplus.ilp1.interfaces.IASTfunctionDefinition;
 import com.paracamplus.ilp1.interfaces.IASTinteger;
 import com.paracamplus.ilp1.interfaces.IASTinvocSensor;
 import com.paracamplus.ilp1.interfaces.IASTinvocation;
 import com.paracamplus.ilp1.interfaces.IASTprogram;
+import com.paracamplus.ilp1.interfaces.IASTreadField;
 import com.paracamplus.ilp1.interfaces.IASTsequence;
 import com.paracamplus.ilp1.interfaces.IASTstring;
 import com.paracamplus.ilp1.interfaces.IASTunaryOperation;
 import com.paracamplus.ilp1.interfaces.IASTvariable;
+import com.paracamplus.ilp1.interfaces.IASTvariableAssign;
 import com.paracamplus.ilp1.interfaces.IASTvisitor;
 import com.paracamplus.ilp1.tools.XMLPrinter;
 
@@ -54,14 +58,16 @@ public class XMLProgramPrinter
 		printer.openTag("condition");
 		iast.getCondition().accept(this,printer);
 		printer.closeTag();
-		printer.openTag("consequence");
+		/*
+		 * printer.openTag("consequence");
+		 
 		iast.getConsequence().accept(this,printer);
 		printer.closeTag();
 		if (iast.isTernary()) {
 			printer.openTag("alternant");
 			iast.getAlternant().accept(this,printer);
 			printer.closeTag();
-		}
+		}*/
 		printer.closeTag();
 		return null;
 	}
@@ -169,7 +175,35 @@ public class XMLProgramPrinter
 	}
 
 	@Override
-	public Object visit(IASTinvocSensor iast, XMLPrinter data) throws Exception {
+	public Object visit(IASTinvocSensor iast, XMLPrinter printer) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object visit(IASTfunctionDefinition iast, XMLPrinter printer) throws Exception {
+		printer.clopenTagText("string", iast.getName());
+		return null;
+	}
+
+	@Override
+	public Object visit(IASTassignment iast, XMLPrinter printer) throws Exception {
+		printer.openTag("assignment", "name", iast.getVariable().getName());
+		printer.openTag("value");
+		iast.getExpression().accept(this,printer);
+		printer.closeTag();
+		printer.closeTag();
+		return null;
+	}
+
+	@Override
+	public Object visit(IASTvariableAssign asTassignment, XMLPrinter data) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object visit(IASTreadField asTreadFiekd, XMLPrinter data) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}

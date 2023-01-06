@@ -10,7 +10,7 @@ import com.paracamplus.ilp1.annotation.OrNull;
 
 public interface IASTalternative extends IASTexpression {
 	IASTexpression getCondition();
-	IASTexpression getConsequence();
-	@OrNull IASTexpression getAlternant();
-	boolean isTernary();
+	//IASTexpression getConsequence();
+	//@OrNull IASTexpression getAlternant();
+	//boolean isTernary();
 }

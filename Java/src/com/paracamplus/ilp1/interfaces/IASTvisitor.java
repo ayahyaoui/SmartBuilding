@@ -6,6 +6,8 @@
  ***************************************************************** */
 package com.paracamplus.ilp1.interfaces;
 
+import com.paracamplus.ilp1.ast.ASTassignment;
+
 public interface IASTvisitor<Result, Data, Anomaly extends Throwable> {
     Result visit(IASTalternative iast, Data data) throws Anomaly;
     Result visit(IASTbinaryOperation iast, Data data) throws Anomaly;
@@ -20,5 +22,7 @@ public interface IASTvisitor<Result, Data, Anomaly extends Throwable> {
     Result visit(IASTunaryOperation iast, Data data) throws Anomaly;
     Result visit(IASTvariable iast, Data data) throws Anomaly;
     Result visit(IASTfunctionDefinition iast, Data data) throws Anomaly;
-    
+	Result visit(IASTassignment asTassignment, Data data) throws Anomaly;
+	Result visit(IASTvariableAssign asTassignment, Data data) throws Anomaly;
+	Result visit(IASTreadField asTreadFiekd, Data data) throws Anomaly;
 }

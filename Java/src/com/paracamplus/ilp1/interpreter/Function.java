@@ -20,10 +20,12 @@ public class Function implements IFunction {
         this.variables = variables;
         this.body = body;
         this.lexenv = lexenv;
+        this.setResult(true);
     }
     private final IASTvariable[] variables;
     private final IASTexpression body;
     private final ILexicalEnvironment lexenv;
+    private boolean result;
 
     @Override
 	public int getArity() {
@@ -55,4 +57,10 @@ public class Function implements IFunction {
         }
         return getBody().accept(interpreter, lexenv2);
     }
+	public boolean getResult() {
+		return result;
+	}
+	public void setResult(boolean result) {
+		this.result = result;
+	}
 }

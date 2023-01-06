@@ -10,6 +10,7 @@ import com.paracamplus.ilp1.interfaces.IASTalternative;
 import com.paracamplus.ilp1.interfaces.IASTbinaryOperation;
 import com.paracamplus.ilp1.interfaces.IASTblock;
 import com.paracamplus.ilp1.interfaces.IASTblock.IASTbinding;
+import com.paracamplus.ilp1.ast.ASTassignment;
 import com.paracamplus.ilp1.interfaces.IASTfactory;
 import com.paracamplus.ilp1.interfaces.IASTboolean;
 import com.paracamplus.ilp1.interfaces.IASTexpression;
@@ -18,6 +19,7 @@ import com.paracamplus.ilp1.interfaces.IASTinteger;
 import com.paracamplus.ilp1.interfaces.IASTinvocation;
 import com.paracamplus.ilp1.interfaces.IASToperator;
 import com.paracamplus.ilp1.interfaces.IASTprogram;
+import com.paracamplus.ilp1.interfaces.IASTreadField;
 import com.paracamplus.ilp1.interfaces.IASTsequence;
 import com.paracamplus.ilp1.interfaces.IASTstring;
 import com.paracamplus.ilp1.interfaces.IASTunaryOperation;
@@ -41,10 +43,8 @@ public class ASTfactory implements IASTfactory {
     }
 
     @Override
-	public IASTalternative newAlternative(IASTexpression condition,
-                                          IASTexpression consequence, 
-                                          IASTexpression alternant) {
-        return new ASTalternative(condition, consequence, alternant);
+	public IASTalternative newAlternative(IASTexpression condition) {
+        return new ASTalternative(condition);
     }
 
     @Override
@@ -101,5 +101,18 @@ public class ASTfactory implements IASTfactory {
             IASTexpression[] arguments) {
     	return new ASTinvocation(function, arguments);
     }
+
+	@Override
+	public IASTexpression newAssignment(IASTvariable variable, IASTexpression value) {
+		return new ASTassignment(variable, value);
+	}
+	public IASTreadField newReadField(String fieldName, IASTexpression target) {
+        return new ASTreadField(fieldName, target);
+    }
+	@Override
+	public IASTexpression newVariableAssign(IASTvariable variable, IASTexpression value) {
+		// return new ASTvariableAssign(variable, value);
+		return null;
+	}
 
 }

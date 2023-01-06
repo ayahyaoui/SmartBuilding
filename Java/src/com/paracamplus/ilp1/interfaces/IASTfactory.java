@@ -16,9 +16,7 @@ public interface IASTfactory {
     IASTexpression newSequence(IASTexpression[] asts);
 
     IASTexpression newAlternative(
-            IASTexpression condition,
-            IASTexpression consequence,
-            IASTexpression alternant);
+            IASTexpression condition);
 
     IASToperator newOperator(String name);
     
@@ -51,5 +49,9 @@ public interface IASTfactory {
     IASTexpression newInvocation(
             IASTexpression function,
             IASTexpression[] arguments);
-   
+    IASTexpression newAssignment(IASTvariable variable,
+            IASTexpression value);
+    IASTexpression newVariableAssign(IASTvariable variable,
+            IASTexpression value);
+	IASTreadField newReadField(String fieldName, IASTexpression target);
 }

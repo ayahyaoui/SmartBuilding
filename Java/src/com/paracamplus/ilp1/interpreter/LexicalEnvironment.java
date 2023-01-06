@@ -77,4 +77,20 @@ public class LexicalEnvironment implements ILexicalEnvironment {
 	public ILexicalEnvironment getNext() {
         return next;
     }
+	@Override
+	public int size() {
+		if (next != null)
+		return (1 + next.size());
+		else
+			return (1);
+	}
+	@Override
+	public String toString() {
+		String s = variable.toString();
+		if (next != null)
+		{
+			s += " -> ";
+		}
+		return s;
+	}
 }

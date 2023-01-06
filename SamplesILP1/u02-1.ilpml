@@ -1,5 +1,8 @@
-def test(alpha)
+
 {
-	1+1
+	let t = 52;
+	if t > 50.0 and t < 100.0;
+	let d = 3;
+	let o =false;
+	if ! o;
 }
-true

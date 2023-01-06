@@ -112,7 +112,12 @@ public class InterpreterRunner {
             assertEquals("Comparing integer results",
                     expectedResult.toString(),
                     value.toString());
-        } else {
+        }else if (value == null)
+        {
+        	System.out.println("Value est null");
+        	assertEquals("exit Failed",1,2); 
+        }
+        else {
             assertEquals("Comparing results", 
                     expectedResult,
                     value.toString());

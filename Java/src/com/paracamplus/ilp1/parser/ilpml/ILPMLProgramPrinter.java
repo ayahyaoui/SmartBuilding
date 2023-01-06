@@ -1,19 +1,23 @@
 package com.paracamplus.ilp1.parser.ilpml;
 
 import com.paracamplus.ilp1.interfaces.IASTalternative;
+import com.paracamplus.ilp1.interfaces.IASTassignment;
 import com.paracamplus.ilp1.interfaces.IASTbinaryOperation;
 import com.paracamplus.ilp1.interfaces.IASTblock;
 import com.paracamplus.ilp1.interfaces.IASTboolean;
 import com.paracamplus.ilp1.interfaces.IASTexpression;
 import com.paracamplus.ilp1.interfaces.IASTfloat;
+import com.paracamplus.ilp1.interfaces.IASTfunctionDefinition;
 import com.paracamplus.ilp1.interfaces.IASTinteger;
 import com.paracamplus.ilp1.interfaces.IASTinvocSensor;
 import com.paracamplus.ilp1.interfaces.IASTinvocation;
 import com.paracamplus.ilp1.interfaces.IASTprogram;
+import com.paracamplus.ilp1.interfaces.IASTreadField;
 import com.paracamplus.ilp1.interfaces.IASTsequence;
 import com.paracamplus.ilp1.interfaces.IASTstring;
 import com.paracamplus.ilp1.interfaces.IASTunaryOperation;
 import com.paracamplus.ilp1.interfaces.IASTvariable;
+import com.paracamplus.ilp1.interfaces.IASTvariableAssign;
 import com.paracamplus.ilp1.interfaces.IASTvisitor;
 import com.paracamplus.ilp1.tools.MLPrinter;
 
@@ -81,7 +85,9 @@ implements IASTvisitor<Object,MLPrinter,Exception> {
 		iast.getCondition().accept(this,printer);
 		printer.dedent();
 		printer.insertBreak();
-		printer.append("then ");
+		/*
+		 * printer.append("then ");
+		 
 		printer.indent();
 		iast.getConsequence().accept(this,printer);
 		printer.dedent();
@@ -93,6 +99,7 @@ implements IASTvisitor<Object,MLPrinter,Exception> {
 			printer.dedent();
 		}
 		printer.closeBreakParen(")");
+		*/
 		return null;
 	}
 
@@ -202,10 +209,42 @@ implements IASTvisitor<Object,MLPrinter,Exception> {
 		return null;
 	}
 
+	
+	@Override
+	public Object visit(IASTassignment iast, MLPrinter printer) throws Exception {
+		printer.openParen("(");
+		printer.append(iast.getVariable().getMangledName());
+		printer.append(" = ");
+		printer.indent();
+		iast.getExpression().accept(this,printer);
+		printer.dedent();
+		printer.closeParen(")");
+		return null;
+	}
+	// TODO
 	@Override
 	public Object visit(IASTinvocSensor iast, MLPrinter data) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public Object visit(IASTfunctionDefinition iast, MLPrinter data) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object visit(IASTvariableAssign asTassignment, MLPrinter data) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object visit(IASTreadField asTreadFiekd, MLPrinter data) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

@@ -39,7 +39,8 @@ public class ILPMLParser {
 			// parcours de l'arbre syntaxique et appels du Listener
 			ParseTreeWalker walker = new ParseTreeWalker();
 			ILPMLListener extractor = new ILPMLListener(factory);
-			walker.walk(extractor, tree);	
+			walker.walk(extractor, tree);
+			System.out.println("parse treenode " + tree.node);
 			return tree.node;
 		} catch (Exception e) {
 			throw new ParseException(e);

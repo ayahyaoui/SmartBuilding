@@ -1,4 +1,4 @@
-// Generated from ILPMLgrammar2.g4 by ANTLR 4.4
+// Generated from ILPMLgrammar1.g4 by ANTLR 4.4
 
     package antlr4;
 
@@ -9,203 +9,191 @@ import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 /**
- * This class provides an empty implementation of {@link ILPMLgrammar2Listener},
+ * This class provides an empty implementation of {@link ILPMLgrammar1Listener},
  * which can be extended to create a listener which only needs to handle a subset
  * of the available methods.
  */
-public class ILPMLgrammar2BaseListener implements ILPMLgrammar2Listener {
+public class ILPMLgrammar1BaseListener implements ILPMLgrammar1Listener {
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterGlobalFunDef(@NotNull ILPMLgrammar2Parser.GlobalFunDefContext ctx) { }
+	@Override public void enterGlobalFunDef(@NotNull ILPMLgrammar1Parser.GlobalFunDefContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitGlobalFunDef(@NotNull ILPMLgrammar2Parser.GlobalFunDefContext ctx) { }
+	@Override public void exitGlobalFunDef(@NotNull ILPMLgrammar1Parser.GlobalFunDefContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterBinding(@NotNull ILPMLgrammar2Parser.BindingContext ctx) { }
+	@Override public void enterAlternative(@NotNull ILPMLgrammar1Parser.AlternativeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitBinding(@NotNull ILPMLgrammar2Parser.BindingContext ctx) { }
+	@Override public void exitAlternative(@NotNull ILPMLgrammar1Parser.AlternativeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterLoop(@NotNull ILPMLgrammar2Parser.LoopContext ctx) { }
+	@Override public void enterVariable(@NotNull ILPMLgrammar1Parser.VariableContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitLoop(@NotNull ILPMLgrammar2Parser.LoopContext ctx) { }
+	@Override public void exitVariable(@NotNull ILPMLgrammar1Parser.VariableContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterVariable(@NotNull ILPMLgrammar2Parser.VariableContext ctx) { }
+	@Override public void enterInvocation(@NotNull ILPMLgrammar1Parser.InvocationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitVariable(@NotNull ILPMLgrammar2Parser.VariableContext ctx) { }
+	@Override public void exitInvocation(@NotNull ILPMLgrammar1Parser.InvocationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAlternative(@NotNull ILPMLgrammar2Parser.AlternativeContext ctx) { }
+	@Override public void enterConstFloat(@NotNull ILPMLgrammar1Parser.ConstFloatContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAlternative(@NotNull ILPMLgrammar2Parser.AlternativeContext ctx) { }
+	@Override public void exitConstFloat(@NotNull ILPMLgrammar1Parser.ConstFloatContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterInvocation(@NotNull ILPMLgrammar2Parser.InvocationContext ctx) { }
+	@Override public void enterVariableAssign(@NotNull ILPMLgrammar1Parser.VariableAssignContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitInvocation(@NotNull ILPMLgrammar2Parser.InvocationContext ctx) { }
+	@Override public void exitVariableAssign(@NotNull ILPMLgrammar1Parser.VariableAssignContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterConstFloat(@NotNull ILPMLgrammar2Parser.ConstFloatContext ctx) { }
+	@Override public void enterSequence(@NotNull ILPMLgrammar1Parser.SequenceContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitConstFloat(@NotNull ILPMLgrammar2Parser.ConstFloatContext ctx) { }
+	@Override public void exitSequence(@NotNull ILPMLgrammar1Parser.SequenceContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterVariableAssign(@NotNull ILPMLgrammar2Parser.VariableAssignContext ctx) { }
+	@Override public void enterReadField(@NotNull ILPMLgrammar1Parser.ReadFieldContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitVariableAssign(@NotNull ILPMLgrammar2Parser.VariableAssignContext ctx) { }
+	@Override public void exitReadField(@NotNull ILPMLgrammar1Parser.ReadFieldContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterSequence(@NotNull ILPMLgrammar2Parser.SequenceContext ctx) { }
+	@Override public void enterConstFalse(@NotNull ILPMLgrammar1Parser.ConstFalseContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitSequence(@NotNull ILPMLgrammar2Parser.SequenceContext ctx) { }
+	@Override public void exitConstFalse(@NotNull ILPMLgrammar1Parser.ConstFalseContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterConstFalse(@NotNull ILPMLgrammar2Parser.ConstFalseContext ctx) { }
+	@Override public void enterProg(@NotNull ILPMLgrammar1Parser.ProgContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitConstFalse(@NotNull ILPMLgrammar2Parser.ConstFalseContext ctx) { }
+	@Override public void exitProg(@NotNull ILPMLgrammar1Parser.ProgContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterProg(@NotNull ILPMLgrammar2Parser.ProgContext ctx) { }
+	@Override public void enterUnary(@NotNull ILPMLgrammar1Parser.UnaryContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitProg(@NotNull ILPMLgrammar2Parser.ProgContext ctx) { }
+	@Override public void exitUnary(@NotNull ILPMLgrammar1Parser.UnaryContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterUnary(@NotNull ILPMLgrammar2Parser.UnaryContext ctx) { }
+	@Override public void enterConstTrue(@NotNull ILPMLgrammar1Parser.ConstTrueContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitUnary(@NotNull ILPMLgrammar2Parser.UnaryContext ctx) { }
+	@Override public void exitConstTrue(@NotNull ILPMLgrammar1Parser.ConstTrueContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterConstTrue(@NotNull ILPMLgrammar2Parser.ConstTrueContext ctx) { }
+	@Override public void enterConstInteger(@NotNull ILPMLgrammar1Parser.ConstIntegerContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitConstTrue(@NotNull ILPMLgrammar2Parser.ConstTrueContext ctx) { }
+	@Override public void exitConstInteger(@NotNull ILPMLgrammar1Parser.ConstIntegerContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterConstInteger(@NotNull ILPMLgrammar2Parser.ConstIntegerContext ctx) { }
+	@Override public void enterConstString(@NotNull ILPMLgrammar1Parser.ConstStringContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitConstInteger(@NotNull ILPMLgrammar2Parser.ConstIntegerContext ctx) { }
+	@Override public void exitConstString(@NotNull ILPMLgrammar1Parser.ConstStringContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterConstString(@NotNull ILPMLgrammar2Parser.ConstStringContext ctx) { }
+	@Override public void enterBinary(@NotNull ILPMLgrammar1Parser.BinaryContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitConstString(@NotNull ILPMLgrammar2Parser.ConstStringContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterBinary(@NotNull ILPMLgrammar2Parser.BinaryContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitBinary(@NotNull ILPMLgrammar2Parser.BinaryContext ctx) { }
+	@Override public void exitBinary(@NotNull ILPMLgrammar1Parser.BinaryContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

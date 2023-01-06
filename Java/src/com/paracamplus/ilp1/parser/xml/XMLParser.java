@@ -133,19 +133,7 @@ public class XMLParser extends AbstractExtensibleParser {
 	public IASTexpression alternative (Element e) throws ParseException {
         IAST iastc = findThenParseChildContent(e, "condition");
         IASTexpression condition = narrowToIASTexpression(iastc);
-        IASTexpression[] iaste = 
-                findThenParseChildAsExpressions(e, "consequence");
-        IASTexpression consequence = getFactory().newSequence(iaste);
-        try {
-            IASTexpression[] iasta = 
-                    findThenParseChildAsExpressions(e, "alternant");
-            IASTexpression alternant = getFactory().newSequence(iasta);
-            return getFactory().newAlternative(
-                    condition, consequence, alternant);
-        } catch (ParseException exc) {
-            return getFactory().newAlternative(
-                    condition, consequence, null);
-        }
+        return getFactory().newAlternative(condition);
     }
 	
 	public IASTexpression sequence (Element e) throws ParseException {
