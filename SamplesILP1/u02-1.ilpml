@@ -1,4 +1,4 @@
-fire(P,C)
+def fire(P,C)
 {
 	let t = 52;
 	if t > 50.0;
