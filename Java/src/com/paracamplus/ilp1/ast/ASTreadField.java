@@ -4,7 +4,7 @@ import com.paracamplus.ilp1.interfaces.IASTexpression;
 import com.paracamplus.ilp1.interfaces.IASTreadField;
 import com.paracamplus.ilp1.interfaces.IASTvisitor;
 
-public class ASTreadField implements IASTreadField {
+public class ASTreadField extends ASTexpression implements IASTreadField {
 
 	private String fieldName;
 	private IASTexpression target;
@@ -32,5 +32,6 @@ public class ASTreadField implements IASTreadField {
 	public void setTarget(IASTexpression target) {
 		this.target = target;
 	}
+
 
 }

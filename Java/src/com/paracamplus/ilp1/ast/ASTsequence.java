@@ -9,6 +9,7 @@ package com.paracamplus.ilp1.ast;
 import com.paracamplus.ilp1.interfaces.IASTexpression;
 import com.paracamplus.ilp1.interfaces.IASTsequence;
 import com.paracamplus.ilp1.interfaces.IASTvisitor;
+import com.paracamplus.ilp1.utils.Utils;
 
 public class ASTsequence extends ASTexpression implements IASTsequence {
     public ASTsequence (IASTexpression[] expressions) {
@@ -32,5 +33,16 @@ public class ASTsequence extends ASTexpression implements IASTsequence {
     Result accept(IASTvisitor<Result, Data, Anomaly> visitor, Data data)
             throws Anomaly {
         return visitor.visit(this, data);
+    }
+    
+    @Override
+    public void show(String start) {
+    	super.show(start);
+    	for (IASTexpression e : this.expressions) {
+    		if (e != null)
+    			e.show(start + Utils.PADDING);
+    		else
+    			System.out.println(start + Utils.PADDING + "AST None");
+         }
     }
 }

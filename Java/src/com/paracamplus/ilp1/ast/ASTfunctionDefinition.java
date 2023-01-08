@@ -11,6 +11,7 @@ import com.paracamplus.ilp1.ast.ASTnamed;
 import com.paracamplus.ilp1.interfaces.IASTexpression;
 import com.paracamplus.ilp1.interfaces.IASTfunctionDefinition;
 import com.paracamplus.ilp1.interfaces.IASTvariable;
+import com.paracamplus.ilp1.utils.Utils;
 
 public class ASTfunctionDefinition extends ASTnamed 
 implements IASTfunctionDefinition {
@@ -22,7 +23,7 @@ implements IASTfunctionDefinition {
         this.functionVariable = functionVariable;
         this.variables = variables;
         this.body = body;
-		System.out.println("function def VV");
+		
 		System.out.println("function def " + variables[0].getName());
     }
     private final IASTvariable functionVariable;
@@ -42,5 +43,15 @@ implements IASTfunctionDefinition {
     @Override
 	public IASTexpression getBody() {
         return body;
+    }
+    @Override   
+    public void show(String     start){
+        super.show(start);
+        System.out.println(start + "  VARIABLES");
+        for ( IASTvariable v : variables ) {
+            v.show(start +  Utils.PADDING);
+        }
+        System.out.println(start + "  BODY");
+        body.show(start + Utils.PADDING);
     }
 }

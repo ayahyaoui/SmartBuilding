@@ -6,7 +6,7 @@
  ***************************************************************** */
 package com.paracamplus.ilp1.interfaces;
 
-public abstract interface IASToperation extends IASTexpression {
+public interface IASToperation extends IASTexpression {
 	IASToperator getOperator();
 	IASTexpression[] getOperands();
 }

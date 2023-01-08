@@ -1,13 +1,16 @@
 package com.paracamplus.ilp1.parser.ilpml;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import org.stringtemplate.v4.ST;
 
 import com.paracamplus.ilp1.interfaces.IASTfactory;
+import com.paracamplus.ilp1.interfaces.IASTfunctionDefinition;
 import com.paracamplus.ilp1.interfaces.IASTblock;
 import com.paracamplus.ilp1.interfaces.IASTexpression;
 import com.paracamplus.ilp1.interfaces.IASTvariable;
@@ -32,7 +35,8 @@ import static antlr4.ILPMLgrammar1Parser.*;
  * 
  */
 public class ILPMLListener implements ILPMLgrammar1Listener {
-	
+	// add to all the methods of ILPMLListener printout the name of the method:
+
 	/*
 	 * Le parseur est paramétré par une fabrique qui indique comment
 	 * créer les instances concrètes d'AST.
@@ -54,6 +58,7 @@ public class ILPMLListener implements ILPMLgrammar1Listener {
 	
 	@Override 
 	public void exitVariable(VariableContext ctx) { 
+		System.out.println("exitVariable");
 		ctx.node = factory.newVariable(ctx.getText());
 	}
 
@@ -87,11 +92,14 @@ public class ILPMLListener implements ILPMLgrammar1Listener {
 	@Override 
 	public void exitAlternative(AlternativeContext ctx) { 
 		ctx.node = factory.newAlternative(ctx.condition.node);
+		System.out.println("exitAlternative");
 	}
 
 	@Override 
 	public void exitSequence(SequenceContext ctx) {
 		ctx.node = factory.newSequence(toExpressions(ctx.exprs));
+		System.out.println("exitSequence");
+		ctx.node.show("[SHOW] exitSequence");
 	}
 
 	@Override 
@@ -101,9 +109,13 @@ public class ILPMLListener implements ILPMLgrammar1Listener {
 	}
 
 	@Override 
-	public void exitProg(ProgContext ctx) { 
+	public void exitProg(ProgContext ctx) {
+		IASTfunctionDefinition f = null;//(IASTfunctionDefinition)ctx.defs.get(0);
 		IASTexpression e = factory.newSequence(toExpressions(ctx.exprs));
-		ctx.node = factory.newProgram(e);
+		e.show("[SHOW] exitProg exp ");
+		//f.show("[SHOW] exitProg funct");
+		ctx.node = factory.newProgram(f, e);
+
 	}
 
 	@Override 
@@ -209,63 +221,91 @@ public class ILPMLListener implements ILPMLgrammar1Listener {
 		return r;			
 	}
 */
-	@Override	public void enterEveryRule(ParserRuleContext arg0) {}
-	@Override	public void exitEveryRule(ParserRuleContext arg0) {}
 	@Override	public void visitErrorNode(ErrorNode arg0) {}
 	@Override	public void visitTerminal(TerminalNode arg0) {}
-	@Override	public void enterConstInteger(ConstIntegerContext ctx) {}
-	@Override	public void enterProg(ProgContext ctx) {}
-	@Override	public void enterConstFloat(ConstFloatContext ctx) {}
-	@Override	public void enterVariable(VariableContext ctx) {}
-	@Override	public void enterBinary(BinaryContext ctx) {}
-	@Override	public void enterAlternative(AlternativeContext ctx) {}	
-	@Override	public void enterConstFalse(ConstFalseContext ctx) {}
-	@Override	public void enterSequence(SequenceContext ctx) {}
-	@Override	public void enterConstTrue(ConstTrueContext ctx) {}
+	@Override	public void enterEveryRule(ParserRuleContext arg0) {
+		//System.out.println("enterEveryRule ilpml");
+	}
+	@Override	public void exitEveryRule(ParserRuleContext arg0) {
+		//System.out.println("exitEveryRule ilpml");
+	}
+	@Override	public void enterConstInteger(ConstIntegerContext ctx) {
+		//System.out.println("enterConstInteger ilpml");
+	}
+	@Override	public void enterProg(ProgContext ctx) {
+		//System.out.println("enterProg ilpml");
+	}
+	@Override	public void enterConstFloat(ConstFloatContext ctx) {
+		//System.out.println("enterConstFloat ilpml");
+	}
+	@Override	public void enterVariable(VariableContext ctx) {
+		//System.out.println("enterVariable ilpml");
+	}
+	@Override	public void enterBinary(BinaryContext ctx) {
+		//System.out.println("enterBinary ilpml");
+	}
+	@Override	public void enterAlternative(AlternativeContext ctx) {
+		//System.out.println("enterAlternative ilpml");
+	}
+	@Override	public void enterConstFalse(ConstFalseContext ctx) {
+		//System.out.println("enterConstFalse ilpml");
+	}
+	@Override	public void enterSequence(SequenceContext ctx) {
+		System.out.println("enterSequence ilpml");
+	}
+	@Override	public void enterConstTrue(ConstTrueContext ctx) {
+		//System.out.println("enterConstTrue ilpml");
+	}
 	//@Override	public void enterBinding(BindingContext ctx) {}
-	@Override	public void enterConstString(ConstStringContext ctx) {}
-	@Override	public void enterUnary(UnaryContext ctx) {}
-	@Override	public void enterInvocation(InvocationContext ctx) {}
+	@Override	public void enterConstString(ConstStringContext ctx) {
+		//System.out.println("enterConstString ilpml");
+	}
+	@Override	public void enterUnary(UnaryContext ctx) {
+		//System.out.println("enterUnary ilpml");
+	}
+	@Override	public void enterInvocation(InvocationContext ctx) {
+		//System.out.println("enterInvocation ilpml");
+	}
 
-
-	@Override
-	public void enterGlobalFunDef(GlobalFunDefContext ctx) {
+	// TODO: à compléter
+	@Override public void enterGlobalFunDef(GlobalFunDefContext ctx) {
 		System.out.println("enterGlobalFunct ilpml");
 		
 	}
-
+	@Override public void enterReadField(ReadFieldContext ctx) {
+		System.out.println("enterReadField ilpml");
+		
+	}
+	@Override public void enterVariableAssign(VariableAssignContext ctx) {
+		System.out.println("enterVariableAssign ilpml");
+	}
 
 	@Override
 	public void exitGlobalFunDef(GlobalFunDefContext ctx) {
 		System.out.println("exitGlobalFunct ilpml");
-		
+		ctx.node = factory.newFunctionDefinition(
+				factory.newVariable(ctx.name.getText()),toVariables(ctx.vars, false),ctx.body.node);
+		ctx.node.show("[SHOW] exitGlobalFunct ilpml");
 	}
 
 
-	@Override
-	public void enterVariableAssign(VariableAssignContext ctx) {
-		// TODO Auto-generated method stub
-		
-	}
+
 	@Override
 	public void exitVariableAssign(VariableAssignContext ctx) {
 		ctx.node = factory.newAssignment(
 				factory.newVariable(ctx.var.getText()),
-				ctx.val.node);		
+				ctx.val.node);
+		System.out.println("exitVariableAssign ilpml");
 	}
 
 
-	@Override
-	public void enterReadField(ReadFieldContext ctx) {
-		// TODO Auto-generated method stub
-		
-	}
 
 
 	// TODO changer factorynewStringConst
 	@Override
 	public void exitReadField(ReadFieldContext ctx) {
 		ctx.node = factory.newReadField(ctx.obj.getText(), factory.newStringConstant(ctx.field.getText()));		
+		System.out.println("exitReadField ilpml");
 	}
 
 }

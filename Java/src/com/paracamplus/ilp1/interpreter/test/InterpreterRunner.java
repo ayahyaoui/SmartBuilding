@@ -19,7 +19,9 @@ import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Vector;
 
+import com.paracamplus.bcm.BaseEnvFile;
 import com.paracamplus.ilp1.interfaces.IASTprogram;
+import com.paracamplus.ilp1.interfaces.IASTsequence;
 import com.paracamplus.ilp1.interpreter.EmptyLexicalEnvironment;
 import com.paracamplus.ilp1.interpreter.Interpreter;
 import com.paracamplus.ilp1.interpreter.interfaces.EvaluationException;
@@ -63,6 +65,8 @@ public class InterpreterRunner {
     		throw new EvaluationException("interpreter not set");
     	}
         ILexicalEnvironment lexenv = new EmptyLexicalEnvironment();
+        System.out.println("first visit");
+        
         result = interpreter.visit(program, lexenv);
         printing = stdout.toString();
         System.out.println("  Value: " + result);
@@ -75,8 +79,14 @@ public class InterpreterRunner {
     		throws ParseException, IOException, EvaluationException {
         System.err.println("Testing " + file.getAbsolutePath() + " ...");
         assertTrue(file.exists());
+        System.out.println("Starting Parsing");
+
         IASTprogram program = parser.parse(file);
-        interpretProgram(program);
+        //interpretProgram(program);
+        program.show("[SHOW]: ");
+        System.out.println("finishing Parsing");
+        BaseEnvFile b = new BaseEnvFile(program);
+        System.out.println(program);
     }
     
     protected String printing;

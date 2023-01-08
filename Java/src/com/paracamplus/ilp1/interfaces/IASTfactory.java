@@ -10,7 +10,7 @@ import com.paracamplus.ilp1.interfaces.IASTblock.IASTbinding;
 
 
 public interface IASTfactory {
-    IASTprogram newProgram(
+    IASTprogram newProgram(IASTfunctionDefinition function,
             IASTexpression expression);
     
     IASTexpression newSequence(IASTexpression[] asts);
@@ -51,7 +51,11 @@ public interface IASTfactory {
             IASTexpression[] arguments);
     IASTexpression newAssignment(IASTvariable variable,
             IASTexpression value);
-    IASTexpression newVariableAssign(IASTvariable variable,
+    IASTvariableAssign newVariableAssign(IASTvariable variable,
             IASTexpression value);
 	IASTreadField newReadField(String fieldName, IASTexpression target);
+        IASTfunctionDefinition newFunctionDefinition(
+                IASTvariable functionVariable,
+                IASTvariable[] variables,
+                IASTexpression body);
 }

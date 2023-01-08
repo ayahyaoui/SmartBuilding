@@ -1,8 +1,7 @@
 def fire(P,C)
 {
-	let t = 52;
-	if t > 50.0;
-	let d = 3;
-	let o = false;
-	if ! o;
+	3+3;
+	if 25 > 50.0;
+	1+2;
+	if true;
 }

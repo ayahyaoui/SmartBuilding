@@ -6,7 +6,7 @@
  ***************************************************************** */
 package com.paracamplus.ilp1.interfaces;
 
-public abstract interface IASTconstant extends IASTexpression {
+public interface IASTconstant extends IASTexpression {
 	/** The accurate description of the constant */
     String getDescription();
     /** The constant as an accurate Java value */

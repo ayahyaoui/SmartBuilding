@@ -8,4 +8,6 @@ package com.paracamplus.ilp1.interfaces;
 
 public interface IAST {
 	// Simple marker for all Abstract Syntax Tree
+    void show(String start);
+
 }

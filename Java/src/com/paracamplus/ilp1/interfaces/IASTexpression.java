@@ -6,6 +6,6 @@
  ***************************************************************** */
 package com.paracamplus.ilp1.interfaces;
 
-public abstract interface IASTexpression extends IAST, IASTvisitable {
+public interface IASTexpression extends IAST, IASTvisitable {
 	// Marker for expressions
 }

@@ -15,6 +15,7 @@ import com.paracamplus.ilp1.interfaces.IASTfactory;
 import com.paracamplus.ilp1.interfaces.IASTboolean;
 import com.paracamplus.ilp1.interfaces.IASTexpression;
 import com.paracamplus.ilp1.interfaces.IASTfloat;
+import com.paracamplus.ilp1.interfaces.IASTfunctionDefinition;
 import com.paracamplus.ilp1.interfaces.IASTinteger;
 import com.paracamplus.ilp1.interfaces.IASTinvocation;
 import com.paracamplus.ilp1.interfaces.IASToperator;
@@ -24,12 +25,13 @@ import com.paracamplus.ilp1.interfaces.IASTsequence;
 import com.paracamplus.ilp1.interfaces.IASTstring;
 import com.paracamplus.ilp1.interfaces.IASTunaryOperation;
 import com.paracamplus.ilp1.interfaces.IASTvariable;
+import com.paracamplus.ilp1.interfaces.IASTvariableAssign;
 
 public class ASTfactory implements IASTfactory {
 
     @Override
-	public IASTprogram newProgram(IASTexpression expression) {
-        return new ASTprogram(expression);
+	public IASTprogram newProgram(IASTfunctionDefinition function, IASTexpression expression) {
+        return new ASTprogram(function, expression);
     }
     
     @Override
@@ -110,9 +112,17 @@ public class ASTfactory implements IASTfactory {
         return new ASTreadField(fieldName, target);
     }
 	@Override
-	public IASTexpression newVariableAssign(IASTvariable variable, IASTexpression value) {
-		// return new ASTvariableAssign(variable, value);
-		return null;
+	public IASTvariableAssign newVariableAssign(IASTvariable variable, IASTexpression value) {
+		System.out.println("Factory newVariableAssign");
+         return  new ASTvariableAssign(variable, value);
+		//return null;
+	}
+
+	@Override
+	public IASTfunctionDefinition newFunctionDefinition(IASTvariable functionVariable, IASTvariable[] variables,
+			IASTexpression body) {
+		
+		return  new ASTfunctionDefinition(functionVariable, variables, body);
 	}
 
 }

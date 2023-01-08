@@ -13,4 +13,8 @@ public abstract class AST implements IAST {
         return this.getClass().getName()
                 .replaceFirst("^com.paracamplus.ilp1.", "");
     }
+    public void show(String start) {
+    	System.out.println(start + "" + getClassShortName());
+
+    }
 }
