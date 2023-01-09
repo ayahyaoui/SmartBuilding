@@ -1,6 +1,8 @@
 package com.paracamplus.bcm;
 
+import com.paracamplus.ilp1.ast.ASTvariableAssign;
 import com.paracamplus.ilp1.interfaces.*;
+import com.paracamplus.ilp1.utils.Utils;
 
 import fr.sorbonne_u.components.examples.basic_cs.ports.URIConsumerOutboundPort;
 
@@ -11,20 +13,19 @@ import java.util.Map;
 
 public class BaseEnvFile {
 
-		IASTexpression[] expressions;
-		IASTvariable[] variables;
-		int indexNode;
+		protected IASTexpression[] expressions;
+		protected IASTvariableAssign[] variables;
+		protected int indexNode;
 		private final Map<String, Object> globalVariableEnvironment;
 
 		boolean checkFormat(IASTprogram program) {
-			IASTexpression body = program.getBody();
-			if (!(body instanceof IASTfunctionDefinition)) {
-				System.err.println(body + "or expected IASTfunctionDefinition" );
+			IASTfunctionDefinition fun = program.getFunction();
+			if (!(fun instanceof IASTfunctionDefinition) || fun == null) {
+				System.err.println(fun + "or expected IASTfunctionDefinition" );
 				return false;
 			}
-			IASTfunctionDefinition function = (IASTfunctionDefinition) body;
-			if (!(function.getBody() instanceof IASTsequence)) {
-				System.err.println(function.getBody() + "or expected IASTsequence" );
+			if (!(fun.getBody() instanceof IASTsequence) || fun.getBody() == null) {
+				System.err.println(fun.getBody() + "or expected IASTsequence" );
 				return false;
 			}
 			return true;
@@ -36,12 +37,31 @@ public class BaseEnvFile {
 			}
 			this.globalVariableEnvironment = new HashMap<>();
 			this.indexNode = 0;
-			IASTfunctionDefinition function = (IASTfunctionDefinition) program.getBody();
+			IASTfunctionDefinition function = program.getFunction();
+			//function.getName();
 			IASTsequence sequence = (IASTsequence) function.getBody();
 			this.expressions = sequence.getExpressions();
-			this.variables = function.getVariables();
+			this.variables = new IASTvariableAssign[function.getVariables().length]; 
+			for (int i = 0; i < variables.length; i++) {
+				variables[i] = new ASTvariableAssign(function.getVariables()[i], null);
+			}
 		}
 
+		public IASTexpression[] getExpressions() {
+			return expressions;
+		}
+
+		public Map<String, Object> getGlobalVariableEnvironment() {
+			return globalVariableEnvironment;
+		}
+
+		public int getIndexNode() {
+			return indexNode;
+		}
+		public IASTvariableAssign[] getVariables() {
+			return variables;
+		}
+		
 		@Override
 		public String toString() {
 			String result = "Env :\n";
@@ -52,19 +72,22 @@ public class BaseEnvFile {
 			}
 			result += "expressions : \n";
 			for (IASTexpression expression : expressions) {
-				result += expression.toString() + "";			
+				result += Utils.PADDING + expression.toString() + "\n";			
 			}
 			result += "variables : \n";
-			for (IASTvariable variable : variables) {
-				result += variable.toString() + "";			
+			for (IASTvariableAssign variable : variables) {
+				result += Utils.PADDING + variable.toString() + "\n";			
 			}
 			return result;
 		}
+
 		public void printEnv() {
 			System.out.println("variable globale Env :");
 		}
 
-		/*public void variableToEnv(String variableName, String ComponentUri) {
+		/*
+		public void variableToEnv(String variableName, String ComponentUri) {
 			globalVariableEnvironment.put(variableName, ComponentUri);
-		}*/
+		}
+		*/
 }

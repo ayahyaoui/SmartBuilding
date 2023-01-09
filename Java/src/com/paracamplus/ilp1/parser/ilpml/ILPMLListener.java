@@ -1,6 +1,7 @@
 package com.paracamplus.ilp1.parser.ilpml;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -58,7 +59,7 @@ public class ILPMLListener implements ILPMLgrammar1Listener {
 	
 	@Override 
 	public void exitVariable(VariableContext ctx) { 
-		System.out.println("exitVariable");
+		//System.out.println("exitVariable");
 		ctx.node = factory.newVariable(ctx.getText());
 	}
 
@@ -92,14 +93,14 @@ public class ILPMLListener implements ILPMLgrammar1Listener {
 	@Override 
 	public void exitAlternative(AlternativeContext ctx) { 
 		ctx.node = factory.newAlternative(ctx.condition.node);
-		System.out.println("exitAlternative");
+		//System.out.println("exitAlternative");
 	}
 
 	@Override 
 	public void exitSequence(SequenceContext ctx) {
 		ctx.node = factory.newSequence(toExpressions(ctx.exprs));
-		System.out.println("exitSequence");
-		ctx.node.show("[SHOW] exitSequence");
+		//System.out.println("exitSequence");
+		//ctx.node.show("[SHOW] exitSequence");
 	}
 
 	@Override 
@@ -110,10 +111,10 @@ public class ILPMLListener implements ILPMLgrammar1Listener {
 
 	@Override 
 	public void exitProg(ProgContext ctx) {
-		IASTfunctionDefinition f = null;//(IASTfunctionDefinition)ctx.defs.get(0);
+		IASTfunctionDefinition f = toFunction(ctx.defs);
 		IASTexpression e = factory.newSequence(toExpressions(ctx.exprs));
-		e.show("[SHOW] exitProg exp ");
-		//f.show("[SHOW] exitProg funct");
+		//e.show("[SHOW] exitProg exp ");
+		
 		ctx.node = factory.newProgram(f, e);
 
 	}
@@ -166,7 +167,19 @@ public class ILPMLListener implements ILPMLgrammar1Listener {
 		
 	
 	/* Utilitaires de conversion ANTLR vers AST */
-	
+	protected IASTfunctionDefinition toFunction(List<GlobalFunDefContext> defs)
+	{
+		//System.out.println("============================================");
+		if (defs == null || defs.isEmpty()) {
+			System.out.println("global function null");
+			return null;
+		}
+		//System.out.println("size " + defs.size());
+		IASTfunctionDefinition result = defs.get(0).node;
+		//result.show("[SHOW] toFunction: ");
+		return result;
+
+	}
 	protected IASTexpression[] toExpressions(
 			List<ExprContext> ctxs) {
 		if (ctxs == null) return new IASTexpression[0];
@@ -251,7 +264,7 @@ public class ILPMLListener implements ILPMLgrammar1Listener {
 		//System.out.println("enterConstFalse ilpml");
 	}
 	@Override	public void enterSequence(SequenceContext ctx) {
-		System.out.println("enterSequence ilpml");
+		//System.out.println("enterSequence ilpml");
 	}
 	@Override	public void enterConstTrue(ConstTrueContext ctx) {
 		//System.out.println("enterConstTrue ilpml");
@@ -269,23 +282,23 @@ public class ILPMLListener implements ILPMLgrammar1Listener {
 
 	// TODO: à compléter
 	@Override public void enterGlobalFunDef(GlobalFunDefContext ctx) {
-		System.out.println("enterGlobalFunct ilpml");
+		//System.out.println("enterGlobalFunct ilpml");
 		
 	}
 	@Override public void enterReadField(ReadFieldContext ctx) {
-		System.out.println("enterReadField ilpml");
+		//System.out.println("enterReadField ilpml");
 		
 	}
 	@Override public void enterVariableAssign(VariableAssignContext ctx) {
-		System.out.println("enterVariableAssign ilpml");
+		//System.out.println("enterVariableAssign ilpml");
 	}
 
 	@Override
 	public void exitGlobalFunDef(GlobalFunDefContext ctx) {
-		System.out.println("exitGlobalFunct ilpml");
+		//System.out.println("exitGlobalFunct ilpml");
 		ctx.node = factory.newFunctionDefinition(
 				factory.newVariable(ctx.name.getText()),toVariables(ctx.vars, false),ctx.body.node);
-		ctx.node.show("[SHOW] exitGlobalFunct ilpml");
+		//ctx.node.show("[SHOW] exitGlobalFunct ilpml");
 	}
 
 
@@ -295,7 +308,7 @@ public class ILPMLListener implements ILPMLgrammar1Listener {
 		ctx.node = factory.newAssignment(
 				factory.newVariable(ctx.var.getText()),
 				ctx.val.node);
-		System.out.println("exitVariableAssign ilpml");
+		//System.out.println("exitVariableAssign ilpml");
 	}
 
 
@@ -305,7 +318,7 @@ public class ILPMLListener implements ILPMLgrammar1Listener {
 	@Override
 	public void exitReadField(ReadFieldContext ctx) {
 		ctx.node = factory.newReadField(ctx.obj.getText(), factory.newStringConstant(ctx.field.getText()));		
-		System.out.println("exitReadField ilpml");
+		//System.out.println("exitReadField ilpml");
 	}
 
 }

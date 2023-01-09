@@ -8,6 +8,8 @@ package com.paracamplus.ilp1.interfaces;
 
 public interface IASTprogram extends IAST {
 	IASTexpression getBody();
+    IASTfunctionDefinition getFunction();
+
 	
 
 

@@ -42,6 +42,9 @@ public class InterpreterRunner {
     	parser = new Parser();
     }
 
+    public Parser getParser() {
+		return parser;
+	}
     public void setXMLParser (IXMLParser p) {
     	parser.setXMLParser(p);
     }

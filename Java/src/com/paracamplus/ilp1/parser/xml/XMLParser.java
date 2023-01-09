@@ -21,6 +21,7 @@ import org.xml.sax.InputSource;
 import com.paracamplus.ilp1.interfaces.IAST;
 import com.paracamplus.ilp1.interfaces.IASTblock.IASTbinding;
 import com.paracamplus.ilp1.interfaces.IASTfactory;
+import com.paracamplus.ilp1.interfaces.IASTfunctionDefinition;
 import com.paracamplus.ilp1.interfaces.IASTexpression;
 import com.paracamplus.ilp1.interfaces.IASToperator;
 import com.paracamplus.ilp1.interfaces.IASTprogram;
@@ -111,10 +112,15 @@ public class XMLParser extends AbstractExtensibleParser {
     @Override
 	public IASTprogram parse (Document d) throws ParseException {
         final Element e = d.getDocumentElement();
+        System.out.println("------------------------------------------------------------Function parse called!!!");
         final IAST[] iasts = parseAll(e.getChildNodes());
+        final List<IASTfunctionDefinition> functionDefinitions = new Vector<>();
         final List<IASTexpression> expressions = new Vector<>();
         for ( IAST iast : iasts ) {
-            if ( iast != null && iast instanceof IASTexpression ) {
+        	if ( iast != null && iast instanceof IASTfunctionDefinition ) {
+                functionDefinitions.add((IASTfunctionDefinition) iast);	
+        	}
+            else if ( iast != null && iast instanceof IASTexpression ) {
                 expressions.add((IASTexpression) iast);
             } else {
                 final String msg = "Should never occur!";
@@ -122,10 +128,12 @@ public class XMLParser extends AbstractExtensibleParser {
                 throw new ParseException(msg);
             }
         }
+        IASTfunctionDefinition def =
+                functionDefinitions.get(0);
         IASTexpression[] exprs = 
             expressions.toArray(new IASTexpression[0]);
         IASTexpression body = getFactory().newSequence(exprs);
-        return getFactory().newProgram(body);
+        return getFactory().newProgram(def, body);
     }
     
            

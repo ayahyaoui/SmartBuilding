@@ -7,7 +7,7 @@ import com.paracamplus.ilp1.interfaces.IASTvariableAssign;
 public class ASTvariableAssign implements IASTvariableAssign {
 
     private final IASTvariable variable;
-    private final IASTexpression expression;
+    private IASTexpression expression; // TODO set Final
 	public ASTvariableAssign(IASTvariable variable, IASTexpression expression) {
         this.variable = variable;
         this.expression = expression;
@@ -21,5 +21,10 @@ public class ASTvariableAssign implements IASTvariableAssign {
 	public IASTexpression getExpression() {
 		return expression;
 	}
+	@Override
+	public void setExpression(IASTexpression expression) {
+		 this.expression = expression;
+	}
+	
 
 }
