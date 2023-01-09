@@ -5,15 +5,15 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.StringWriter;
 
-import com.paracamplus.bcm.BaseEnvFile;
 import com.paracamplus.ilp1.ast.ASTfactory;
 import com.paracamplus.ilp1.ast.ASTstring;
-import com.paracamplus.ilp1.interfaces.IASTexpression;
+
 import com.paracamplus.ilp1.interfaces.IASTfactory;
 import com.paracamplus.ilp1.interfaces.IASTprogram;
-import com.paracamplus.ilp1.interfaces.IASTsequence;
-import com.paracamplus.ilp1.interfaces.IASTvariable;
+
+
 import com.paracamplus.ilp1.interfaces.IASTvariableAssign;
+import com.paracamplus.ilp1.interpreter.BaseEnvFile;
 import com.paracamplus.ilp1.interpreter.GlobalVariableEnvironment;
 import com.paracamplus.ilp1.interpreter.GlobalVariableStuff;
 import com.paracamplus.ilp1.interpreter.Interpreter;
@@ -23,7 +23,7 @@ import com.paracamplus.ilp1.interpreter.interfaces.EvaluationException;
 import com.paracamplus.ilp1.interpreter.interfaces.IGlobalVariableEnvironment;
 import com.paracamplus.ilp1.interpreter.interfaces.IOperatorEnvironment;
 import com.paracamplus.ilp1.interpreter.test.InterpreterRunner;
-import com.paracamplus.ilp1.interpreter.test.InterpreterTest;
+
 import com.paracamplus.ilp1.parser.ilpml.ILPMLParser;
 import com.paracamplus.ilp1.parser.xml.IXMLParser;
 import com.paracamplus.ilp1.parser.xml.XMLParser;
@@ -33,14 +33,20 @@ public class DesktopRoom extends AbstractRoom {
 	    protected static String pattern = ".*\\.ilpml";
 	    protected static String XMLgrammarFile = "XMLGrammars/grammar1.rng";
 	    BaseEnvFile env;
+	    protected  Interpreter interpreter;
 	
     protected DesktopRoom(int nbThreads, int nbSchedulableThreads) {
         super(nbThreads, nbSchedulableThreads);
         this.env = test();
-        IASTexpression[] prog = env.getExpressions();
-        
-    
-        
+        //IASTexpression[] prog = env.getExpressions();
+        connectToFunction();
+        System.out.println("+--+-+-+-+-+-+-+-+-+-+-+ START Interpret with component +--+-+-+-+-+-+-+-+-+-+-+");
+        try {
+			env.getExpressions().accept(this.interpreter, env);
+		} catch (EvaluationException e) {
+			e.printStackTrace();
+		}
+            //env.getExpressions()[i].visit(new Interpreter(env, new OperatorEnvironment()));
     }
     
     public void connectToFunction()
@@ -68,7 +74,7 @@ public class DesktopRoom extends AbstractRoom {
         IOperatorEnvironment oe = new OperatorEnvironment();
         OperatorStuff.fillUnaryOperators(oe);
         OperatorStuff.fillBinaryOperators(oe);
-        Interpreter interpreter = new Interpreter(gve, oe);        
+        this.interpreter = new Interpreter(gve, oe);        
         run.setInterpreter(interpreter);
     }
     
@@ -77,17 +83,14 @@ public class DesktopRoom extends AbstractRoom {
     	File file = new File(samplesDirName[0] + "/u02-1.ilpml");
     	System.out.println(samplesDirName[0]);
     	System.out.println(file.exists());
-    	InterpreterTest it = new InterpreterTest( file);
         try {    	
         	System.out.println("++++++++++++++++++++++++++++++++++++++++");
         	InterpreterRunner run = new InterpreterRunner();
         	configureRunner(run);
-        	 assertTrue(file.exists());
-             System.out.println("Starting Parsing");
-
+        	assertTrue(file.exists());
+            System.out.println("Starting Parsing");
             IASTprogram program = run.getParser().parse(file);
             return (new BaseEnvFile(program));
-            
         } catch(Exception e) {
             e.printStackTrace();
             return null;

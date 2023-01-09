@@ -89,15 +89,12 @@ implements IASTvisitor<Object, ILexicalEnvironment, EvaluationException> {
         if ( c != null && c instanceof Boolean ) {
             Boolean b = (Boolean) c;
             System.out.println("result if" + b);
-            System.out.println(lexenv.size());
-        	System.out.println(lexenv);
+
             if ( b.booleanValue() ) { // if true just continue
                 return true; //return iast.getConsequence().accept(this, lexenv);
             }/* else if ( iast.isTernary() ) {
                 return iast.getAlternant().accept(this, lexenv);                
             }*/ else {
-            	System.out.println(lexenv.size());
-            	System.out.println(lexenv);
                 return whatever; // try to finish the block
             }
         } else {
@@ -123,7 +120,7 @@ implements IASTvisitor<Object, ILexicalEnvironment, EvaluationException> {
             throws EvaluationException {
         Object leftOperand = iast.getLeftOperand().accept(this, lexenv);
         Object rightOperand = iast.getRightOperand().accept(this, lexenv);
-        IASToperator operator = iast.getOperator();
+        IASToperator operator = iast.getOperator();	
         IOperator op = getOperatorEnvironment().getBinaryOperator(operator);
         return op.apply(leftOperand, rightOperand);
     }
@@ -138,14 +135,14 @@ implements IASTvisitor<Object, ILexicalEnvironment, EvaluationException> {
         IASTexpression[] expressions = iast.getExpressions();
         Object lastValue = null;
         System.out.println("visit Sequence..."+expressions);
-        for ( IASTexpression e : expressions ) {
-        	 System.out.println("visit Sequence will accept loop" + e);
-            lastValue = e.accept(this, lexenv);
-            System.out.println("visit Sequence has accepted loop");
-
-            if (lastValue != null && lastValue.equals(whatever))
-            	return false;
-        }System.out.println("visit Sequence after loop");
+        for (int i = lexenv.getIndexNode() ; i < expressions.length; i++) {
+        	System.out.println("visit Sequence will accept loop" + expressions[i]);
+        	lastValue = expressions[i].accept(this, lexenv);
+        	System.out.println("visit Sequence has accepted loop");
+        	if (lastValue != null && lastValue.equals(whatever))
+        		return false;	
+		}
+        System.out.println("visit Sequence after loop");
         return lastValue;
     }
     
@@ -245,7 +242,7 @@ implements IASTvisitor<Object, ILexicalEnvironment, EvaluationException> {
 
 	@Override
 	public Object visit(IASTvariableAssign asTassignment, ILexicalEnvironment data) throws EvaluationException {
-		// TODO Auto-generated method stub
+		System.out.println("Not implemented yet");
 		return null;
 	}
 
@@ -253,7 +250,10 @@ implements IASTvisitor<Object, ILexicalEnvironment, EvaluationException> {
 	public Object visit(IASTreadField asTreadFiekd, ILexicalEnvironment data) throws EvaluationException {
 		System.out.println("Visit readField");
 		if (asTreadFiekd != null)
-			System.out.println(" " + asTreadFiekd.getFieldName() + "-> " + asTreadFiekd.getTarget().toString());
+		{
+			System.out.println(" " + asTreadFiekd.getFieldName() + "-> " + ((IASTstring)(asTreadFiekd.getTarget())).getValue());
+			System.out.println(" value Uri" + ((IASTstring)(data.getValue(data.findVariable(asTreadFiekd.getFieldName())))).getValue());
+		}
 		return null;
 	}
 

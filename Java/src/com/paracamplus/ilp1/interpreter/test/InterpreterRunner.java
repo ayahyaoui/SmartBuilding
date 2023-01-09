@@ -19,9 +19,9 @@ import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Vector;
 
-import com.paracamplus.bcm.BaseEnvFile;
 import com.paracamplus.ilp1.interfaces.IASTprogram;
 import com.paracamplus.ilp1.interfaces.IASTsequence;
+import com.paracamplus.ilp1.interpreter.BaseEnvFile;
 import com.paracamplus.ilp1.interpreter.EmptyLexicalEnvironment;
 import com.paracamplus.ilp1.interpreter.Interpreter;
 import com.paracamplus.ilp1.interpreter.interfaces.EvaluationException;

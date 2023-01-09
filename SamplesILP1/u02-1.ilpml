@@ -1,6 +1,7 @@
 def fire(P,C)
 {
 	3+3;
+	C.test
 	if 25 > 50.0;
 	1+2;
 	if true;

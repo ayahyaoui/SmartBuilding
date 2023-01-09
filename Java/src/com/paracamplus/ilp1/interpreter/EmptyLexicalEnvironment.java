@@ -58,4 +58,16 @@ public class EmptyLexicalEnvironment implements ILexicalEnvironment {
 	public int size() {
 		return 0;
 	}
+
+	@Override
+	public int getIndexNode() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public IASTvariable findVariable(String s) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

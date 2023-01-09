@@ -93,4 +93,17 @@ public class LexicalEnvironment implements ILexicalEnvironment {
 		}
 		return s;
 	}
+	@Override
+	public int getIndexNode() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	@Override
+	public IASTvariable findVariable(String s) {
+		if (s.equals(getKey().getName()) ) {
+            return getKey();
+        } else {
+            return getNext().findVariable(s);
+        }
+	}
 }
