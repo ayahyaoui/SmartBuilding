@@ -2,50 +2,49 @@ package com.paracamplus.bcm.components;
 
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
-import java.io.StringWriter;
 
-import com.paracamplus.ilp1.ast.ASTfactory;
 import com.paracamplus.ilp1.ast.ASTstring;
-
-import com.paracamplus.ilp1.interfaces.IASTfactory;
-import com.paracamplus.ilp1.interfaces.IASTprogram;
-
-
 import com.paracamplus.ilp1.interfaces.IASTvariableAssign;
 import com.paracamplus.ilp1.interpreter.BaseEnvFile;
-import com.paracamplus.ilp1.interpreter.GlobalVariableEnvironment;
-import com.paracamplus.ilp1.interpreter.GlobalVariableStuff;
 import com.paracamplus.ilp1.interpreter.Interpreter;
-import com.paracamplus.ilp1.interpreter.OperatorEnvironment;
-import com.paracamplus.ilp1.interpreter.OperatorStuff;
 import com.paracamplus.ilp1.interpreter.interfaces.EvaluationException;
-import com.paracamplus.ilp1.interpreter.interfaces.IGlobalVariableEnvironment;
-import com.paracamplus.ilp1.interpreter.interfaces.IOperatorEnvironment;
-import com.paracamplus.ilp1.interpreter.test.InterpreterRunner;
 
-import com.paracamplus.ilp1.parser.ilpml.ILPMLParser;
-import com.paracamplus.ilp1.parser.xml.IXMLParser;
-import com.paracamplus.ilp1.parser.xml.XMLParser;
+import fr.sorbonne_u.components.AbstractComponent;
+import fr.sorbonne_u.components.cyphy.tools.aclocks.AcceleratedClock;
+import fr.sorbonne_u.components.cyphy.tools.aclocks.ClockServer;
+import fr.sorbonne_u.components.cyphy.tools.aclocks.ClockServerConnector;
+import fr.sorbonne_u.components.cyphy.tools.aclocks.ClockServerOutboundPort;
+import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
+import fr.sorbonne_u.components.exceptions.ComponentStartException;
+import fr.sorbonne_u.exceptions.PreconditionException;
 
-public class DesktopRoom extends AbstractRoom {
-	 	protected static String[] samplesDirName = { "SamplesILP1" }; 
+public class DesktopRoom extends AbstractComponent {
+	 	/*protected static String[] samplesDirName = { "SamplesILP1" }; 
 	    protected static String pattern = ".*\\.ilpml";
 	    protected static String XMLgrammarFile = "XMLGrammars/grammar1.rng";
-	    BaseEnvFile env;
+	    */
+		BaseEnvFile env;
 	    protected  Interpreter interpreter;
+	    //protected int nbPersonnes ;
+		protected int nbFenetres ;
+		//protected FenetreInstantanee FenetreInstantanee ;
+
+		protected final String				clockURI;
+		protected AcceleratedClock			clock;
+		protected ClockServerOutboundPort	clockServerOBP;
 	
-    protected DesktopRoom(int nbThreads, int nbSchedulableThreads) {
-        super(nbThreads, nbSchedulableThreads);
-        this.env = test();
+    protected DesktopRoom(String reflectionInboundPortURI, String clockURI) {
+    	super(reflectionInboundPortURI, 1, 1);
+    	assert	clockURI != null && !clockURI.isEmpty() :
+			new PreconditionException(
+					"clockURI != null && !clockURI.isEmpty()");
+
+    	this.clockURI = clockURI;
+    	
+        //this.env = test();
         //IASTexpression[] prog = env.getExpressions();
-        connectToFunction();
-        System.out.println("+--+-+-+-+-+-+-+-+-+-+-+ START Interpret with component +--+-+-+-+-+-+-+-+-+-+-+");
-        try {
-			env.getExpressions().accept(this.interpreter, env);
-		} catch (EvaluationException e) {
-			e.printStackTrace();
-		}
+        //connectToFunction();
+        
             //env.getExpressions()[i].visit(new Interpreter(env, new OperatorEnvironment()));
     }
     
@@ -58,44 +57,77 @@ public class DesktopRoom extends AbstractRoom {
     	
     }
     
-    public void  configureRunner(InterpreterRunner run) throws EvaluationException {
-    	// configuration du parseur
-        IASTfactory factory = new ASTfactory();
-        IXMLParser xmlParser = new XMLParser(factory);
-        xmlParser.setGrammar(new File(XMLgrammarFile));
-        run.setXMLParser(xmlParser);
-        run.setILPMLParser(new ILPMLParser(factory));
+   
+    @Override
+	public synchronized void	start() throws ComponentStartException
+	{
+		super.start();
 
-        // configuration de l'interprète
-        StringWriter stdout = new StringWriter();
-        run.setStdout(stdout);
-        IGlobalVariableEnvironment gve = new GlobalVariableEnvironment();
-        GlobalVariableStuff.fillGlobalVariables(gve, stdout);
-        IOperatorEnvironment oe = new OperatorEnvironment();
-        OperatorStuff.fillUnaryOperators(oe);
-        OperatorStuff.fillBinaryOperators(oe);
-        this.interpreter = new Interpreter(gve, oe);        
-        run.setInterpreter(interpreter);
-    }
-    
-    BaseEnvFile test()
-    {
-    	File file = new File(samplesDirName[0] + "/u02-1.ilpml");
-    	System.out.println(samplesDirName[0]);
-    	System.out.println(file.exists());
-        try {    	
-        	System.out.println("++++++++++++++++++++++++++++++++++++++++");
-        	InterpreterRunner run = new InterpreterRunner();
-        	configureRunner(run);
-        	assertTrue(file.exists());
-            System.out.println("Starting Parsing");
-            IASTprogram program = run.getParser().parse(file);
-            return (new BaseEnvFile(program));
-        } catch(Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-    
+		try {
+			this.clockServerOBP = new ClockServerOutboundPort(this);
+			this.clockServerOBP.publishPort();
+			this.doPortConnection(
+					this.clockServerOBP.getPortURI(),
+					ClockServer.STANDARD_INBOUNDPORT_URI,
+					ClockServerConnector.class.getCanonicalName());
+		} catch (Exception e) {
+			throw new ComponentStartException(e) ;
+		}
+
+		this.logMessage("start.");
+	}
+	
+	@Override
+	public void			execute() throws Exception
+	{
+		System.out.println("+--+-+-+-+-+-+-+-+-+-+-+ START Interpret with component +--+-+-+-+-+-+-+-+-+-+-+");
+        try {
+			env.getExpressions().accept(this.interpreter, env);
+		} catch (EvaluationException e) {
+			e.printStackTrace();
+		}
+        /*
+		// get the centralised clock from the clock server.
+		this.clock = this.clockServerOBP.getClock(this.clockURI);
+		// wait for the Unix epoch start time to execute the actions
+		Thread.sleep(this.clock.waitUntilStartInMillis());
+		this.logMessage("bureau ; fenetre fermee");
+		Instant i0 = clock.getStartInstant();
+		Instant i1 = i0.plusSeconds(3600); // i0 + 1:00 hour
+		long delay1 = clock.delayToAcceleratedInstantInNanos(i1);
+		
+		this.scheduleTask(
+				o -> {	((Bureau)o).FenetreInstantanee.setOuverte(true);
+						((Bureau)o).logMessage(
+								"at " + i1 +
+								" Capteur Fenetre Instantanée retourne " + ((Bureau)o).FenetreInstantanee.getOuverte() );
+					 },
+				delay1,
+				TimeUnit.NANOSECONDS);
+		this.logMessage("continue.");
+		*/
+	}
+	
+	@Override
+	public synchronized void	finalise() throws Exception
+	{
+		this.doPortDisconnection(this.clockServerOBP.getPortURI());
+		super.finalise();
+	}
+	
+	
+	@Override
+	public synchronized void	shutdown() throws ComponentShutdownException
+	{
+		try {
+			this.clockServerOBP.unpublishPort();
+		} catch (Exception e) {
+			throw new ComponentShutdownException(e) ;
+		}
+
+		this.logMessage("shutdown.");
+		super.shutdown();
+	}
+
     
 }
