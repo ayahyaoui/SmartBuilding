@@ -1,4 +1,4 @@
-package com.paracamplus.bcm.ports;
+package com.paracamplus.bcm.obp;
 
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.examples.basic_cs.interfaces.URIConsumerCI;
