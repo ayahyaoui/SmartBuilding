@@ -14,7 +14,7 @@ import java.util.Map;
 
 
 
-public class BaseEnvFile implements ISmartEnvironment{
+public class GlobalEnvFile implements ISmartEnvironment{
 
 		protected IASTsequence expressions;
 		protected IASTvariableAssign[] variables;
@@ -34,7 +34,7 @@ public class BaseEnvFile implements ISmartEnvironment{
 			return true;
 		}
 
-		public BaseEnvFile(IASTprogram program) {
+		public GlobalEnvFile(IASTprogram program) {
 			if (!checkFormat(program)) {
 				throw new IllegalArgumentException("Wrong format");
 			}

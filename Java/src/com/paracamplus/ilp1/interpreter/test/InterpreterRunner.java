@@ -21,7 +21,7 @@ import java.util.Vector;
 
 import com.paracamplus.ilp1.interfaces.IASTprogram;
 import com.paracamplus.ilp1.interfaces.IASTsequence;
-import com.paracamplus.ilp1.interpreter.BaseEnvFile;
+import com.paracamplus.ilp1.interpreter.GlobalEnvFile;
 import com.paracamplus.ilp1.interpreter.EmptyLexicalEnvironment;
 import com.paracamplus.ilp1.interpreter.Interpreter;
 import com.paracamplus.ilp1.interpreter.interfaces.EvaluationException;
@@ -88,7 +88,7 @@ public class InterpreterRunner {
         //interpretProgram(program);
         program.show("[SHOW]: ");
         System.out.println("finishing Parsing");
-        BaseEnvFile b = new BaseEnvFile(program);
+        GlobalEnvFile b = new GlobalEnvFile(program);
         System.out.println(program);
     }
     

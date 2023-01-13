@@ -1,23 +1,31 @@
 package com.paracamplus.bcm.obp;
 
+
+
+import com.paracamplus.bcm.components.DesktopRoom;
+import com.paracamplus.bcm.interfaces.ScriptManagementCI;
+import com.paracamplus.ilp1.interpreter.GlobalEnvFile;
+
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.examples.basic_cs.interfaces.URIConsumerCI;
-import fr.sorbonne_u.components.interfaces.RequiredCI;
+
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 
 public class DesktopRoomOBP extends AbstractOutboundPort
-implements URIConsumerCI {
+implements URIConsumerCI, ScriptManagementCI  {
 
 	
+	private static final long serialVersionUID = 1L;
 	public DesktopRoomOBP(String uri, ComponentI owner)throws Exception {
 		super(uri, URIConsumerCI.class, owner) ;
-		assert	uri != null && owner != null ;
-		// TODO Auto-generated constructor stub
+		assert	uri != null && owner != null && owner instanceof DesktopRoom ;
+		
 	}
+	
 	public DesktopRoomOBP( ComponentI owner)throws Exception {
 		super(URIConsumerCI.class, owner) ;
-		assert	owner != null ;
-		// TODO Auto-generated constructor stub
+		assert	owner != null && owner instanceof DesktopRoom;
+		
 	}
 
 	@Override
@@ -28,5 +36,9 @@ implements URIConsumerCI {
 	@Override
 	public String[] getURIs(int numberOfURIs) throws Exception {
 		return ((URIConsumerCI)this.getConnector()).getURIs(numberOfURIs) ;
+	}
+	@Override
+	public GlobalEnvFile executeScript(GlobalEnvFile env) throws Exception {
+		return ((ScriptManagementCI)this.getConnector()).executeScript(env);
 	}
 }

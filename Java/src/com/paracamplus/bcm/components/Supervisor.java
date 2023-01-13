@@ -13,7 +13,7 @@ import com.paracamplus.ilp1.ast.ASTstring;
 import com.paracamplus.ilp1.interfaces.IASTfactory;
 import com.paracamplus.ilp1.interfaces.IASTprogram;
 import com.paracamplus.ilp1.interfaces.IASTvariableAssign;
-import com.paracamplus.ilp1.interpreter.BaseEnvFile;
+import com.paracamplus.ilp1.interpreter.GlobalEnvFile;
 import com.paracamplus.ilp1.interpreter.GlobalVariableEnvironment;
 import com.paracamplus.ilp1.interpreter.GlobalVariableStuff;
 import com.paracamplus.ilp1.interpreter.Interpreter;
@@ -37,12 +37,12 @@ public class Supervisor extends AbstractComponent{
     protected static String pattern = ".*\\.ilpml";
     protected static String XMLgrammarFile = "XMLGrammars/grammar1.rng";
     protected Interpreter interpreter;
-    protected ArrayList<BaseEnvFile> allEnv;
+    protected ArrayList<GlobalEnvFile> allEnv;
     DesktopRoomOBP deskOBP;
 	
 	protected Supervisor(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads) {
 		super(reflectionInboundPortURI, nbThreads, nbSchedulableThreads);
-		allEnv = new ArrayList<BaseEnvFile>();
+		allEnv = new ArrayList<GlobalEnvFile>();
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -68,7 +68,7 @@ public class Supervisor extends AbstractComponent{
 		 */
 		this.logMessage("start.");
 	}
-	  public void connectToFunction(BaseEnvFile env)
+	  public void connectToFunction(GlobalEnvFile env)
 	    {
 	    	IASTvariableAssign[] variables = env.getVariables(); 
 	    	variables[0].setExpression(new ASTstring(Utils.DESKTOPROOM_101_ID +" firstParam" ));
@@ -94,7 +94,7 @@ public class Supervisor extends AbstractComponent{
 	        run.setInterpreter(interpreter);
 	    }
 	    
-	    BaseEnvFile test()
+	    GlobalEnvFile test()
 	    {
 	    	File file = new File(samplesDirName[0] + "/u02-1.ilpml");
 	    	System.out.println(samplesDirName[0]);
@@ -106,7 +106,7 @@ public class Supervisor extends AbstractComponent{
 	        	assertTrue(file.exists());
 	            System.out.println("Starting Parsing");
 	            IASTprogram program = run.getParser().parse(file);
-	            return (new BaseEnvFile(program));
+	            return (new GlobalEnvFile(program));
 	        } catch(Exception e) {
 	            e.printStackTrace();
 	            return null;

@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.paracamplus.ilp1.ast.ASTstring;
 import com.paracamplus.ilp1.interfaces.IASTvariableAssign;
-import com.paracamplus.ilp1.interpreter.BaseEnvFile;
+import com.paracamplus.ilp1.interpreter.GlobalEnvFile;
 import com.paracamplus.ilp1.interpreter.Interpreter;
 import com.paracamplus.ilp1.interpreter.interfaces.EvaluationException;
 
@@ -23,7 +23,7 @@ public class DesktopRoom extends AbstractComponent {
 	    protected static String pattern = ".*\\.ilpml";
 	    protected static String XMLgrammarFile = "XMLGrammars/grammar1.rng";
 	    */
-		BaseEnvFile env;
+		GlobalEnvFile env;
 	    protected  Interpreter interpreter;
 	    //protected int nbPersonnes ;
 		protected int nbFenetres ;
@@ -106,6 +106,12 @@ public class DesktopRoom extends AbstractComponent {
 				TimeUnit.NANOSECONDS);
 		this.logMessage("continue.");
 		*/
+	}
+	
+	public GlobalEnvFile executeScript(GlobalEnvFile env)
+	{
+		System.out.println("DesktopRoom has to execute script");
+		return env;
 	}
 	
 	@Override
