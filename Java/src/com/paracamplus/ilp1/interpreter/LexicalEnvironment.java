@@ -98,12 +98,5 @@ public class LexicalEnvironment implements ILexicalEnvironment {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-	@Override
-	public IASTvariable findVariable(String s) {
-		if (s.equals(getKey().getName()) ) {
-            return getKey();
-        } else {
-            return getNext().findVariable(s);
-        }
-	}
+	
 }

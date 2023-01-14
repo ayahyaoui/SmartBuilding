@@ -5,6 +5,7 @@ import java.util.AbstractCollection;
 import java.util.concurrent.TimeUnit;
 
 import com.paracamplus.bcm.components.DesktopRoom;
+import com.paracamplus.bcm.components.Supervisor;
 import com.paracamplus.bcm.utils.Utils;
 
 import fr.sorbonne_u.components.AbstractComponent;
@@ -31,14 +32,16 @@ public class SmartBuildingCVM extends AbstractCVM{
 							 TimeUnit.MILLISECONDS.toNanos(EXECUTION_START),
 							 Instant.parse(Utils.START_INSTANT),
 							 Utils.ACC_FACTOR});
+        String[] rooms = new String[] {Utils.DESKTOPROOM_101_ID, Utils.DESKTOPROOM_102_ID};
+        
+        AbstractComponent.createComponent(
+                Supervisor.class.getCanonicalName(),
+                  new Object[] {Utils.SUPERVISOR_URI, 2, 1});
         
         AbstractComponent.createComponent(
               DesktopRoom.class.getCanonicalName(),
                 new Object[] {Utils.DESKTOPROOM_101_ID, Utils.CLOCK_URI});
         
-        String[] rooms = new String[2];
-        rooms[0] = Utils.DESKTOPROOM_101_ID;
-        rooms[1] = Utils.DESKTOPROOM_102_ID;
         AbstractComponent.createComponent(
                 DesktopRoom.class.getCanonicalName(),
                   new Object[] {Utils.CLOCK_URI, Utils.DESKTOPROOM_101_ID});

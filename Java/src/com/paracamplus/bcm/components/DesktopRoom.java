@@ -2,12 +2,21 @@ package com.paracamplus.bcm.components;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.StringWriter;
 
 import com.paracamplus.ilp1.ast.ASTstring;
+import com.paracamplus.ilp1.interfaces.IASTsequence;
 import com.paracamplus.ilp1.interfaces.IASTvariableAssign;
 import com.paracamplus.ilp1.interpreter.GlobalEnvFile;
+import com.paracamplus.ilp1.interpreter.GlobalVariableEnvironment;
+import com.paracamplus.ilp1.interpreter.GlobalVariableStuff;
 import com.paracamplus.ilp1.interpreter.Interpreter;
+import com.paracamplus.ilp1.interpreter.OperatorEnvironment;
+import com.paracamplus.ilp1.interpreter.OperatorStuff;
 import com.paracamplus.ilp1.interpreter.interfaces.EvaluationException;
+import com.paracamplus.ilp1.interpreter.interfaces.IGlobalVariableEnvironment;
+import com.paracamplus.ilp1.interpreter.interfaces.IOperatorEnvironment;
+import com.paracamplus.ilp1.test.GlobalFunctionAst;
 
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cyphy.tools.aclocks.AcceleratedClock;
@@ -33,13 +42,22 @@ public class DesktopRoom extends AbstractComponent {
 		protected AcceleratedClock			clock;
 		protected ClockServerOutboundPort	clockServerOBP;
 	
-    protected DesktopRoom(String reflectionInboundPortURI, String clockURI) {
+    protected DesktopRoom(String reflectionInboundPortURI, String clockURI) throws EvaluationException {
     	super(reflectionInboundPortURI, 1, 1);
     	assert	clockURI != null && !clockURI.isEmpty() :
 			new PreconditionException(
 					"clockURI != null && !clockURI.isEmpty()");
 
     	this.clockURI = clockURI;
+		StringWriter stdout = new StringWriter();
+        //run.setStdout(stdout);
+    	IGlobalVariableEnvironment gve = new GlobalVariableEnvironment();
+        GlobalVariableStuff.fillGlobalVariables(gve, stdout);
+        IOperatorEnvironment oe = new OperatorEnvironment();
+        OperatorStuff.fillUnaryOperators(oe);
+        OperatorStuff.fillBinaryOperators(oe);
+        this.interpreter = new Interpreter(gve, oe);
+		//this.interpreter = new Interpreter(new GlobalVariableEnvironment() , new OperatorEnvironment());
     	
         //this.env = test();
         //IASTexpression[] prog = env.getExpressions();
@@ -50,10 +68,10 @@ public class DesktopRoom extends AbstractComponent {
     
     public void connectToFunction()
     {
-    	IASTvariableAssign[] variables = env.getVariables(); 
+    	/*IASTvariableAssign[] variables = env.getVariables(); 
     	for (int i = 0; i < variables.length; i++) {
     		variables[i].setExpression(new ASTstring("testParam" + i));
-    	}
+    	}*/
     	
     }
     
@@ -81,36 +99,16 @@ public class DesktopRoom extends AbstractComponent {
 	public void			execute() throws Exception
 	{
 		System.out.println("+--+-+-+-+-+-+-+-+-+-+-+ START Interpret with component +--+-+-+-+-+-+-+-+-+-+-+");
-        try {
-			env.getExpressions().accept(this.interpreter, env);
-		} catch (EvaluationException e) {
-			e.printStackTrace();
-		}
-        /*
-		// get the centralised clock from the clock server.
-		this.clock = this.clockServerOBP.getClock(this.clockURI);
-		// wait for the Unix epoch start time to execute the actions
-		Thread.sleep(this.clock.waitUntilStartInMillis());
-		this.logMessage("bureau ; fenetre fermee");
-		Instant i0 = clock.getStartInstant();
-		Instant i1 = i0.plusSeconds(3600); // i0 + 1:00 hour
-		long delay1 = clock.delayToAcceleratedInstantInNanos(i1);
-		
-		this.scheduleTask(
-				o -> {	((Bureau)o).FenetreInstantanee.setOuverte(true);
-						((Bureau)o).logMessage(
-								"at " + i1 +
-								" Capteur Fenetre Instantanée retourne " + ((Bureau)o).FenetreInstantanee.getOuverte() );
-					 },
-				delay1,
-				TimeUnit.NANOSECONDS);
-		this.logMessage("continue.");
-		*/
+        System.out.println("exec");
+		//env.getExpressions().accept(this.interpreter, env);
 	}
 	
-	public GlobalEnvFile executeScript(GlobalEnvFile env)
+	public GlobalEnvFile executeScript(GlobalEnvFile env) throws EvaluationException
 	{
 		System.out.println("DesktopRoom has to execute script");
+		IASTsequence sequence = GlobalFunctionAst.getInstance().getBody(env.getNameFunction());
+		sequence.accept(this.interpreter, env);
+		
 		return env;
 	}
 	

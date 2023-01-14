@@ -15,9 +15,9 @@ extends IEnvironment<IASTvariable, Object, EvaluationException> {
 	ILexicalEnvironment extend(IASTvariable variable, Object value);
     @Override
 	ILexicalEnvironment getNext() throws EvaluationException;
-	int size();
 	
-	IASTvariable findVariable(String s);
-	int getIndexNode();
+    int size(); // nbVariable or nbNode in sequence ?? 
+	//IASTvariable findVariable(String s);
+	int getIndexNode(); // position
 	
 }

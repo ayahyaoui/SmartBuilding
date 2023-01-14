@@ -88,7 +88,7 @@ public class InterpreterRunner {
         //interpretProgram(program);
         program.show("[SHOW]: ");
         System.out.println("finishing Parsing");
-        GlobalEnvFile b = new GlobalEnvFile(program);
+        //GlobalEnvFile b = new GlobalEnvFile(program);
         System.out.println(program);
     }
     

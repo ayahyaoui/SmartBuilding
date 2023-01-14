@@ -9,6 +9,7 @@ package com.paracamplus.ilp1.interpreter;
 import java.util.List;
 import java.util.Vector;
 
+import com.paracamplus.ilp1.ast.ASTvariable;
 import com.paracamplus.ilp1.interfaces.IASTalternative;
 import com.paracamplus.ilp1.interfaces.IASTassignment;
 import com.paracamplus.ilp1.interfaces.IASTbinaryOperation;
@@ -251,8 +252,10 @@ implements IASTvisitor<Object, ILexicalEnvironment, EvaluationException> {
 		System.out.println("Visit readField");
 		if (asTreadFiekd != null)
 		{
+            ASTvariable variable = new ASTvariable(asTreadFiekd.getFieldName());
 			System.out.println(" " + asTreadFiekd.getFieldName() + "-> " + ((IASTstring)(asTreadFiekd.getTarget())).getValue());
-			System.out.println(" value Uri" + ((IASTstring)(data.getValue(data.findVariable(asTreadFiekd.getFieldName())))).getValue());
+			System.out.println(" value Uri" + data.getValue(variable));
+			
 		}
 		return null;
 	}
