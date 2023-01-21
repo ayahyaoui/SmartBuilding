@@ -9,5 +9,7 @@ public interface ScriptManagementCI extends	OfferedCI,
 RequiredCI{
 
 	public GlobalEnvFile executeScript(GlobalEnvFile env) throws Exception;
+	public GlobalEnvFile executeScript(GlobalEnvFile env, String uri) throws Exception;
+
 
 }

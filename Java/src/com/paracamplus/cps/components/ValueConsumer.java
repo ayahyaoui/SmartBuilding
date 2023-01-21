@@ -228,8 +228,7 @@ extends		AbstractComponent
 	 * @throws Exception						<i>todo.</i>
 	 */
 	protected				ValueConsumer(String valueProvidingInboundPortURI)
-	throws Exception
-	{
+	throws Exception{
 		super(1, 0);
 		assert	valueProvidingInboundPortURI != null ;
 
@@ -262,11 +261,8 @@ extends		AbstractComponent
 	 * @param valueProvidingInboundPortURI	inbound port URI of the value provider component.
 	 * @throws Exception						<i>todo.</i>
 	 */
-	protected				ValueConsumer(
-		String reflectionInboundPortURI,
-		String valueProvidingInboundPortURI
-		) throws Exception
-	{
+	protected				ValueConsumer(String reflectionInboundPortURI, String valueProvidingInboundPortURI)
+	throws Exception{
 		super(reflectionInboundPortURI, 1, 0);
 		assert	valueProvidingInboundPortURI != null ;
 

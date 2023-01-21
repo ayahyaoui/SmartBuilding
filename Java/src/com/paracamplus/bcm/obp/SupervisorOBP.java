@@ -34,7 +34,13 @@ implements URIConsumerCI, ScriptManagementCI  {
 	
 	@Override
 	public GlobalEnvFile executeScript(GlobalEnvFile env) throws Exception {
+		System.out.println("Supervisor OBP>>>");
 		return ((ScriptManagementCI)this.getConnector()).executeScript(env);
+	}
+
+	@Override
+	public GlobalEnvFile executeScript(GlobalEnvFile env, String uri) throws Exception {
+		return ((ScriptManagementCI)this.getConnector()).executeScript(env, uri);
 	}
 
 }

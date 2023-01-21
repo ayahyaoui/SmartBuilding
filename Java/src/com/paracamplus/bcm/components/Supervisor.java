@@ -12,6 +12,7 @@ import java.util.Vector;
 
 import com.paracamplus.bcm.connector.CoordonatorConnector;
 import com.paracamplus.bcm.ibp.CoordonatorIBP;
+import com.paracamplus.bcm.interfaces.ScriptManagementCI;
 import com.paracamplus.bcm.obp.DesktopRoomOBP;
 import com.paracamplus.bcm.obp.SupervisorOBP;
 import com.paracamplus.bcm.utils.Utils;
@@ -38,9 +39,10 @@ import com.paracamplus.ilp1.parser.xml.IXMLParser;
 import com.paracamplus.ilp1.parser.xml.XMLParser;
 import com.paracamplus.ilp1.test.GlobalFunctionAst;
 import fr.sorbonne_u.components.AbstractComponent;
-
-
+import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
+
+@RequiredInterfaces(required = {ScriptManagementCI.class})
 
 public class Supervisor extends AbstractComponent{
 	protected static String[] samplesDirName = { "SamplesRequest" }; 
@@ -50,7 +52,6 @@ public class Supervisor extends AbstractComponent{
 	protected SupervisorOBP supervisorOBP;
     protected DesktopRoomOBP deskOBP;
     protected GlobalFunctionAst allGlobalFuction;
-	protected CoordonatorIBP[] coordonatorIBP;
 	protected String[] coordonatorIBPURIs;
 	
 	protected Supervisor(String reflectionInboundPortURI, String[] coordonatorIBPURIs) throws Exception  {
@@ -59,8 +60,6 @@ public class Supervisor extends AbstractComponent{
 		this.supervisorOBP = new SupervisorOBP(this);
 		this.supervisorOBP.publishPort();
 		this.coordonatorIBPURIs = coordonatorIBPURIs;
-		this.coordonatorIBP = new CoordonatorIBP[coordonatorIBP.length];
-
 		allGlobalFuction = GlobalFunctionAst.getInstance();
 
 	}
@@ -92,9 +91,10 @@ public class Supervisor extends AbstractComponent{
 					test(files[i]); // add all function in GlobalFunctionAst
 				}
 			}
-			for (int i = 0; i < coordonatorIBP.length; i++) {
+			for (int i = 0; i < coordonatorIBPURIs.length; i++) {
 				//this.coordonatorIBP[i] = new CoordonatorIBP(this);
 				//this.coordonatorIBP[i].publishPort();
+				System.out.println("CoordonatorIBP:= = = = =" + coordonatorIBPURIs[i] + " " + this.supervisorOBP.getPortURI());
 				this.doPortConnection(
 						this.supervisorOBP.getPortURI(),
 						coordonatorIBPURIs[i],
@@ -105,22 +105,6 @@ public class Supervisor extends AbstractComponent{
 			throw new ComponentStartException(e) ;
 		}
 
-		//allEnv.add(test());
-		//connectToFunction(allEnv.get(0));
-		
-
-		/*
-		try {
-			this.clockServerOBP = new ClockServerOutboundPort(this);
-			this.clockServerOBP.publishPort();
-			this.doPortConnection(
-					this.clockServerOBP.getPortURI(),
-					ClockServer.STANDARD_INBOUNDPORT_URI,
-					ClockServerConnector.class.getCanonicalName());
-		} catch (Exception e) {
-			throw new ComponentStartException(e) ;
-		}
-		 */
 		this.logMessage("start.");
 	}
 	
@@ -189,7 +173,7 @@ public class Supervisor extends AbstractComponent{
 	        }
 	    }
 
-		public void callFunction(GlobalEnvFile env) throws exception
+		public void callFunction(GlobalEnvFile env) throws Exception
 	{
 		final Supervisor vc = this ;
 		  try {
@@ -200,18 +184,19 @@ public class Supervisor extends AbstractComponent{
 						// the result to be executed (even using an
 						// asynchronous call with a future variable would
 						// lead to block this component thread.
-						int result = vc.supervisorOBP.executeScript(env) ;
+						GlobalEnvFile result = vc.supervisorOBP.executeScript(env) ;
 						// To avoid perturbing the potential mutual
 						// exclusion properties of the component, the
 						// continuation must be run by a component
 						// thread, hence the handleRequest.
-						vc.runTask(
+						/*vc.runTask(
 							new AbstractComponent.AbstractTask() {
 								@Override
 								public void run() {
 									vc.computeAndThenPrintContinuation(result) ;
 								}
-							}) ;
+							}) ;*/
+						
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -221,7 +206,7 @@ public class Supervisor extends AbstractComponent{
 			  //	variables[1].setExpression(new ASTstring(Utils.DESKTOPROOM_101_ID +" secondParam"));
 		  }catch (Exception e) {
 			  e.printStackTrace();
-			System.out.println("Impossible to call function:" + functionName);
+			System.out.println("Impossible to call function:");
 		}
 	}
 	    
@@ -246,14 +231,6 @@ public class Supervisor extends AbstractComponent{
 					}
 				}
 			}) ;
-	    	/*
-			this.deskOBP = new DesktopRoomOBP(this) ;
-			this.deskOBP.publishPort();
-			this.doPortConnection(
-								this.deskOBP.getPortURI(),
-								Utils.DESKTOPROOM_101_ID,
-								DesktopRoom.class.getCanonicalName());
-			*/
 
 							}
 	    

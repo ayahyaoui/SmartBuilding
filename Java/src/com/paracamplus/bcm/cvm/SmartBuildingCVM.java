@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.AbstractCollection;
 import java.util.concurrent.TimeUnit;
 
+import com.paracamplus.bcm.components.Coordonator;
 import com.paracamplus.bcm.components.DesktopRoom;
 import com.paracamplus.bcm.components.Supervisor;
 import com.paracamplus.bcm.utils.Utils;
@@ -26,26 +27,32 @@ public class SmartBuildingCVM extends AbstractCVM{
     public void deploy() throws Exception {
         System.out.println("Deploying components..." +  DesktopRoom.class.getCanonicalName() );
         
-        AbstractComponent.createComponent(
+        /*AbstractComponent.createComponent(
 				ClockServer.class.getCanonicalName(),
 				new Object[]{Utils.CLOCK_URI,		// create the centralised clock
 							 TimeUnit.MILLISECONDS.toNanos(EXECUTION_START),
 							 Instant.parse(Utils.START_INSTANT),
 							 Utils.ACC_FACTOR});
-        String[] rooms = new String[] {Utils.DESKTOPROOM_101_ID, Utils.DESKTOPROOM_102_ID};
+                             */
+        String[] rooms = new String[] {Utils.DESKTOPROOM_101_ID};//, Utils.DESKTOPROOM_102_ID};
+        String[] coords = new String[] {Utils.COORDONATOR_ID};
         
         AbstractComponent.createComponent(
+                Coordonator.class.getCanonicalName(),
+                  new Object[] {Utils.COORDONATOR_ID, rooms});
+
+        AbstractComponent.createComponent(
                 Supervisor.class.getCanonicalName(),
-                  new Object[] {Utils.SUPERVISOR_URI, 2, 1});
+                  new Object[] {Utils.SUPERVISOR_URI, coords});
         
         AbstractComponent.createComponent(
               DesktopRoom.class.getCanonicalName(),
                 new Object[] {Utils.DESKTOPROOM_101_ID, Utils.CLOCK_URI});
         
-        AbstractComponent.createComponent(
+       /*  AbstractComponent.createComponent(
                 DesktopRoom.class.getCanonicalName(),
-                  new Object[] {Utils.CLOCK_URI, Utils.DESKTOPROOM_101_ID});
-          
+                  new Object[] {Utils.DESKTOPROOM_102_ID, Utils.CLOCK_URI});
+          */
         //TODO Auto-generated method stub
     }
 

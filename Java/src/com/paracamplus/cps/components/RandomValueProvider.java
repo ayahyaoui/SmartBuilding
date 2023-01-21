@@ -88,10 +88,8 @@ extends		AbstractComponent
 	 * @param valueProvidingInboundPortURI	URI to be used to create the inbound port.
 	 * @throws Exception						<i>todo.</i>
 	 */
-	protected			RandomValueProvider(
-		String valueProvidingInboundPortURI
-		) throws Exception
-	{
+	protected			RandomValueProvider(String valueProvidingInboundPortURI)
+	throws Exception{
 		// only one thread to ensure the serialised execution of services
 		// inside the component.
 		super(1, 0) ;
@@ -125,11 +123,8 @@ extends		AbstractComponent
 	 * @param valueProvidingInboundPortURI	URI to be used to create the inbound port.
 	 * @throws Exception						<i>todo.</i>
 	 */
-	protected			RandomValueProvider(
-		String reflectionInboundPortURI,
-		String valueProvidingInboundPortURI
-		) throws Exception
-	{
+	protected			RandomValueProvider(String reflectionInboundPortURI, String valueProvidingInboundPortURI)
+	throws Exception{
 		super(reflectionInboundPortURI, 1, 0);
 
 		//this.rg = new Well19937c() ;

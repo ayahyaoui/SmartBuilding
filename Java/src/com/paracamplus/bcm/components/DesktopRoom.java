@@ -4,6 +4,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.StringWriter;
 
+import com.paracamplus.bcm.ibp.DesktopRoomIBP;
+import com.paracamplus.bcm.interfaces.ScriptManagementCI;
 import com.paracamplus.ilp1.ast.ASTstring;
 import com.paracamplus.ilp1.interfaces.IASTsequence;
 import com.paracamplus.ilp1.interfaces.IASTvariableAssign;
@@ -19,6 +21,7 @@ import com.paracamplus.ilp1.interpreter.interfaces.IOperatorEnvironment;
 import com.paracamplus.ilp1.test.GlobalFunctionAst;
 
 import fr.sorbonne_u.components.AbstractComponent;
+import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.cyphy.tools.aclocks.AcceleratedClock;
 import fr.sorbonne_u.components.cyphy.tools.aclocks.ClockServer;
 import fr.sorbonne_u.components.cyphy.tools.aclocks.ClockServerConnector;
@@ -27,6 +30,7 @@ import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.exceptions.PreconditionException;
 
+@OfferedInterfaces(offered = {ScriptManagementCI.class})
 public class DesktopRoom extends AbstractComponent {
 	 	/*protected static String[] samplesDirName = { "SamplesILP1" }; 
 	    protected static String pattern = ".*\\.ilpml";
@@ -41,13 +45,16 @@ public class DesktopRoom extends AbstractComponent {
 		protected final String				clockURI;
 		protected AcceleratedClock			clock;
 		protected ClockServerOutboundPort	clockServerOBP;
+
+		protected final DesktopRoomIBP		desktopRoomIBP;
 	
-    protected DesktopRoom(String reflectionInboundPortURI, String clockURI) throws EvaluationException {
-    	super(reflectionInboundPortURI, 1, 1);
+    protected DesktopRoom(String reflectionInboundPortURI, String clockURI) throws Exception {
+    	super(1, 1);
     	assert	clockURI != null && !clockURI.isEmpty() :
 			new PreconditionException(
 					"clockURI != null && !clockURI.isEmpty()");
 
+		this.desktopRoomIBP = new DesktopRoomIBP(reflectionInboundPortURI, this);
     	this.clockURI = clockURI;
 		StringWriter stdout = new StringWriter();
         //run.setStdout(stdout);
@@ -75,7 +82,7 @@ public class DesktopRoom extends AbstractComponent {
     	
     }
     
-   
+   /*
     @Override
 	public synchronized void	start() throws ComponentStartException
 	{
@@ -102,20 +109,25 @@ public class DesktopRoom extends AbstractComponent {
         System.out.println("exec");
 		//env.getExpressions().accept(this.interpreter, env);
 	}
+	*/
 	
 	public GlobalEnvFile executeScript(GlobalEnvFile env) throws EvaluationException
 	{
-		System.out.println("DesktopRoom has to execute script");
+		System.out.println("I am :" + reflectionInboundPortURI + " had to execute script");
 		IASTsequence sequence = GlobalFunctionAst.getInstance().getBody(env.getNameFunction());
 		sequence.accept(this.interpreter, env);
 		
 		return env;
 	}
 	
+	public GlobalEnvFile executeScript(GlobalEnvFile env, String uri) {
+		System.out.println("I am :" + reflectionInboundPortURI + " had to execute script");
+		return env;
+	}
 	@Override
 	public synchronized void	finalise() throws Exception
 	{
-		this.doPortDisconnection(this.clockServerOBP.getPortURI());
+		//this.doPortDisconnection(this.clockServerOBP.getPortURI());
 		super.finalise();
 	}
 	
@@ -124,7 +136,7 @@ public class DesktopRoom extends AbstractComponent {
 	public synchronized void	shutdown() throws ComponentShutdownException
 	{
 		try {
-			this.clockServerOBP.unpublishPort();
+			//this.clockServerOBP.unpublishPort();
 		} catch (Exception e) {
 			throw new ComponentShutdownException(e) ;
 		}
@@ -132,6 +144,7 @@ public class DesktopRoom extends AbstractComponent {
 		this.logMessage("shutdown.");
 		super.shutdown();
 	}
+
 
     
 }

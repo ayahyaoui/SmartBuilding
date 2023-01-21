@@ -21,7 +21,9 @@ public class Utils {
 	public static final double	ACC_FACTOR = 1200; // 1 hour = 3 seconds
 	public static final long EXECUTION_DURATION = (long) ((SCENARIO_DURATION*3600*1000)/ACC_FACTOR);
     public static final String SUPERVISOR_URI = "supervisor-uri";
-	public static final String	DESKTOPROOM_101_ID = "bureau-101";
+    public static final String	COORDONATOR_ID = "coordonator-01";
+    public static final String	DESKTOPROOM_101_ID = "bureau-101";
+	
 	public static final String	DESKTOPROOM_102_ID = "bureau-102";
 
 	public static final String Salle_Convivalite_ID = "salle_conv_104" ;
