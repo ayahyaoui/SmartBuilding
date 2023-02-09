@@ -13,12 +13,15 @@ import com.paracamplus.ilp1.utils.Utils;
 
 public class ASTsequence extends ASTexpression implements IASTsequence {
     public ASTsequence (IASTexpression[] expressions) {
-    	 for ( IASTexpression e : expressions ) {
-    		if (e != null)
-    			System.out.println("expressions AST" + e.toString());
-    		else
-    			System.out.println("expressions AST None");
-         }
+    	/*
+         * 
+         for ( IASTexpression e : expressions ) {
+             if (e != null)
+             System.out.println("expressions AST" + e.toString());
+             else
+             System.out.println("expressions AST None");
+            }
+            */
         this.expressions = expressions;
     }
     protected IASTexpression[] expressions;

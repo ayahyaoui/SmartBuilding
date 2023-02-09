@@ -34,8 +34,16 @@ public class SmartBuildingCVM extends AbstractCVM{
 							 Instant.parse(Utils.START_INSTANT),
 							 Utils.ACC_FACTOR});
                              */
-        String[] rooms = new String[] {Utils.DESKTOPROOM_101_ID};//, Utils.DESKTOPROOM_102_ID};
+        String[] rooms = new String[] {Utils.DESKTOPROOM_101_ID, Utils.DESKTOPROOM_102_ID};
         String[] coords = new String[] {Utils.COORDONATOR_ID};
+        
+        AbstractComponent.createComponent(
+        		DesktopRoom.class.getCanonicalName(),
+        		new Object[] {Utils.DESKTOPROOM_101_ID, Utils.CLOCK_URI});
+
+        AbstractComponent.createComponent(
+        		DesktopRoom.class.getCanonicalName(),
+        		new Object[] {Utils.DESKTOPROOM_102_ID, Utils.CLOCK_URI});
         
         AbstractComponent.createComponent(
                 Coordonator.class.getCanonicalName(),
@@ -45,14 +53,7 @@ public class SmartBuildingCVM extends AbstractCVM{
                 Supervisor.class.getCanonicalName(),
                   new Object[] {Utils.SUPERVISOR_URI, coords});
         
-        AbstractComponent.createComponent(
-              DesktopRoom.class.getCanonicalName(),
-                new Object[] {Utils.DESKTOPROOM_101_ID, Utils.CLOCK_URI});
-        
-       /*  AbstractComponent.createComponent(
-                DesktopRoom.class.getCanonicalName(),
-                  new Object[] {Utils.DESKTOPROOM_102_ID, Utils.CLOCK_URI});
-          */
+          
         //TODO Auto-generated method stub
     }
 

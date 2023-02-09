@@ -5,6 +5,8 @@ import static org.junit.Assert.assertTrue;
 import java.io.StringWriter;
 
 import com.paracamplus.bcm.ibp.DesktopRoomIBP;
+import com.paracamplus.bcm.interfaces.DesktopRoomCI;
+import com.paracamplus.bcm.interfaces.RoomI;
 import com.paracamplus.bcm.interfaces.ScriptManagementCI;
 import com.paracamplus.ilp1.ast.ASTstring;
 import com.paracamplus.ilp1.interfaces.IASTsequence;
@@ -25,13 +27,13 @@ import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.cyphy.tools.aclocks.AcceleratedClock;
 import fr.sorbonne_u.components.cyphy.tools.aclocks.ClockServer;
 import fr.sorbonne_u.components.cyphy.tools.aclocks.ClockServerConnector;
+import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.cyphy.tools.aclocks.ClockServerOutboundPort;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
-import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.exceptions.PreconditionException;
 
 @OfferedInterfaces(offered = {ScriptManagementCI.class})
-public class DesktopRoom extends AbstractComponent {
+public class DesktopRoom extends AbstractComponent implements DesktopRoomCI{
 	 	/*protected static String[] samplesDirName = { "SamplesILP1" }; 
 	    protected static String pattern = ".*\\.ilpml";
 	    protected static String XMLgrammarFile = "XMLGrammars/grammar1.rng";
@@ -42,6 +44,7 @@ public class DesktopRoom extends AbstractComponent {
 		protected int nbFenetres ;
 		//protected FenetreInstantanee FenetreInstantanee ;
 
+		protected final String reflectionInboundPortURI;
 		protected final String				clockURI;
 		protected AcceleratedClock			clock;
 		protected ClockServerOutboundPort	clockServerOBP;
@@ -49,12 +52,13 @@ public class DesktopRoom extends AbstractComponent {
 		protected final DesktopRoomIBP		desktopRoomIBP;
 	
     protected DesktopRoom(String reflectionInboundPortURI, String clockURI) throws Exception {
-    	super(1, 1);
+    	super(reflectionInboundPortURI,1, 1);
     	assert	clockURI != null && !clockURI.isEmpty() :
 			new PreconditionException(
 					"clockURI != null && !clockURI.isEmpty()");
-
+		this.reflectionInboundPortURI = reflectionInboundPortURI;
 		this.desktopRoomIBP = new DesktopRoomIBP(reflectionInboundPortURI, this);
+		this.desktopRoomIBP.publishPort();
     	this.clockURI = clockURI;
 		StringWriter stdout = new StringWriter();
         //run.setStdout(stdout);
@@ -63,7 +67,7 @@ public class DesktopRoom extends AbstractComponent {
         IOperatorEnvironment oe = new OperatorEnvironment();
         OperatorStuff.fillUnaryOperators(oe);
         OperatorStuff.fillBinaryOperators(oe);
-        this.interpreter = new Interpreter(gve, oe);
+        this.interpreter = new Interpreter(gve, oe,this);
 		//this.interpreter = new Interpreter(new GlobalVariableEnvironment() , new OperatorEnvironment());
     	
         //this.env = test();
@@ -143,6 +147,18 @@ public class DesktopRoom extends AbstractComponent {
 
 		this.logMessage("shutdown.");
 		super.shutdown();
+	}
+
+	@Override
+	public boolean hasMethod(String name) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Object execute(String name) {
+		System.out.println("I am :" + reflectionInboundPortURI + " had to execute script " + name);
+		return null;
 	}
 
 

@@ -16,7 +16,7 @@ public class CoordonatorConnector extends AbstractConnector implements ScriptMan
 
 	@Override
 	public GlobalEnvFile executeScript(GlobalEnvFile env, String uri) throws Exception {
-		System.out.println("CoordonatorConnector execute >>");
+		System.out.println("CoordonatorConnector execute >>" + uri);
 		return ((ScriptManagementCI)this.offering).executeScript(env, uri);
 	}
 	

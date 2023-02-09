@@ -2,7 +2,8 @@ package com.paracamplus.bcm.components;
 
 import java.util.ArrayList;
 
-import com.paracamplus.bcm.connector.CoordonatorConnector;
+
+import com.paracamplus.bcm.connector.DesktopRoomConnector;
 import com.paracamplus.bcm.ibp.CoordonatorIBP;
 import com.paracamplus.bcm.interfaces.ScriptManagementCI;
 import com.paracamplus.bcm.obp.DesktopRoomOBP;
@@ -12,12 +13,14 @@ import com.paracamplus.ilp1.test.GlobalFunctionAst;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
+import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
+import fr.sorbonne_u.components.ports.PortI;
 
-@RequiredInterfaces(required = {ScriptManagementCI.class})
 
 @OfferedInterfaces(offered = {ScriptManagementCI.class})
+@RequiredInterfaces(required = {ScriptManagementCI.class})
 public class Coordonator extends AbstractComponent{
 
 	protected CoordonatorIBP coordonatorIBP;
@@ -35,7 +38,7 @@ public class Coordonator extends AbstractComponent{
 		for (int i = 0; i < desktopIbpUris.length; i++) {
 			DesktopRoomOBP desktopRoomOBP = new DesktopRoomOBP(this);
 			desktopRoomOBP.publishPort();
-			System.out.println("Coordonator:(" + desktopRoomOBP.getPortURI() + ", " + reflectionInboundPortURI + ", " + ScriptManagementCI.class.getCanonicalName() + ")");
+			//System.out.println("Coordonator:(" + desktopRoomOBP.getPortURI() + ", " + reflectionInboundPortURI + ", " + ScriptManagementCI.class.getCanonicalName() + ")");
 			desktopOBPList.add(desktopRoomOBP);
 		}
 		
@@ -46,15 +49,15 @@ public class Coordonator extends AbstractComponent{
 		super.start();
 		try {
 			for (int i = 0; i < DesktopInboundPortURIs.length; i++) {
-				System.out.println("Coordonator: doPortConnection(" + desktopOBPList.get(i).getPortURI() + ", " + DesktopInboundPortURIs[i] + ", " + ScriptManagementCI.class.getCanonicalName() + ")");
-				
 				this.doPortConnection(
 						desktopOBPList.get(i).getPortURI(),
 						DesktopInboundPortURIs[i],
-						CoordonatorConnector.class.getCanonicalName());
-				
+						DesktopRoomConnector.class.getCanonicalName());
 			}
+				
+			
 		} catch (Exception e) {
+			
 			throw new ComponentStartException(e);
 		}
 	}
@@ -100,7 +103,6 @@ public class Coordonator extends AbstractComponent{
 		System.out.println("Coordonator HAS TO EXECUTE FILE with " + env.getNameFunction() + " as name function");
 		System.out.println("Coordonator HAS TO EXECUTE FILE with " + env);
 		for (int i = 0; i < DesktopInboundPortURIs.length; i++) {
-			System.out.println("Coordonator: doPortConnection(" + desktopOBPList.get(i).getPortURI() + ", " + DesktopInboundPortURIs[i] + ", " + ScriptManagementCI.class.getCanonicalName() + ")");
 			if (DesktopInboundPortURIs[i].equals(uri)) {
 				desktopOBPList.get(i).executeScript(env);
 			}

@@ -1,6 +1,8 @@
 package com.paracamplus.bcm.components;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.function.Function;
 
 import fr.sorbonne_u.components.AbstractComponent;
 
@@ -19,6 +21,8 @@ public abstract class AbstractRoom extends AbstractComponent{
     protected int nbPeople;
     protected int floor;
     protected ArrayList<AbstractRoom> neighbours;
+    // hasmap of string and function
+    protected HashMap<String, Object> functions;
       
 
     protected AbstractRoom(int nbThreads, int nbSchedulableThreads) {
@@ -37,9 +41,19 @@ public abstract class AbstractRoom extends AbstractComponent{
         this.nbPeople = nbPeople;
         this.floor = floor;
         this.neighbours = neighbours;
+        this.functions = new HashMap<String, Object>();
+        //this.functions.put("test", ()->{System.out.println("test");});
+    }
+
+    protected void test(){
+        System.out.println("test");
     }
 
     protected void connectRoom(AbstractRoom room) {
         this.neighbours.add(room);
+    }
+
+    protected void addFunction(String name, Function function) {
+        this.functions.put(name, function);
     }
 }

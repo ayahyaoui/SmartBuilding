@@ -19,7 +19,6 @@ public class DesktopRoomIBP extends AbstractInboundPort implements ScriptManagem
 	
 	public DesktopRoomIBP(String uri, ComponentI owner) throws Exception {
 		super(uri, ScriptManagementCI.class, owner);
-		System.out.println("DesktopRoomIBP   " + uri);
 		assert	owner instanceof DesktopRoom;
 	}
 

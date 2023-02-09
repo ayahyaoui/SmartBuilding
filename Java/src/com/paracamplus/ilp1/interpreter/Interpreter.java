@@ -9,6 +9,7 @@ package com.paracamplus.ilp1.interpreter;
 import java.util.List;
 import java.util.Vector;
 
+import com.paracamplus.bcm.interfaces.RoomI;
 import com.paracamplus.ilp1.ast.ASTvariable;
 import com.paracamplus.ilp1.interfaces.IASTalternative;
 import com.paracamplus.ilp1.interfaces.IASTassignment;
@@ -45,9 +46,19 @@ implements IASTvisitor<Object, ILexicalEnvironment, EvaluationException> {
                         IOperatorEnvironment operatorEnvironment ) {
         this.globalVariableEnvironment = globalVariableEnvironment;
         this.operatorEnvironment = operatorEnvironment;
+        this.owner = null;
     }
+    
+    public Interpreter (IGlobalVariableEnvironment globalVariableEnvironment,
+	            IOperatorEnvironment operatorEnvironment , RoomI owner) {
+	this.globalVariableEnvironment = globalVariableEnvironment;
+	this.operatorEnvironment = operatorEnvironment;
+	this.owner = owner;
+	}
+
     protected IGlobalVariableEnvironment globalVariableEnvironment;
     protected IOperatorEnvironment operatorEnvironment;
+    protected RoomI owner;
 
     public IOperatorEnvironment getOperatorEnvironment() {
         return operatorEnvironment;
@@ -135,7 +146,7 @@ implements IASTvisitor<Object, ILexicalEnvironment, EvaluationException> {
             throws EvaluationException {
         IASTexpression[] expressions = iast.getExpressions();
         Object lastValue = null;
-        System.out.println("visit Sequence..."+expressions);
+        System.out.println("visit Sequence..." + expressions);
         for (int i = lexenv.getIndexNode() ; i < expressions.length; i++) {
         	System.out.println("visit Sequence will accept loop" + expressions[i]);
         	lastValue = expressions[i].accept(this, lexenv);
@@ -255,6 +266,10 @@ implements IASTvisitor<Object, ILexicalEnvironment, EvaluationException> {
             ASTvariable variable = new ASTvariable(asTreadFiekd.getFieldName());
 			System.out.println(" " + asTreadFiekd.getFieldName() + "-> " + ((IASTstring)(asTreadFiekd.getTarget())).getValue());
 			System.out.println(" value Uri" + data.getValue(variable));
+			if (owner != null)
+			{
+				owner.execute(((IASTstring)(asTreadFiekd.getTarget())).getValue());
+			}
 			
 		}
 		return null;

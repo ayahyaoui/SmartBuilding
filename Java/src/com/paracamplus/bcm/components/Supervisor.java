@@ -40,7 +40,9 @@ import com.paracamplus.ilp1.parser.xml.XMLParser;
 import com.paracamplus.ilp1.test.GlobalFunctionAst;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
+import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
+import fr.sorbonne_u.components.ports.PortI;
 
 @RequiredInterfaces(required = {ScriptManagementCI.class})
 
@@ -95,10 +97,15 @@ public class Supervisor extends AbstractComponent{
 				//this.coordonatorIBP[i] = new CoordonatorIBP(this);
 				//this.coordonatorIBP[i].publishPort();
 				System.out.println("CoordonatorIBP:= = = = =" + coordonatorIBPURIs[i] + " " + this.supervisorOBP.getPortURI());
+				PortI serverPort =
+						AbstractCVM.getFromLocalRegistry(coordonatorIBPURIs[i]);
+						if (serverPort != null) 
+							System.out.println("yes it is not null" + serverPort);
 				this.doPortConnection(
 						this.supervisorOBP.getPortURI(),
 						coordonatorIBPURIs[i],
 						CoordonatorConnector.class.getCanonicalName());
+				System.out.println("Is connected ?? " + supervisorOBP.connected());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -146,7 +153,7 @@ public class Supervisor extends AbstractComponent{
 	boolean	addFunction(IASTprogram program) throws Exception
 	{
 		
-		program.show("[AddFunction]");
+		//program.show("[AddFunction]");
 		IASTfunctionDefinition f = program.getFunction();
 		if (!(f instanceof IASTfunctionDefinition) || f == null)
 			throw new Exception("The program must contain a function definition");
@@ -160,7 +167,7 @@ public class Supervisor extends AbstractComponent{
 	    {
 	    	assert file.exists();
 	        try {    	
-	        	System.out.println("++++++++++++++++++++++++++++++++++++++++" + file.getName());
+	        	//System.out.println("++++++++++++++++++++++++++++++++++++++++" + file.getName());
 	        	InterpreterRunner run = new InterpreterRunner();
 	        	configureRunner(run);
 	        	assertTrue(file.exists());
