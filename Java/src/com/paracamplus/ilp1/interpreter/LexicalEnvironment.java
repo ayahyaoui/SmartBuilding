@@ -98,5 +98,20 @@ public class LexicalEnvironment implements ILexicalEnvironment {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	@Override
+	public void setIndexNode(int index) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public String getNextComponentUri() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public void setNextComponentUri(String nextComponentUri) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

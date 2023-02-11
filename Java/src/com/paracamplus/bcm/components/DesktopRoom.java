@@ -3,6 +3,7 @@ package com.paracamplus.bcm.components;
 import static org.junit.Assert.assertTrue;
 
 import java.io.StringWriter;
+import java.math.BigInteger;
 
 import com.paracamplus.bcm.ibp.DesktopRoomIBP;
 import com.paracamplus.bcm.interfaces.DesktopRoomCI;
@@ -118,9 +119,30 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI{
 	public GlobalEnvFile executeScript(GlobalEnvFile env) throws EvaluationException
 	{
 		System.out.println("I am :" + reflectionInboundPortURI + " had to execute script");
-		IASTsequence sequence = GlobalFunctionAst.getInstance().getBody(env.getNameFunction());
-		sequence.accept(this.interpreter, env);
 		
+		env.setNextComponentUri(reflectionInboundPortURI);
+		IASTsequence sequence = GlobalFunctionAst.getInstance().getBody(env.getNameFunction());
+		sequence.show("FIRE");
+		Object test = sequence.accept(this.interpreter, env);
+		System.out.println("end of executeScript" + env.getIndexNode() + " / " + sequence.getExpressions().length);
+		System.out.println(test + "   " + test.getClass());
+		if (env.getIndexNode() < sequence.getExpressions().length)
+		{
+			System.out.println("I am :" + reflectionInboundPortURI + " had to execute script");
+			if (env.getNextComponentUri().equals(test) && test instanceof Boolean && (Boolean)test == false)
+			{
+				 // stop the execution of the script
+				return env;
+			}
+			else if (!env.getNextComponentUri().equals(reflectionInboundPortURI))
+			{
+				// find the next component to execute the script
+				// TODO call coordinator to find the next component to execute the script
+				System.out.println("I am :" + reflectionInboundPortURI + " had to find the next component to execute the script :" + env.getNextComponentUri());				return env;
+			}
+			System.out.println("end of executeScript ERROR");
+			
+		}
 		return env;
 	}
 	
@@ -158,7 +180,11 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI{
 	@Override
 	public Object execute(String name) {
 		System.out.println("I am :" + reflectionInboundPortURI + " had to execute script " + name);
-		return null;
+		return 42;
+	}
+
+	public String getReflectionInboundPortURI() {
+		return reflectionInboundPortURI;
 	}
 
 

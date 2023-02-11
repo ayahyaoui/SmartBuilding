@@ -119,6 +119,7 @@ public class Supervisor extends AbstractComponent{
 	public void callFunction(String functionName, String[] parameters)
 	{
 		  try {
+			  System.out.println("callFunction supervisors");
 			  GlobalEnvFile env = new GlobalEnvFile(functionName, parameters);
 			  DesktopRoom room = new DesktopRoom("qwerty", "ss");
 			  room.executeScript(env);

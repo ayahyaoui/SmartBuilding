@@ -9,6 +9,8 @@ package com.paracamplus.ilp1.interpreter;
 import java.util.List;
 import java.util.Vector;
 
+import org.antlr.v4.parse.ANTLRParser.sync_return;
+
 import com.paracamplus.bcm.interfaces.RoomI;
 import com.paracamplus.ilp1.ast.ASTvariable;
 import com.paracamplus.ilp1.interfaces.IASTalternative;
@@ -148,11 +150,15 @@ implements IASTvisitor<Object, ILexicalEnvironment, EvaluationException> {
         Object lastValue = null;
         System.out.println("visit Sequence..." + expressions);
         for (int i = lexenv.getIndexNode() ; i < expressions.length; i++) {
-        	System.out.println("visit Sequence will accept loop" + expressions[i]);
+        	lexenv.setIndexNode(i);
+        	System.out.println("visit Sequence will accept loop" + expressions[i] + "index: " + i + " or " + lexenv.getIndexNode());
         	lastValue = expressions[i].accept(this, lexenv);
         	System.out.println("visit Sequence has accepted loop");
-        	if (lastValue != null && lastValue.equals(whatever))
-        		return false;	
+        	if ((lastValue != null && lastValue.equals(whatever)) || !lexenv.getNextComponentUri().equals(owner.getReflectionInboundPortURI()))
+        		{
+                    System.out.println("visit Sequence will return false" + lexenv.getIndexNode() + " " + lexenv.getNextComponentUri() + " " + owner.getReflectionInboundPortURI() + " " + i);
+                    return lastValue;	
+                }
 		}
         System.out.println("visit Sequence after loop");
         return lastValue;
@@ -240,9 +246,10 @@ implements IASTvisitor<Object, ILexicalEnvironment, EvaluationException> {
 	@Override
 	public Object visit(IASTassignment iast, ILexicalEnvironment lexenv) 
             throws EvaluationException {
-		System.out.println("visit assign");
         IASTvariable variable = iast.getVariable();
+        System.out.println("visit assign " + variable.getName());
         Object value = iast.getExpression().accept(this, lexenv);
+        System.out.println("visit assign " + variable.getName() + " value " + value + " " + value.getClass());
         try {
             lexenv.update(variable, value);
         } catch (EvaluationException exc) {
@@ -259,16 +266,26 @@ implements IASTvisitor<Object, ILexicalEnvironment, EvaluationException> {
 	}
 
 	@Override
-	public Object visit(IASTreadField asTreadFiekd, ILexicalEnvironment data) throws EvaluationException {
+	public Object visit(IASTreadField asTreadField, ILexicalEnvironment data) throws EvaluationException {
 		System.out.println("Visit readField");
-		if (asTreadFiekd != null)
+		Object res;
+        String cibleUri;
+		if (asTreadField != null)
 		{
-            ASTvariable variable = new ASTvariable(asTreadFiekd.getFieldName());
-			System.out.println(" " + asTreadFiekd.getFieldName() + "-> " + ((IASTstring)(asTreadFiekd.getTarget())).getValue());
-			System.out.println(" value Uri" + data.getValue(variable));
-			if (owner != null)
+            cibleUri =  (String)data.getValue(new ASTvariable(asTreadField.getFieldName()));
+            System.out.println(" " + asTreadField.getFieldName() + "-> " + asTreadField.getTarget());
+            //ASTvariable target = (ASTvariable)asTreadField.getTarget();
+			System.out.println(" " + asTreadField.getFieldName() + "-> " + ((IASTstring)(asTreadField.getTarget())).getValue());
+            if (owner != null)
 			{
-				owner.execute(((IASTstring)(asTreadFiekd.getTarget())).getValue());
+				if (owner.getReflectionInboundPortURI().equals(cibleUri))
+                    res = owner.execute(((IASTstring)(asTreadField.getTarget())).getValue());
+                else
+                {
+                    data.setNextComponentUri(cibleUri);
+                    res = cibleUri;
+                }
+				return res;
 			}
 			
 		}

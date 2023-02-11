@@ -64,4 +64,22 @@ public class EmptyLexicalEnvironment implements ILexicalEnvironment {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	@Override
+	public void setIndexNode(int index) {
+	
+		
+	}
+
+	@Override
+	public String getNextComponentUri() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setNextComponentUri(String nextComponentUri) {
+		// TODO Auto-generated method stub
+		
+	}
 }

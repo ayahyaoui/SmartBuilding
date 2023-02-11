@@ -19,6 +19,9 @@ public class GlobalEnvFile implements ISmartEnvironment{
 
 		protected int indexNode;
 		protected String nameFunction;
+		protected String nextComponentUri; 
+
+
 		private final Map<String, Object> globalVariableEnvironment;
 
 		boolean checkFormat(String nameFunction, HashMap<String, String> parameters) {
@@ -175,4 +178,19 @@ public class GlobalEnvFile implements ISmartEnvironment{
 			return globalVariableEnvironment.size();
 		}
 
+
+		@Override
+		public void setIndexNode(int index) {
+			this.indexNode = index;
+			
+		}
+
+		public String getNextComponentUri() {
+			return nextComponentUri;
+		}
+		
+		
+		public void setNextComponentUri(String nextComponentUri) {
+			this.nextComponentUri = nextComponentUri;
+		}
 }

@@ -19,5 +19,10 @@ extends IEnvironment<IASTvariable, Object, EvaluationException> {
     int size(); // nbVariable or nbNode in sequence ?? 
 	//IASTvariable findVariable(String s);
 	int getIndexNode(); // position
+	void setIndexNode(int index);
+	
+	// needed to avoid round trip
+	public String getNextComponentUri(); 
+	public void setNextComponentUri(String nextComponentUri);
 	
 }
