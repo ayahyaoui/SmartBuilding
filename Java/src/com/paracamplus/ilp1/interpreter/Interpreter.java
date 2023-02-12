@@ -154,12 +154,18 @@ implements IASTvisitor<Object, ILexicalEnvironment, EvaluationException> {
         	System.out.println("visit Sequence will accept loop" + expressions[i] + "index: " + i + " or " + lexenv.getIndexNode());
         	lastValue = expressions[i].accept(this, lexenv);
         	System.out.println("visit Sequence has accepted loop");
-        	if ((lastValue != null && lastValue.equals(whatever)) || !lexenv.getNextComponentUri().equals(owner.getReflectionInboundPortURI()))
-        		{
-                    System.out.println("visit Sequence will return false" + lexenv.getIndexNode() + " " + lexenv.getNextComponentUri() + " " + owner.getReflectionInboundPortURI() + " " + i);
-                    return lastValue;	
-                }
+            if (!lexenv.getNextComponentUri().equals(owner.getReflectionInboundPortURI())) // has to change component
+            {
+                System.out.println("[Interpreter] visit Sequence has to change component " + owner.getReflectionInboundPortURI() + " -> " + lexenv.getNextComponentUri() + " (" + lexenv.getIndexNode() + ")");
+                return lastValue;
+            }
+        	if ((lastValue != null && lastValue.equals(whatever)))
+            {   
+                System.out.println("visit Sequence will return false" + lexenv.getIndexNode() + " " + lexenv.getNextComponentUri() + " " + owner.getReflectionInboundPortURI() + " ");
+                break;
+            }
 		}
+        lexenv.setIsFinished(true);
         System.out.println("visit Sequence after loop");
         return lastValue;
     }
@@ -279,7 +285,7 @@ implements IASTvisitor<Object, ILexicalEnvironment, EvaluationException> {
             if (owner != null)
 			{
 				if (owner.getReflectionInboundPortURI().equals(cibleUri))
-                    res = owner.execute(((IASTstring)(asTreadField.getTarget())).getValue());
+                    res = owner.executeFunction(((IASTstring)(asTreadField.getTarget())).getValue());
                 else
                 {
                     data.setNextComponentUri(cibleUri);

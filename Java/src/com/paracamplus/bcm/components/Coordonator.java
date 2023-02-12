@@ -7,6 +7,7 @@ import com.paracamplus.bcm.connector.DesktopRoomConnector;
 import com.paracamplus.bcm.ibp.CoordonatorIBP;
 import com.paracamplus.bcm.interfaces.ScriptManagementCI;
 import com.paracamplus.bcm.obp.DesktopRoomOBP;
+import com.paracamplus.bcm.utils.Utils;
 import com.paracamplus.ilp1.interpreter.GlobalEnvFile;
 import com.paracamplus.ilp1.test.GlobalFunctionAst;
 
@@ -92,16 +93,17 @@ public class Coordonator extends AbstractComponent{
 	}
 
 	public GlobalEnvFile executeScript(GlobalEnvFile env) throws Exception {
-		System.out.println("Coordonator HAS TO EXECUTE FILE");
+		if (Utils.DEBUG_MODE || Utils.DEBUG_MODE_BCM)
+			System.out.println("[Coordonator][executeScript] " + " HAS TO EXECUTE FILE with " + env.getNameFunction() + " as name function");
+		
 		String firstVaribleName = GlobalFunctionAst.getInstance().getParameters(env.getNameFunction())[0].getName();
 		return executeScript(env, (String)env.getGlobalVariableEnvironment().get(firstVaribleName));
 	}
 
 	
 	public GlobalEnvFile executeScript(GlobalEnvFile env, String uri) throws Exception {
-		System.out.println("Coordonator HAS TO EXECUTE FILE with " + uri + " as uri");
-		System.out.println("Coordonator HAS TO EXECUTE FILE with " + env.getNameFunction() + " as name function");
-		System.out.println("Coordonator HAS TO EXECUTE FILE with " + env);
+		if (Utils.DEBUG_MODE || Utils.DEBUG_MODE_BCM)
+			System.out.println("[Coordonator][executeScript] " + " HAS TO EXECUTE FILE with " + env.getNameFunction() + " as name function and " + uri + " as uri");
 		for (int i = 0; i < DesktopInboundPortURIs.length; i++) {
 			if (DesktopInboundPortURIs[i].equals(uri)) {
 				desktopOBPList.get(i).executeScript(env);

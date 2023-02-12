@@ -5,10 +5,14 @@ import static org.junit.Assert.assertTrue;
 import java.io.StringWriter;
 import java.math.BigInteger;
 
+import com.paracamplus.bcm.connector.CoordonatorConnector;
 import com.paracamplus.bcm.ibp.DesktopRoomIBP;
 import com.paracamplus.bcm.interfaces.DesktopRoomCI;
 import com.paracamplus.bcm.interfaces.RoomI;
+
 import com.paracamplus.bcm.interfaces.ScriptManagementCI;
+import com.paracamplus.bcm.obp.CoordonatorOBP;
+import com.paracamplus.bcm.utils.Utils;
 import com.paracamplus.ilp1.ast.ASTstring;
 import com.paracamplus.ilp1.interfaces.IASTsequence;
 import com.paracamplus.ilp1.interfaces.IASTvariableAssign;
@@ -25,13 +29,17 @@ import com.paracamplus.ilp1.test.GlobalFunctionAst;
 
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
-import fr.sorbonne_u.components.cyphy.tools.aclocks.AcceleratedClock;
-import fr.sorbonne_u.components.cyphy.tools.aclocks.ClockServer;
-import fr.sorbonne_u.components.cyphy.tools.aclocks.ClockServerConnector;
-import fr.sorbonne_u.components.exceptions.ComponentStartException;
-import fr.sorbonne_u.components.cyphy.tools.aclocks.ClockServerOutboundPort;
+/*
+ * 
+ import fr.sorbonne_u.components.cyphy.tools.aclocks.AcceleratedClock;
+ import fr.sorbonne_u.components.cyphy.tools.aclocks.ClockServer;
+ import fr.sorbonne_u.components.cyphy.tools.aclocks.ClockServerConnector;
+ import fr.sorbonne_u.components.exceptions.ComponentStartException;
+ import fr.sorbonne_u.components.cyphy.tools.aclocks.ClockServerOutboundPort;
+ import fr.sorbonne_u.exceptions.PreconditionException;
+ */
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
-import fr.sorbonne_u.exceptions.PreconditionException;
+import fr.sorbonne_u.components.exceptions.ComponentStartException;
 
 @OfferedInterfaces(offered = {ScriptManagementCI.class})
 public class DesktopRoom extends AbstractComponent implements DesktopRoomCI{
@@ -41,26 +49,30 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI{
 	    */
 		GlobalEnvFile env;
 	    protected  Interpreter interpreter;
-	    //protected int nbPersonnes ;
-		protected int nbFenetres ;
-		//protected FenetreInstantanee FenetreInstantanee ;
-
 		protected final String reflectionInboundPortURI;
-		protected final String				clockURI;
-		protected AcceleratedClock			clock;
-		protected ClockServerOutboundPort	clockServerOBP;
+	    //protected int nbPersonnes ;
+		//protected int nbFenetres ;
+		//protected FenetreInstantanee FenetreInstantanee;
+		//protected final String				clockURI;
+		//protected AcceleratedClock			clock;
+		//protected ClockServerOutboundPort	clockServerOBP;
 
 		protected final DesktopRoomIBP		desktopRoomIBP;
-	
-    protected DesktopRoom(String reflectionInboundPortURI, String clockURI) throws Exception {
+		protected String coordonatorIBPURI;
+		protected CoordonatorOBP coordinatorOBP;
+		
+    protected DesktopRoom(String reflectionInboundPortURI, String clockURI, String coordonatorIBPURI) throws Exception {
     	super(reflectionInboundPortURI,1, 1);
-    	assert	clockURI != null && !clockURI.isEmpty() :
-			new PreconditionException(
-					"clockURI != null && !clockURI.isEmpty()");
+    	//assert	clockURI != null && !clockURI.isEmpty() :
+		//	new PreconditionException(
+		//			"clockURI != null && !clockURI.isEmpty()");
 		this.reflectionInboundPortURI = reflectionInboundPortURI;
 		this.desktopRoomIBP = new DesktopRoomIBP(reflectionInboundPortURI, this);
 		this.desktopRoomIBP.publishPort();
-    	this.clockURI = clockURI;
+		this.coordinatorOBP = new CoordonatorOBP(this);
+		this.coordinatorOBP.publishPort();
+		this.coordonatorIBPURI = coordonatorIBPURI;
+    	//this.clockURI = clockURI;
 		StringWriter stdout = new StringWriter();
         //run.setStdout(stdout);
     	IGlobalVariableEnvironment gve = new GlobalVariableEnvironment();
@@ -75,7 +87,7 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI{
         //IASTexpression[] prog = env.getExpressions();
         //connectToFunction();
         
-            //env.getExpressions()[i].visit(new Interpreter(env, new OperatorEnvironment()));
+        //env.getExpressions()[i].visit(new Interpreter(env, new OperatorEnvironment()));
     }
     
     public void connectToFunction()
@@ -87,76 +99,73 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI{
     	
     }
     
-   /*
+	/* */
+	
     @Override
 	public synchronized void	start() throws ComponentStartException
 	{
 		super.start();
 
 		try {
-			this.clockServerOBP = new ClockServerOutboundPort(this);
-			this.clockServerOBP.publishPort();
-			this.doPortConnection(
-					this.clockServerOBP.getPortURI(),
-					ClockServer.STANDARD_INBOUNDPORT_URI,
-					ClockServerConnector.class.getCanonicalName());
-		} catch (Exception e) {
-			throw new ComponentStartException(e) ;
+			if (Utils.DEBUG_MODE_BCM)
+				System.out.println("[DesktopRoom] start()" + "connextion" + this.coordinatorOBP.getPortURI() + " " + coordonatorIBPURI);
+				this.doPortConnection(
+						this.coordinatorOBP.getPortURI(),
+						coordonatorIBPURI,
+						CoordonatorConnector.class.getCanonicalName());
+			} catch (Exception e) {
+				throw new ComponentStartException(e) ;
+			}
+			
+			this.logMessage("start.");
 		}
-
-		this.logMessage("start.");
-	}
+		
 	
-	@Override
-	public void			execute() throws Exception
-	{
-		System.out.println("+--+-+-+-+-+-+-+-+-+-+-+ START Interpret with component +--+-+-+-+-+-+-+-+-+-+-+");
-        System.out.println("exec");
-		//env.getExpressions().accept(this.interpreter, env);
-	}
+		
+	/*
+	*  TODO: choose the best version
+	*  First version, when the script has to be executed by the next component in the graph 
+	*	I am calling coordinatorOBP executeScript to find the next component to execute the script 
 	*/
-	
+	/*
+		* Second version, when the script has to be executed by the next component in the graph 
+		* I am just returning the env and let the coordinator check if he need to find the next component to execute the script
+		*/
 	public GlobalEnvFile executeScript(GlobalEnvFile env) throws EvaluationException
 	{
-		System.out.println("I am :" + reflectionInboundPortURI + " had to execute script");
-		
+		if (Utils.DEBUG_MODE_BCM)
+			System.out.println("[DesktopRoom] executeScript()" + " had to execute script index" + env.getIndexNode() );
 		env.setNextComponentUri(reflectionInboundPortURI);
 		IASTsequence sequence = GlobalFunctionAst.getInstance().getBody(env.getNameFunction());
-		sequence.show("FIRE");
-		Object test = sequence.accept(this.interpreter, env);
-		System.out.println("end of executeScript" + env.getIndexNode() + " / " + sequence.getExpressions().length);
-		System.out.println(test + "   " + test.getClass());
-		if (env.getIndexNode() < sequence.getExpressions().length)
-		{
-			System.out.println("I am :" + reflectionInboundPortURI + " had to execute script");
-			if (env.getNextComponentUri().equals(test) && test instanceof Boolean && (Boolean)test == false)
-			{
-				 // stop the execution of the script
-				return env;
-			}
-			else if (!env.getNextComponentUri().equals(reflectionInboundPortURI))
-			{
+		if (Utils.DEBUG_MODE_BCM)
+			sequence.show("FIRE");
+		sequence.accept(this.interpreter, env);
+		if (Utils.DEBUG_MODE_BCM)
+			System.out.println("[DesktopRoom] executeScript()" + this.reflectionInboundPortURI + " has executed script index" + env.getIndexNode()  + " / " + sequence.getExpressions().length);
+			if (!env.isFinished() && !env.getNextComponentUri().equals(reflectionInboundPortURI))
+		 	{
 				// find the next component to execute the script
-				// TODO call coordinator to find the next component to execute the script
-				System.out.println("I am :" + reflectionInboundPortURI + " had to find the next component to execute the script :" + env.getNextComponentUri());				return env;
+			 	System.out.println("I am :" + reflectionInboundPortURI + " had to find the next component to execute the script :" + env.getNextComponentUri());
+			 	try
+			 	{
+					coordinatorOBP.executeScript(env, env.getNextComponentUri());
+				}
+				catch(Exception e)
+				{
+					System.out.println("ERROR when executing script : " + e.getMessage() + "");
+					return env;
+				}
 			}
-			System.out.println("end of executeScript ERROR");
-			
-		}
 		return env;
 	}
 	
-	public GlobalEnvFile executeScript(GlobalEnvFile env, String uri) {
-		System.out.println("I am :" + reflectionInboundPortURI + " had to execute script");
-		return env;
-	}
+	
 	@Override
 	public synchronized void	finalise() throws Exception
 	{
 		//this.doPortDisconnection(this.clockServerOBP.getPortURI());
 		super.finalise();
 	}
-	
 	
 	@Override
 	public synchronized void	shutdown() throws ComponentShutdownException
@@ -178,8 +187,8 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI{
 	}
 
 	@Override
-	public Object execute(String name) {
-		System.out.println("I am :" + reflectionInboundPortURI + " had to execute script " + name);
+	public Object executeFunction(String name) {
+		System.out.println("[DesktopRoom] executeFunction()" + reflectionInboundPortURI +" had to execute script " + name);
 		return 42;
 	}
 

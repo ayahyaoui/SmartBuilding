@@ -39,11 +39,11 @@ public class SmartBuildingCVM extends AbstractCVM{
         
         AbstractComponent.createComponent(
         		DesktopRoom.class.getCanonicalName(),
-        		new Object[] {Utils.DESKTOPROOM_101_ID, Utils.CLOCK_URI});
+        		new Object[] {Utils.DESKTOPROOM_101_ID, Utils.CLOCK_URI,Utils.COORDONATOR_ID});
 
         AbstractComponent.createComponent(
         		DesktopRoom.class.getCanonicalName(),
-        		new Object[] {Utils.DESKTOPROOM_102_ID, Utils.CLOCK_URI});
+        		new Object[] {Utils.DESKTOPROOM_102_ID, Utils.CLOCK_URI,Utils.COORDONATOR_ID});
         
         AbstractComponent.createComponent(
                 Coordonator.class.getCanonicalName(),
@@ -66,7 +66,6 @@ public class SmartBuildingCVM extends AbstractCVM{
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        System.out.println("Hello World!");
         }
     }
 }

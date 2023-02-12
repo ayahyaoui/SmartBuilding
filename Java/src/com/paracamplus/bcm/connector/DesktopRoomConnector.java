@@ -10,7 +10,6 @@ public class DesktopRoomConnector extends AbstractConnector implements ScriptMan
 	@Override
 	public GlobalEnvFile executeScript(GlobalEnvFile env) throws Exception {
 		System.out.println("DesktopConnector execute >>");
-		System.out.println(this + " " + this.offering);
 		return ((ScriptManagementCI)this.offering).executeScript(env);
 	}
 

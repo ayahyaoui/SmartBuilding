@@ -1,6 +1,5 @@
 package com.paracamplus.ilp1.interpreter;
 
-import com.paracamplus.ilp1.ast.ASTvariableAssign;
 import com.paracamplus.ilp1.interfaces.*;
 import com.paracamplus.ilp1.interpreter.interfaces.EvaluationException;
 import com.paracamplus.ilp1.interpreter.interfaces.ILexicalEnvironment;
@@ -8,7 +7,6 @@ import com.paracamplus.ilp1.interpreter.interfaces.ISmartEnvironment;
 import com.paracamplus.ilp1.test.GlobalFunctionAst;
 import com.paracamplus.ilp1.utils.Utils;
 
-import fr.sorbonne_u.components.examples.basic_cs.ports.URIConsumerOutboundPort;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +17,8 @@ public class GlobalEnvFile implements ISmartEnvironment{
 
 		protected int indexNode;
 		protected String nameFunction;
-		protected String nextComponentUri; 
+		protected String nextComponentUri;
+		protected boolean isFinished;
 
 
 		private final Map<String, Object> globalVariableEnvironment;
@@ -76,6 +75,7 @@ public class GlobalEnvFile implements ISmartEnvironment{
 			this.globalVariableEnvironment = new HashMap<>();
 			this.indexNode = 0;
 			this.nameFunction = nameFunction;
+			this.isFinished = false;
 			globalVariableEnvironment.putAll(parameters);
 		}
 		
@@ -104,6 +104,13 @@ public class GlobalEnvFile implements ISmartEnvironment{
 			return indexNode;
 		}
 	
+		public void setIsFinished(boolean isFinished) {
+			this.isFinished = isFinished;
+		}
+
+		public boolean isFinished() {
+			return isFinished;
+		}
 		
 		@Override
 		public String toString() {

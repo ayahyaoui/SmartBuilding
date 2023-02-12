@@ -8,15 +8,17 @@ import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.examples.basic_cs.interfaces.URIConsumerCI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 
-public class SupervisorOBP extends AbstractOutboundPort
+public class CoordonatorOBP extends AbstractOutboundPort
 implements URIConsumerCI, ScriptManagementCI  {
 	
-	public SupervisorOBP(String uri, ComponentI owner)throws Exception {
+	private static final long serialVersionUID = 1L;
+
+	public CoordonatorOBP(String uri, ComponentI owner)throws Exception {
 		super(uri, URIConsumerCI.class, owner) ;
 		assert	uri != null && owner != null && owner instanceof DesktopRoom ;
 	}
 	
-	public SupervisorOBP( ComponentI owner)throws Exception {
+	public CoordonatorOBP( ComponentI owner)throws Exception {
 		super(URIConsumerCI.class, owner) ;
 		assert	owner != null && owner instanceof DesktopRoom;
 		
@@ -34,7 +36,6 @@ implements URIConsumerCI, ScriptManagementCI  {
 	
 	@Override
 	public GlobalEnvFile executeScript(GlobalEnvFile env) throws Exception {
-		System.out.println("Supervisor OBP>>>");
 		return ((ScriptManagementCI)this.getConnector()).executeScript(env);
 	}
 

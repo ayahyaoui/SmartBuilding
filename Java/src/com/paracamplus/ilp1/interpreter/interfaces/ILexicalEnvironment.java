@@ -20,6 +20,8 @@ extends IEnvironment<IASTvariable, Object, EvaluationException> {
 	//IASTvariable findVariable(String s);
 	int getIndexNode(); // position
 	void setIndexNode(int index);
+	void setIsFinished(boolean isFinished);
+	boolean isFinished();
 	
 	// needed to avoid round trip
 	public String getNextComponentUri(); 

@@ -2,6 +2,7 @@ def fire(P,C)
 {
 	3+3;
 	C.test
+	let b = 5
 	if 25 > 50.0;
 	1+2;
 	if true;
