@@ -29,6 +29,12 @@ import com.paracamplus.ilp1.test.GlobalFunctionAst;
 
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
+import fr.sorbonne_u.components.annotations.RequiredInterfaces;
+import fr.sorbonne_u.components.cyphy.tools.aclocks.AcceleratedClock;
+import fr.sorbonne_u.components.cyphy.tools.aclocks.ClockServer;
+import fr.sorbonne_u.components.cyphy.tools.aclocks.ClockServerCI;
+import fr.sorbonne_u.components.cyphy.tools.aclocks.ClockServerConnector;
+import fr.sorbonne_u.components.cyphy.tools.aclocks.ClockServerOutboundPort;
 /*
  * 
  import fr.sorbonne_u.components.cyphy.tools.aclocks.AcceleratedClock;
@@ -42,7 +48,8 @@ import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 
 @OfferedInterfaces(offered = {ScriptManagementCI.class})
-public class DesktopRoom extends AbstractComponent implements DesktopRoomCI{
+@RequiredInterfaces(required={ClockServerCI.class})
+public class DesktopRoom extends AbstractComponent implements DesktopRoomCI, ScriptManagementCI{
 	 	/*protected static String[] samplesDirName = { "SamplesILP1" }; 
 	    protected static String pattern = ".*\\.ilpml";
 	    protected static String XMLgrammarFile = "XMLGrammars/grammar1.rng";
@@ -53,9 +60,9 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI{
 	    //protected int nbPersonnes ;
 		//protected int nbFenetres ;
 		//protected FenetreInstantanee FenetreInstantanee;
-		//protected final String				clockURI;
-		//protected AcceleratedClock			clock;
-		//protected ClockServerOutboundPort	clockServerOBP;
+		protected final String				clockURI = Utils.CLOCK_URI; // todo : change it initialise in the constructor
+		protected AcceleratedClock			clock;
+		protected ClockServerOutboundPort	clockServerOBP;
 
 		protected final DesktopRoomIBP		desktopRoomIBP;
 		protected String coordonatorIBPURI;
@@ -113,6 +120,13 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI{
 						this.coordinatorOBP.getPortURI(),
 						coordonatorIBPURI,
 						CoordonatorConnector.class.getCanonicalName());
+
+				this.clockServerOBP = new ClockServerOutboundPort(this);
+				this.clockServerOBP.publishPort();
+				this.doPortConnection(
+						this.clockServerOBP.getPortURI(),
+						ClockServer.STANDARD_INBOUNDPORT_URI,
+						ClockServerConnector.class.getCanonicalName());
 			} catch (Exception e) {
 				throw new ComponentStartException(e) ;
 			}
@@ -120,7 +134,16 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI{
 			this.logMessage("start.");
 		}
 		
-	
+	public void			execute() throws Exception
+	{
+		this.clock = this.clockServerOBP.getClock(this.clockURI);
+		System.out.println("clock = " + this.clock + " " + this.clock.getStartEpochNanos());
+		//this.clock.setDebugLevel(2);
+		//this.clock.start();
+		//this.clockServerOBP.setClock(this.clockURI, this.clock);
+		//this.clockServerOBP.startClock(this.clockURI);
+		//this.clockServerOBP.startClock
+	}
 		
 	/*
 	*  TODO: choose the best version
@@ -189,6 +212,7 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI{
 	@Override
 	public Object executeFunction(String name) {
 		System.out.println("[DesktopRoom] executeFunction()" + reflectionInboundPortURI +" had to execute script " + name);
+		System.out.println("[DesktopRoom] executeFunction() clock" + this.clock.getStartEpochNanos());
 		return 42;
 	}
 
@@ -196,6 +220,15 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI{
 		return reflectionInboundPortURI;
 	}
 
-
+	@Override
+	public GlobalEnvFile executeScript(GlobalEnvFile env, String uri) throws Exception {
+		if (uri.equals(reflectionInboundPortURI))
+		{
+			return executeScript(env);
+		}
+		System.out.println("[DesktopRoom] executeScript()" + reflectionInboundPortURI +" had to execute script " + env.getNameFunction() + " on " + uri);
+		env.setNextComponentUri(uri);
+		return coordinatorOBP.executeScript(env, uri);
+	}
     
 }

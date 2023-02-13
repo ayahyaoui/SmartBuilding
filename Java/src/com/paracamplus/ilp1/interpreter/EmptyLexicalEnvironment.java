@@ -82,4 +82,16 @@ public class EmptyLexicalEnvironment implements ILexicalEnvironment {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void setIsFinished(boolean isFinished) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isFinished() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

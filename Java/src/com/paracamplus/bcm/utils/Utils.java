@@ -29,36 +29,38 @@ public class Utils {
 	
 	public static final String	DESKTOPROOM_102_ID = "bureau-102";
 
-	public static final String Salle_Convivalite_ID = "salle_conv_104" ;
+	public static final String Salle_Convivalite_ID = "salle_conv_104";
+
+	
 
 
-	  public static File[] getFileList(
-	    		String samplesDirName,
-	    		String pattern
-	    		) throws Exception {
-	        final Pattern p = Pattern.compile("^" + pattern + "$");
-	        final FilenameFilter ff = new FilenameFilter() {
-	            @Override
-				public boolean accept (File dir, String name) {
-	                final Matcher m = p.matcher(name);
-	                return m.matches();
-	            }
-	        };
-	        File samplesDir = new File(samplesDirName);
-	        final File[] testFiles = samplesDir.listFiles(ff);
-	        if (testFiles == null) {
-	        	throw new IllegalArgumentException("Directory does not exist : " + samplesDirName);
-	        }
-	        assertNotNull(testFiles);
-	        
-	        if ( testFiles.length == 0 ) {
-	            final String msg = "Cannot find a single test like " + pattern + " in " + samplesDirName;
-	            throw new IllegalArgumentException(msg);
-	        }
-	        java.util.Arrays.sort(testFiles,
-	                (f1, f2) -> f1.getName().compareTo(f2.getName()));
-			return testFiles;
-	    }
+	public static File[] getFileList(
+			String samplesDirName,
+			String pattern
+			) throws Exception {
+		final Pattern p = Pattern.compile("^" + pattern + "$");
+		final FilenameFilter ff = new FilenameFilter() {
+			@Override
+			public boolean accept (File dir, String name) {
+				final Matcher m = p.matcher(name);
+				return m.matches();
+			}
+		};
+		File samplesDir = new File(samplesDirName);
+		final File[] testFiles = samplesDir.listFiles(ff);
+		if (testFiles == null) {
+			throw new IllegalArgumentException("Directory does not exist : " + samplesDirName);
+		}
+		assertNotNull(testFiles);
+		
+		if ( testFiles.length == 0 ) {
+			final String msg = "Cannot find a single test like " + pattern + " in " + samplesDirName;
+			throw new IllegalArgumentException(msg);
+		}
+		java.util.Arrays.sort(testFiles,
+				(f1, f2) -> f1.getName().compareTo(f2.getName()));
+		return testFiles;
+	}
 
 
 	public static File[] getFileList(

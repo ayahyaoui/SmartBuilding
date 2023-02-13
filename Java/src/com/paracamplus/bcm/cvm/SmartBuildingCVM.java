@@ -27,13 +27,13 @@ public class SmartBuildingCVM extends AbstractCVM{
     public void deploy() throws Exception {
         System.out.println("Deploying components..." +  DesktopRoom.class.getCanonicalName() );
         
-        /*AbstractComponent.createComponent(
+        AbstractComponent.createComponent(
 				ClockServer.class.getCanonicalName(),
 				new Object[]{Utils.CLOCK_URI,		// create the centralised clock
-							 TimeUnit.MILLISECONDS.toNanos(EXECUTION_START),
+							 TimeUnit.MILLISECONDS.toNanos(System.currentTimeMillis() + Utils.DEFAULT_STARTUP_TIME),
 							 Instant.parse(Utils.START_INSTANT),
 							 Utils.ACC_FACTOR});
-                             */
+                             
         String[] rooms = new String[] {Utils.DESKTOPROOM_101_ID, Utils.DESKTOPROOM_102_ID};
         String[] coords = new String[] {Utils.COORDONATOR_ID};
         
@@ -53,8 +53,6 @@ public class SmartBuildingCVM extends AbstractCVM{
                 Supervisor.class.getCanonicalName(),
                   new Object[] {Utils.SUPERVISOR_URI, coords});
         
-          
-        //TODO Auto-generated method stub
     }
 
     public static void main(String[] args) {
