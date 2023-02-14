@@ -1,19 +1,19 @@
 <deployment>
    <hosts>
     <host name="localhost"
-          dir="/mnt/nfs/homes/anyahyao/eclipse-workspace/SmartIlp/Java/src/com/paracamplus/cps/"/>
+          dir="/mnt/nfs/homes/anyahyao/eclipse-workspace/SmartIlp/Java/src/com/paracamplus/bcm/"/>
   </hosts>
   <cyclicBarrier   hostname="localhost" port="55253"/>
   <globalRegistry  hostname="localhost" port="55252"/>
   <rmiRegistryPort no="55999"/>
   <jvms2hostnames>
-    <jvm2hostname jvmuri="ValueProvider"
+    <jvm2hostname jvmuri="JVM1"
         rmiRegistryCreator="true"
         hostname="localhost"
-        mainclass="com.paracamplus.cps.DistributedCVM"/>
-    <jvm2hostname jvmuri="ValueConsumer"
+        mainclass="com.paracamplus.bcm.cvm.SmartBuildingDistributedCVM"/>
+    <jvm2hostname jvmuri="JVM2"
         rmiRegistryCreator="false"
         	hostname="localhost"
-        mainclass="com.paracamplus.cps.DistributedCVM"/>
+        mainclass="com.paracamplus.bcm.cvm.SmartBuildingDistributedCVM"/>
   </jvms2hostnames>
 </deployment>

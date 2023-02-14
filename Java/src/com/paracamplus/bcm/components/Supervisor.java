@@ -112,7 +112,7 @@ public class Supervisor extends AbstractComponent{
           try {
               System.out.println("callFunction supervisors");
               GlobalEnvFile env = new GlobalEnvFile(functionName, parameters);
-              DesktopRoom room = new DesktopRoom("qwerty", "ss",null);
+              DesktopRoom room = new DesktopRoom("qwerty", "ss",null, null);
               room.executeScript(env);
               //variables[0].setExpression(new ASTstring(Utils.DESKTOPROOM_101_ID +" firstParam" ));
               //	variables[1].setExpression(new ASTstring(Utils.DESKTOPROOM_101_ID +" secondParam"));
@@ -220,7 +220,7 @@ public class Supervisor extends AbstractComponent{
             System.out.println("*     		        Supervisor                             *");
             System.out.println("*    		        **********                             *");
             System.out.println("************************************************************");
-            String[] parameters = new String[] {Utils.DESKTOPROOM_101_ID, Utils.DESKTOPROOM_102_ID};
+            String[] parameters = new String[] {Utils.DESKTOPROOM_101_URI, Utils.DESKTOPROOM_102_URI};
             //callFunction("fire",parameters);
             GlobalEnvFile env = new GlobalEnvFile("fire", parameters);
             this.runTask(

@@ -1,5 +1,11 @@
 package com.paracamplus.cps;
 
+import com.paracamplus.cps.components.RandomValueProvider;
+import com.paracamplus.cps.components.ValueConsumer;
+
+//import com.paracamplus.cps.components.RandomValueProvider;
+//import com.paracamplus.cps.components.ValueConsumer;
+
 //Copyright Jacques Malenfant, Sorbonne Universite.
 //
 //Jacques.Malenfant@lip6.fr
@@ -37,8 +43,6 @@ package com.paracamplus.cps;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.cvm.AbstractDistributedCVM;
-import com.paracamplus.cps.components.RandomValueProvider;
-import com.paracamplus.cps.components.ValueConsumer;
 import fr.sorbonne_u.components.helpers.CVMDebugModes;
 
 //-----------------------------------------------------------------------------
@@ -74,6 +78,29 @@ extends		AbstractDistributedCVM
 		super(args);
 	}
 
+	 @Override
+		public void initialise() throws Exception {
+			super.initialise();
+			String[] jvmURIs = this.configurationParameters.getJvmURIs();
+			boolean JVMURI1_OK = false;
+			boolean JVMURI2_OK = false;
+
+	        System.out.println("size jvmUri:  " + jvmURIs.length);
+
+			for (int i = 0; i < jvmURIs.length && (!JVMURI1_OK || !JVMURI2_OK); i++) {
+				if (jvmURIs[i].equals(VALUE_CONSUMER_JVM_URI) && !JVMURI1_OK) {
+					JVMURI1_OK = true;
+				} else if (jvmURIs[i].equals(VALUE_PROVIDER_JVM_URI) && !JVMURI2_OK) {
+					JVMURI2_OK = true;
+				}
+	            else {
+	                throw new Exception("Uknown JVM URI: " + jvmURIs[i] + "or JVM URI already used");
+	            }
+
+			}
+
+		}
+	
 	/**
 	 * @see fr.sorbonne_u.components.cvm.AbstractDistributedCVM#instantiateAndPublish()
 	 */

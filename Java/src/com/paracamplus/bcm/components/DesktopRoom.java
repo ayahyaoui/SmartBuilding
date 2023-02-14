@@ -68,7 +68,7 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI, Scr
 		protected String coordonatorIBPURI;
 		protected CoordonatorOBP coordinatorOBP;
 		
-    protected DesktopRoom(String reflectionInboundPortURI, String clockURI, String coordonatorIBPURI) throws Exception {
+    protected DesktopRoom(String reflectionInboundPortURI, String clockURI, String coordonatorIBPURI, String []neighboursURI) throws Exception {
     	super(reflectionInboundPortURI,1, 1);
     	//assert	clockURI != null && !clockURI.isEmpty() :
 		//	new PreconditionException(
