@@ -1,3 +1,15 @@
+package com.paracamplus.bcm.obp;
+
+import com.paracamplus.bcm.components.DesktopRoom;
+import com.paracamplus.bcm.interfaces.RoomI;
+import com.paracamplus.bcm.interfaces.ScriptManagementCI;
+import com.paracamplus.ilp1.interpreter.GlobalEnvFile;
+
+import fr.sorbonne_u.components.ComponentI;
+import fr.sorbonne_u.components.examples.basic_cs.interfaces.URIConsumerCI;
+
+import fr.sorbonne_u.components.ports.AbstractOutboundPort;
+
 public class RoomOBP extends AbstractOutboundPort
 implements  ScriptManagementCI  {
 
@@ -6,13 +18,13 @@ implements  ScriptManagementCI  {
 
     public RoomOBP(String uri, ComponentI owner)throws Exception {
         super(uri, URIConsumerCI.class, owner) ;
-        assert	uri != null && owner != null && owner instanceof Room;
+        assert	uri != null && owner != null && owner instanceof RoomI;
         
     }
 
     public RoomOBP( ComponentI owner)throws Exception {
         super(URIConsumerCI.class, owner) ;
-        assert	owner != null && owner instanceof Room;
+        assert	owner != null && owner instanceof RoomI;
         
     }
 	

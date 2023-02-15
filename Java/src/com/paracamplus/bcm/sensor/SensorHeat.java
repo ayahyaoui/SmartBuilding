@@ -23,12 +23,12 @@ public class SensorHeat implements ISensor{
 	}
 
 	@Override
-	public float getValue() {
+	public Float getValue() {
 		return heat;
 	}
 
-	@Override
-	public void setValue(float f) {
+	
+	public void setValue(Float f) {
 		nextValue = f;
 		
 	}

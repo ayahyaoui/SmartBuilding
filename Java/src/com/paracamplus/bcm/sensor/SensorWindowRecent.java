@@ -1,8 +1,10 @@
 package com.paracamplus.bcm.sensor;
 
+import java.time.Instant;
+
 import com.paracamplus.bcm.simul.WindowSimul;
 
-public class SensorWindowRecent implements IBoolSensor{
+public class SensorWindowRecent implements ISensor{
 
     protected boolean value;
     protected boolean nextValue;
@@ -22,15 +24,14 @@ public class SensorWindowRecent implements IBoolSensor{
     }
 
     @Override
-    public boolean getValue() {
+    public Boolean getValue() {
         return value;
     }
 
     @Override
-    public void eval() {
+	public void eval(Instant now){
         windowSim.routine();
         nextValue = windowSim.isOpen() && windowSim.getLastOpen() > marge;
     }
-
 
 }

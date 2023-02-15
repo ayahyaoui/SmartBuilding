@@ -4,14 +4,20 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.StringWriter;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import com.paracamplus.bcm.connector.CoordonatorConnector;
+import com.paracamplus.bcm.connector.RoomConnector;
 import com.paracamplus.bcm.ibp.DesktopRoomIBP;
 import com.paracamplus.bcm.interfaces.DesktopRoomCI;
 import com.paracamplus.bcm.interfaces.RoomI;
 
 import com.paracamplus.bcm.interfaces.ScriptManagementCI;
 import com.paracamplus.bcm.obp.CoordonatorOBP;
+import com.paracamplus.bcm.obp.RoomOBP;
+import com.paracamplus.bcm.sensor.ISensor;
 import com.paracamplus.bcm.utils.Utils;
 import com.paracamplus.ilp1.ast.ASTstring;
 import com.paracamplus.ilp1.interfaces.IASTsequence;
@@ -84,13 +90,10 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI, Scr
 			this.neighboursOBP.get(i).publishPort();
 		}
 		this.sensors = new HashMap<String, ISensor>();
-		this.sensors.put("temperature", new TemperatureSensor());
-		this.sensors.put("humidity", new HumiditySensor());
-		this.sensors.put("light", new LightSensor());
 		this.initialiseInterpreter();
     }
 	
-	private void initialiseInterpreter() {
+	private void initialiseInterpreter() throws EvaluationException {
 		StringWriter stdout = new StringWriter();
 		IGlobalVariableEnvironment gve = new GlobalVariableEnvironment();
 		GlobalVariableStuff.fillGlobalVariables(gve, stdout);
@@ -144,13 +147,28 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI, Scr
 		
 	public void			execute() throws Exception
 	{
+		/*
 		this.clock = this.clockServerOBP.getClock(this.clockURI);
 		System.out.println("clock = " + this.clock + " " + this.clock.getStartEpochNanos());
 		//this.clock.setDebugLevel(2);
 		//this.clock.start();
 		//this.clockServerOBP.setClock(this.clockURI, this.clock);
 		//this.clockServerOBP.startClock(this.clockURI);
-		//this.clockServerOBP.startClock
+		//this.clockServerOBP.startClock// get the centralised clock from the clock server.
+		Thread.sleep(this.clock.waitUntilStartInMillis());
+		*/
+		/*this.scheduleTask(
+				o -> {
+					// TODO: every 10 seconds, eval all the sensors
+
+					for (ISensor sensor : ((DesktopRoom)o).sensors.values()) {
+						sensor.eval(((Object) clock).getCurrentTimeNanos());
+						((DesktopRoom)o).logMessage("evaluating sensor " + sensor.getSensorName());
+					}					
+					
+				},1, TimeUnit.SECONDS);
+				*/
+		//this.logMessage("continue.");
 	}
 		
 	/*
@@ -179,15 +197,12 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI, Scr
 			System.out.println("I am :" + reflectionInboundPortURI + " had to find the next component to execute the script :" + env.getNextComponentUri());
 			try
 			{
-				if (this.neighboursURI.contains(env.getNextComponentUri()))
-				{
-					int index = this.neighboursURI.indexOf(env.getNextComponentUri());
-					return this.neighboursOBP.get(index).executeScript(env);
+				for (int i = 0; i < this.neighboursURI.length; i++) {
+					if (this.neighboursURI[i].equals(env.getNextComponentUri()))
+						return this.neighboursOBP.get(i).executeScript(env);
 				}
-				else // to change => maybe just return env and let the coordinator check if he need to find the next component to execute the script
-				{
-					this.coordinatorOBP.executeScript(env, env.getNextComponentUri());
-				}
+				// to change => maybe just return env and let the coordinator check if he need to find the next component to execute the script
+				this.coordinatorOBP.executeScript(env, env.getNextComponentUri());
 			}
 			catch(Exception e)
 			{
@@ -231,12 +246,11 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI, Scr
 	public Object executeFunction(String name) {
 		System.out.println("[DesktopRoom] executeFunction()" + reflectionInboundPortURI +" had to execute script " + name);
 		System.out.println("[DesktopRoom] executeFunction() clock" + this.clock.getStartEpochNanos());
-		if (sensors.contains(name))
+		if (sensors.containsKey(name))
 		{
 			ISensor sensor = sensors.get(name);
 			return sensor.getValue();
 		}
-
 		return 42;
 	}
 
