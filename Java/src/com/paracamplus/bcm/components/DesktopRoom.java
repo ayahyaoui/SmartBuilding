@@ -50,15 +50,9 @@ import fr.sorbonne_u.components.exceptions.ComponentStartException;
 @OfferedInterfaces(offered = {ScriptManagementCI.class})
 @RequiredInterfaces(required={ClockServerCI.class})
 public class DesktopRoom extends AbstractComponent implements DesktopRoomCI, ScriptManagementCI{
-	 	/*protected static String[] samplesDirName = { "SamplesILP1" }; 
-	    protected static String pattern = ".*\\.ilpml";
-	    protected static String XMLgrammarFile = "XMLGrammars/grammar1.rng";
-	    */
 		GlobalEnvFile env;
 	    protected  Interpreter interpreter;
 		protected final String reflectionInboundPortURI;
-	    //protected int nbPersonnes ;
-		//protected int nbFenetres ;
 		//protected FenetreInstantanee FenetreInstantanee;
 		protected final String				clockURI = Utils.CLOCK_URI; // todo : change it initialise in the constructor
 		protected AcceleratedClock			clock;
@@ -67,6 +61,10 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI, Scr
 		protected final DesktopRoomIBP		desktopRoomIBP;
 		protected String coordonatorIBPURI;
 		protected CoordonatorOBP coordinatorOBP;
+		protected String[] neighboursURI;
+		protected ArrayList<RoomOBP> neighboursOBP;
+		protected HashMap<String, ISensor> sensors;
+
 		
     protected DesktopRoom(String reflectionInboundPortURI, String clockURI, String coordonatorIBPURI, String []neighboursURI) throws Exception {
     	super(reflectionInboundPortURI,1, 1);
@@ -79,32 +77,33 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI, Scr
 		this.coordinatorOBP = new CoordonatorOBP(this);
 		this.coordinatorOBP.publishPort();
 		this.coordonatorIBPURI = coordonatorIBPURI;
-    	//this.clockURI = clockURI;
+		this.neighboursURI = neighboursURI;
+		this.neighboursOBP = new ArrayList<RoomOBP>();
+		for (int i = 0; i < neighboursURI.length; i++) {
+			this.neighboursOBP.add(new RoomOBP(this));
+			this.neighboursOBP.get(i).publishPort();
+		}
+		this.sensors = new HashMap<String, ISensor>();
+		this.sensors.put("temperature", new TemperatureSensor());
+		this.sensors.put("humidity", new HumiditySensor());
+		this.sensors.put("light", new LightSensor());
+		this.initialiseInterpreter();
+    }
+	
+	private void initialiseInterpreter() {
 		StringWriter stdout = new StringWriter();
-        //run.setStdout(stdout);
-    	IGlobalVariableEnvironment gve = new GlobalVariableEnvironment();
-        GlobalVariableStuff.fillGlobalVariables(gve, stdout);
-        IOperatorEnvironment oe = new OperatorEnvironment();
-        OperatorStuff.fillUnaryOperators(oe);
-        OperatorStuff.fillBinaryOperators(oe);
-        this.interpreter = new Interpreter(gve, oe,this);
-		//this.interpreter = new Interpreter(new GlobalVariableEnvironment() , new OperatorEnvironment());
-    	
-        //this.env = test();
-        //IASTexpression[] prog = env.getExpressions();
-        //connectToFunction();
-        
-        //env.getExpressions()[i].visit(new Interpreter(env, new OperatorEnvironment()));
-    }
+		IGlobalVariableEnvironment gve = new GlobalVariableEnvironment();
+		GlobalVariableStuff.fillGlobalVariables(gve, stdout);
+		IOperatorEnvironment oe = new OperatorEnvironment();
+		OperatorStuff.fillUnaryOperators(oe);
+		OperatorStuff.fillBinaryOperators(oe);
+		this.interpreter = new Interpreter(gve, oe,this);
+		
+	}
     
-    public void connectToFunction()
-    {
-    	/*IASTvariableAssign[] variables = env.getVariables(); 
-    	for (int i = 0; i < variables.length; i++) {
-    		variables[i].setExpression(new ASTstring("testParam" + i));
-    	}*/
-    	
-    }
+	public void addSensor(String sensorName, ISensor sensor) {
+		this.sensors.put(sensorName, sensor);
+	}
     
 	/* */
 	
@@ -116,21 +115,30 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI, Scr
 		try {
 			if (Utils.DEBUG_MODE_BCM)
 				System.out.println("[DesktopRoom] start()" + "connextion" + this.coordinatorOBP.getPortURI() + " " + coordonatorIBPURI);
-				this.doPortConnection(
-						this.coordinatorOBP.getPortURI(),
-						coordonatorIBPURI,
-						CoordonatorConnector.class.getCanonicalName());
+			
+			// connect to his coordinator
+			this.doPortConnection(
+				this.coordinatorOBP.getPortURI(),
+				coordonatorIBPURI,
+				CoordonatorConnector.class.getCanonicalName());
 
-				this.clockServerOBP = new ClockServerOutboundPort(this);
-				this.clockServerOBP.publishPort();
+			// connect to his neighbours
+			for (int i = 0; i < neighboursURI.length; i++) {
 				this.doPortConnection(
-						this.clockServerOBP.getPortURI(),
-						ClockServer.STANDARD_INBOUNDPORT_URI,
-						ClockServerConnector.class.getCanonicalName());
+					this.neighboursOBP.get(i).getPortURI(),
+					neighboursURI[i],
+					RoomConnector.class.getCanonicalName());
+			}
+
+			this.clockServerOBP = new ClockServerOutboundPort(this);
+			this.clockServerOBP.publishPort();
+			this.doPortConnection(
+					this.clockServerOBP.getPortURI(),
+					ClockServer.STANDARD_INBOUNDPORT_URI,
+					ClockServerConnector.class.getCanonicalName());
 			} catch (Exception e) {
 				throw new ComponentStartException(e) ;
 			}
-			
 			this.logMessage("start.");
 		}
 		
@@ -165,20 +173,28 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI, Scr
 		sequence.accept(this.interpreter, env);
 		if (Utils.DEBUG_MODE_BCM)
 			System.out.println("[DesktopRoom] executeScript()" + this.reflectionInboundPortURI + " has executed script index" + env.getIndexNode()  + " / " + sequence.getExpressions().length);
-			if (!env.isFinished() && !env.getNextComponentUri().equals(reflectionInboundPortURI))
-		 	{
-				// find the next component to execute the script
-			 	System.out.println("I am :" + reflectionInboundPortURI + " had to find the next component to execute the script :" + env.getNextComponentUri());
-			 	try
-			 	{
-					coordinatorOBP.executeScript(env, env.getNextComponentUri());
-				}
-				catch(Exception e)
+		if (!env.isFinished() && !env.getNextComponentUri().equals(reflectionInboundPortURI))
+		{
+			// find the next component to execute the script
+			System.out.println("I am :" + reflectionInboundPortURI + " had to find the next component to execute the script :" + env.getNextComponentUri());
+			try
+			{
+				if (this.neighboursURI.contains(env.getNextComponentUri()))
 				{
-					System.out.println("ERROR when executing script : " + e.getMessage() + "");
-					return env;
+					int index = this.neighboursURI.indexOf(env.getNextComponentUri());
+					return this.neighboursOBP.get(index).executeScript(env);
+				}
+				else // to change => maybe just return env and let the coordinator check if he need to find the next component to execute the script
+				{
+					this.coordinatorOBP.executeScript(env, env.getNextComponentUri());
 				}
 			}
+			catch(Exception e)
+			{
+				System.out.println("ERROR when executing script : " + e.getMessage() + "");
+				return env;
+			}
+		}
 		return env;
 	}
 	
@@ -186,6 +202,7 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI, Scr
 	@Override
 	public synchronized void	finalise() throws Exception
 	{
+
 		//this.doPortDisconnection(this.clockServerOBP.getPortURI());
 		super.finalise();
 	}
@@ -194,6 +211,7 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI, Scr
 	public synchronized void	shutdown() throws ComponentShutdownException
 	{
 		try {
+			this.desktopRoomIBP.unpublishPort();
 			//this.clockServerOBP.unpublishPort();
 		} catch (Exception e) {
 			throw new ComponentShutdownException(e) ;
@@ -213,6 +231,12 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI, Scr
 	public Object executeFunction(String name) {
 		System.out.println("[DesktopRoom] executeFunction()" + reflectionInboundPortURI +" had to execute script " + name);
 		System.out.println("[DesktopRoom] executeFunction() clock" + this.clock.getStartEpochNanos());
+		if (sensors.contains(name))
+		{
+			ISensor sensor = sensors.get(name);
+			return sensor.getValue();
+		}
+
 		return 42;
 	}
 
@@ -220,6 +244,7 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI, Scr
 		return reflectionInboundPortURI;
 	}
 
+	// Unused methods from the interface ???
 	@Override
 	public GlobalEnvFile executeScript(GlobalEnvFile env, String uri) throws Exception {
 		if (uri.equals(reflectionInboundPortURI))

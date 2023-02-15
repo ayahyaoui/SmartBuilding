@@ -1,8 +1,9 @@
 package com.paracamplus.bcm.sensor;
 
-public class SensorHeat implements IFloatSensor{
+public class SensorHeat implements ISensor{
 	protected float nextValue;
 	protected float heat;
+
 
 
 	SensorHeat(float heat){
@@ -12,25 +13,23 @@ public class SensorHeat implements IFloatSensor{
 
 	@Override
 	public void updateValue() {
-		// TODO Auto-generated method stub
-		
+		heat = nextValue;
 	}
 
 	@Override
-	public void eval() {
-		// TODO Auto-generated method stub
-		
+	public void eval(java.time.Instant now) {
+		nextValue = (float) (Math.sin(now.getEpochSecond())*10);
+		System.out.println("Heat: " + nextValue + " " + now.getEpochSecond());
 	}
 
 	@Override
 	public float getValue() {
-		// TODO Auto-generated method stub
-		return 0;
+		return heat;
 	}
 
 	@Override
 	public void setValue(float f) {
-		// TODO Auto-generated method stub
+		nextValue = f;
 		
 	}
 
