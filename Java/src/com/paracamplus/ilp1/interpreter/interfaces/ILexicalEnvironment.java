@@ -22,7 +22,8 @@ extends IEnvironment<IASTvariable, Object, EvaluationException> {
 	void setIndexNode(int index);
 	void setIsFinished(boolean isFinished);
 	boolean isFinished();
-	
+
+
 	// needed to avoid round trip
 	public String getNextComponentUri(); 
 	public void setNextComponentUri(String nextComponentUri);

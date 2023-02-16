@@ -1,9 +1,10 @@
 def fire(P,C)
 {
 	3+3;
-	C.test
+	let a = P.test
 	let b = 5
+	if a > b
 	if 25 > 50.0;
-	1+2;
+	C.test;
 	if true;
 }

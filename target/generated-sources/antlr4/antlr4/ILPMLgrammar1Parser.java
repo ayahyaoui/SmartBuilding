@@ -26,7 +26,7 @@ public class ILPMLgrammar1Parser extends Parser {
 		ESC=33, LINE_COMMENT=34, COMMENT=35, SPACE=36;
 	public static final String[] tokenNames = {
 		"<INVALID>", "'/'", "'def'", "'true'", "'!='", "'{'", "';'", "'='", "'}'", 
-		"'if'", "'^'", "'<='", "'&'", "'('", "'*'", "','", "'.'", "'false'", "'>='", 
+		"'if'", "'^'", "'<='", "'&'", "'('", "'*'", "','", "'false'", "'.'", "'>='", 
 		"'|'", "'=='", "'<'", "'>'", "'!'", "'let'", "'%'", "')'", "'+'", "'-'", 
 		"IDENT", "INT", "FLOAT", "STRING", "ESC", "LINE_COMMENT", "COMMENT", "SPACE"
 	};
@@ -120,7 +120,7 @@ public class ILPMLgrammar1Parser extends Parser {
 			setState(21);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__25) | (1L << T__23) | (1L << T__19) | (1L << T__11) | (1L << T__5) | (1L << T__4) | (1L << T__0) | (1L << IDENT) | (1L << INT) | (1L << FLOAT) | (1L << STRING))) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__25) | (1L << T__23) | (1L << T__19) | (1L << T__12) | (1L << T__5) | (1L << T__4) | (1L << T__0) | (1L << IDENT) | (1L << INT) | (1L << FLOAT) | (1L << STRING))) != 0)) {
 				{
 				{
 				setState(15); ((ProgContext)_localctx).expr = expr(0);
@@ -476,24 +476,24 @@ public class ILPMLgrammar1Parser extends Parser {
 				setState(44); ((UnaryContext)_localctx).arg = expr(16);
 				}
 				break;
-			case T__4:
-				{
-				_localctx = new VariableAssignContext(_localctx);
-				_ctx = _localctx;
-				_prevctx = _localctx;
-				setState(45); match(T__4);
-				setState(46); ((VariableAssignContext)_localctx).var = match(IDENT);
-				setState(47); match(T__21);
-				setState(48); ((VariableAssignContext)_localctx).val = expr(4);
-				}
-				break;
 			case T__19:
 				{
 				_localctx = new AlternativeContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(49); match(T__19);
-				setState(50); ((AlternativeContext)_localctx).condition = expr(2);
+				setState(45); match(T__19);
+				setState(46); ((AlternativeContext)_localctx).condition = expr(9);
+				}
+				break;
+			case T__4:
+				{
+				_localctx = new VariableAssignContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
+				setState(47); match(T__4);
+				setState(48); ((VariableAssignContext)_localctx).var = match(IDENT);
+				setState(49); match(T__21);
+				setState(50); ((VariableAssignContext)_localctx).val = expr(2);
 				}
 				break;
 			case T__23:
@@ -547,12 +547,12 @@ public class ILPMLgrammar1Parser extends Parser {
 				setState(67); match(T__25);
 				}
 				break;
-			case T__11:
+			case T__12:
 				{
 				_localctx = new ConstFalseContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(68); match(T__11);
+				setState(68); match(T__12);
 				}
 				break;
 			case INT:
@@ -707,7 +707,7 @@ public class ILPMLgrammar1Parser extends Parser {
 						setState(94); match(T__15);
 						setState(96);
 						_la = _input.LA(1);
-						if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__25) | (1L << T__23) | (1L << T__19) | (1L << T__11) | (1L << T__5) | (1L << T__4) | (1L << T__0) | (1L << IDENT) | (1L << INT) | (1L << FLOAT) | (1L << STRING))) != 0)) {
+						if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__25) | (1L << T__23) | (1L << T__19) | (1L << T__12) | (1L << T__5) | (1L << T__4) | (1L << T__0) | (1L << IDENT) | (1L << INT) | (1L << FLOAT) | (1L << STRING))) != 0)) {
 							{
 							setState(95); ((InvocationContext)_localctx).expr = expr(0);
 							((InvocationContext)_localctx).args.add(((InvocationContext)_localctx).expr);
@@ -738,8 +738,8 @@ public class ILPMLgrammar1Parser extends Parser {
 						((ReadFieldContext)_localctx).obj = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(106);
-						if (!(precpred(_ctx, 1))) throw new FailedPredicateException(this, "precpred(_ctx, 1)");
-						setState(107); match(T__12);
+						if (!(precpred(_ctx, 8))) throw new FailedPredicateException(this, "precpred(_ctx, 8)");
+						setState(107); match(T__11);
 						setState(108); ((ReadFieldContext)_localctx).field = match(IDENT);
 						}
 						break;
@@ -778,7 +778,7 @@ public class ILPMLgrammar1Parser extends Parser {
 		case 4: return precpred(_ctx, 11);
 		case 5: return precpred(_ctx, 10);
 		case 6: return precpred(_ctx, 17);
-		case 7: return precpred(_ctx, 1);
+		case 7: return precpred(_ctx, 8);
 		}
 		return true;
 	}
@@ -802,19 +802,19 @@ public class ILPMLgrammar1Parser extends Parser {
 		"\2\2\35\36\7\37\2\2\36 \7\17\2\2\37!\7\37\2\2 \37\3\2\2\2 !\3\2\2\2!&"+
 		"\3\2\2\2\"#\7\21\2\2#%\7\37\2\2$\"\3\2\2\2%(\3\2\2\2&$\3\2\2\2&\'\3\2"+
 		"\2\2\')\3\2\2\2(&\3\2\2\2)*\7\34\2\2*+\5\6\4\2+\5\3\2\2\2,-\b\4\1\2-."+
-		"\t\2\2\2.L\5\6\4\22/\60\7\32\2\2\60\61\7\37\2\2\61\62\7\t\2\2\62L\5\6"+
-		"\4\6\63\64\7\13\2\2\64L\5\6\4\4\65\66\7\7\2\2\66=\5\6\4\2\679\7\b\2\2"+
-		"8\67\3\2\2\289\3\2\2\29:\3\2\2\2:<\5\6\4\2;8\3\2\2\2<?\3\2\2\2=;\3\2\2"+
+		"\t\2\2\2.L\5\6\4\22/\60\7\13\2\2\60L\5\6\4\13\61\62\7\32\2\2\62\63\7\37"+
+		"\2\2\63\64\7\t\2\2\64L\5\6\4\4\65\66\7\7\2\2\66=\5\6\4\2\679\7\b\2\28"+
+		"\67\3\2\2\289\3\2\2\29:\3\2\2\2:<\5\6\4\2;8\3\2\2\2<?\3\2\2\2=;\3\2\2"+
 		"\2=>\3\2\2\2>A\3\2\2\2?=\3\2\2\2@B\7\b\2\2A@\3\2\2\2AB\3\2\2\2BC\3\2\2"+
-		"\2CD\7\n\2\2DL\3\2\2\2EL\7\5\2\2FL\7\23\2\2GL\7 \2\2HL\7!\2\2IL\7\"\2"+
-		"\2JL\7\37\2\2K,\3\2\2\2K/\3\2\2\2K\63\3\2\2\2K\65\3\2\2\2KE\3\2\2\2KF"+
+		"\2CD\7\n\2\2DL\3\2\2\2EL\7\5\2\2FL\7\22\2\2GL\7 \2\2HL\7!\2\2IL\7\"\2"+
+		"\2JL\7\37\2\2K,\3\2\2\2K/\3\2\2\2K\61\3\2\2\2K\65\3\2\2\2KE\3\2\2\2KF"+
 		"\3\2\2\2KG\3\2\2\2KH\3\2\2\2KI\3\2\2\2KJ\3\2\2\2Lq\3\2\2\2MN\f\21\2\2"+
 		"NO\t\3\2\2Op\5\6\4\22PQ\f\20\2\2QR\t\4\2\2Rp\5\6\4\21ST\f\17\2\2TU\t\5"+
 		"\2\2Up\5\6\4\20VW\f\16\2\2WX\t\6\2\2Xp\5\6\4\17YZ\f\r\2\2Z[\7\16\2\2["+
 		"p\5\6\4\16\\]\f\f\2\2]^\t\7\2\2^p\5\6\4\r_`\f\23\2\2`b\7\17\2\2ac\5\6"+
 		"\4\2ba\3\2\2\2bc\3\2\2\2ch\3\2\2\2de\7\21\2\2eg\5\6\4\2fd\3\2\2\2gj\3"+
-		"\2\2\2hf\3\2\2\2hi\3\2\2\2ik\3\2\2\2jh\3\2\2\2kp\7\34\2\2lm\f\3\2\2mn"+
-		"\7\22\2\2np\7\37\2\2oM\3\2\2\2oP\3\2\2\2oS\3\2\2\2oV\3\2\2\2oY\3\2\2\2"+
+		"\2\2\2hf\3\2\2\2hi\3\2\2\2ik\3\2\2\2jh\3\2\2\2kp\7\34\2\2lm\f\n\2\2mn"+
+		"\7\23\2\2np\7\37\2\2oM\3\2\2\2oP\3\2\2\2oS\3\2\2\2oV\3\2\2\2oY\3\2\2\2"+
 		"o\\\3\2\2\2o_\3\2\2\2ol\3\2\2\2ps\3\2\2\2qo\3\2\2\2qr\3\2\2\2r\7\3\2\2"+
 		"\2sq\3\2\2\2\20\n\16\23\27 &8=AKbhoq";
 	public static final ATN _ATN =

@@ -80,6 +80,10 @@ expr returns [com.paracamplus.ilp1.interfaces.IASTexpression node]
     | arg1=expr op='&' arg2=expr # Binary
     | arg1=expr op=('|' | '^') arg2=expr # Binary
        
+// alternative (if then else)
+    | 'if' condition=expr # Alternative
+    | obj=expr '.' field=IDENT # ReadField
+
 // constantes
     | 'true' # ConstTrue
     | 'false' # ConstFalse
@@ -92,16 +96,7 @@ expr returns [com.paracamplus.ilp1.interfaces.IASTexpression node]
 	// variables
     | var=IDENT # Variable
 
-/* *
- * / déclaration de variable locale
-    | 'let' vars+=IDENT '=' vals+=expr # Binding //('and' vars+=IDENT '=' vals+=expr)* 
-      //'in' body=expr # Binding
- */
- // alternative (if then else)
-    | 'if' condition=expr # Alternative
-    /* 'then' consequence=expr 
-        ('else' alternant=expr)? # Alternative*/
-    | obj=expr '.' field=IDENT # ReadField
+
     ;
     
        

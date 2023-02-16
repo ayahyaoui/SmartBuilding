@@ -4,6 +4,7 @@ import com.paracamplus.ilp1.interfaces.*;
 import com.paracamplus.ilp1.interpreter.interfaces.EvaluationException;
 import com.paracamplus.ilp1.interpreter.interfaces.ILexicalEnvironment;
 import com.paracamplus.ilp1.interpreter.interfaces.ISmartEnvironment;
+import com.paracamplus.ilp1.interpreter.primitive.ToString;
 import com.paracamplus.ilp1.test.GlobalFunctionAst;
 import com.paracamplus.ilp1.utils.Utils;
 
@@ -19,8 +20,9 @@ public class GlobalEnvFile implements ISmartEnvironment{
 		protected String nameFunction;
 		protected String nextComponentUri;
 		protected boolean isFinished;
-
-
+		protected boolean isAccepted;
+		protected boolean found;
+		protected HashMap<String, Boolean> visited;
 		private final Map<String, Object> globalVariableEnvironment;
 
 		boolean checkFormat(String nameFunction, HashMap<String, String> parameters) {
@@ -77,6 +79,9 @@ public class GlobalEnvFile implements ISmartEnvironment{
 			this.nameFunction = nameFunction;
 			this.isFinished = false;
 			globalVariableEnvironment.putAll(parameters);
+			this.isAccepted = false;
+			this.visited = new HashMap<>();
+			found = false;
 		}
 		
 		public GlobalEnvFile(String nameFunction, String []parameters) {
@@ -90,6 +95,10 @@ public class GlobalEnvFile implements ISmartEnvironment{
 			for (int i = 0; i < params.length; i++) {
 				globalVariableEnvironment.put(params[i].getName(), parameters[i]);
 			}
+			this.isAccepted = false;
+			this.isFinished = false;
+			this.visited = new HashMap<>();
+			found = false;
 		}
 
 		public String getNameFunction() {
@@ -111,6 +120,39 @@ public class GlobalEnvFile implements ISmartEnvironment{
 		public boolean isFinished() {
 			return isFinished;
 		}
+
+		public void setNextComponentUri(String nextComponentUri) {
+			this.nextComponentUri = nextComponentUri;
+		}
+
+		public String getNextComponentUri() {
+			return nextComponentUri;
+		}
+
+		public void setIsAccepted(boolean isAccepted) {
+			this.isAccepted = isAccepted;
+		}
+
+		public boolean isAccepted() {
+			return isAccepted;
+		}
+
+		public void setFound(boolean found) {
+			this.found = found;
+		}
+
+		public boolean isFound() {
+			return found;
+		}
+		public void setVisited(String key, boolean value) {
+			visited.put(key, value);
+		}
+		public boolean isVisited(String key) {
+			if (!visited.containsKey(key)) {
+				return false;
+			}
+			return visited.get(key);
+		}
 		
 		@Override
 		public String toString() {
@@ -121,6 +163,9 @@ public class GlobalEnvFile implements ISmartEnvironment{
 			for (String key : globalVariableEnvironment.keySet()) {
 				result += (Utils.PADDING +  key + " : " + globalVariableEnvironment.get(key) + "\n");
 			}
+			result += isFinished ? "is Finished\n" : "not Finished\n";
+			result += "nextComponentUri : " + nextComponentUri + "\n";
+			result += isAccepted ? "is Accepted\n" : "not Accepted\n";
 			return result;
 		}
 
@@ -159,7 +204,7 @@ public class GlobalEnvFile implements ISmartEnvironment{
 		
 		@Override
 		public Object getValue(IASTvariable key) throws EvaluationException {
-			if (isPresent(key)) {
+			if (isPresent(key) || isPresent(key.getName())) {
 				return globalVariableEnvironment.get(key.getName());
 			}
 			System.out.println("Variable don't even exist !");
@@ -171,7 +216,10 @@ public class GlobalEnvFile implements ISmartEnvironment{
 			if (isPresent(key)) 
 				globalVariableEnvironment.put(key.getName(), value);
 			else
+			{
 				System.out.println("Variable don't even exist !");
+				globalVariableEnvironment.put(key.getName(), value);
+			}
 		}
 		
 
@@ -192,12 +240,5 @@ public class GlobalEnvFile implements ISmartEnvironment{
 			
 		}
 
-		public String getNextComponentUri() {
-			return nextComponentUri;
-		}
-		
-		
-		public void setNextComponentUri(String nextComponentUri) {
-			this.nextComponentUri = nextComponentUri;
-		}
+
 }

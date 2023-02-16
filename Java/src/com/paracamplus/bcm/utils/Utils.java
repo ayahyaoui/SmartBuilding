@@ -18,7 +18,7 @@ public class Utils {
 
     public static final long DEFAULT_SLEEP_TIME = 1000L;
 	public static final long DEFAULT_SLEEP_TIME_SIMUL = 1000L;
-    public static final long DEFAULT_LIFE_CYCLE = 10000L;
+    public static final long DEFAULT_LIFE_CYCLE = 100000L;
     public static final long DEFAULT_STARTUP_TIME = 0L;
 	public static final String	CLOCK_URI = "a-clock";
 	public static final double	ACC_FACTOR = 1200; // 1 hour = 3 seconds
@@ -84,7 +84,7 @@ public class Utils {
 		for (String c : coords) {
 			roomsCoordonators.put(c, new String[] {});
 		}
-		roomsCoordonators.put(COORDONATOR_01_URI, new String[] {DESKTOPROOM_101_URI, DESKTOPROOM_102_URI, DESKTOPROOM_103_URI});
+		roomsCoordonators.put(COORDONATOR_01_URI, new String[] {DESKTOPROOM_101_URI, DESKTOPROOM_102_URI});
 		roomsNeighbours.put(DESKTOPROOM_101_URI, new String[] {DESKTOPROOM_102_URI});
 		roomsNeighbours.put(DESKTOPROOM_102_URI, new String[] {DESKTOPROOM_101_URI});
 		isInit = true;

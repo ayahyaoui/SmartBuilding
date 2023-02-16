@@ -35,7 +35,7 @@ public class SmartBuildingCVM extends AbstractCVM{
     public void deploy() throws Exception {
         System.out.println("Deploying components...");
         
-        Utils.buildingPlan1();
+        Utils.buildingPlan2();
 
         AbstractComponent.createComponent(
 				ClockServer.class.getCanonicalName(),

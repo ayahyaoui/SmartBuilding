@@ -63,6 +63,11 @@ public class Supervisor extends AbstractComponent{
         this.supervisorOBP.publishPort();
         this.coordonatorIBPURIs = coordonatorIBPURIs;
         allGlobalFuction = GlobalFunctionAst.getInstance();
+        this.tracer.get().setTitle("Supervisor component " + this.reflectionInboundPortURI);
+		this.tracer.get().setRelativePosition(1, 0);
+		this.toggleTracing();
+		logMessage(this.toString());
+        logMessage(toString());
 
     }
     
@@ -183,7 +188,10 @@ public class Supervisor extends AbstractComponent{
                         // the result to be executed (even using an
                         // asynchronous call with a future variable would
                         // lead to block this component thread.
+                        logMessage(env.toString());
                         GlobalEnvFile result = vc.supervisorOBP.executeScript(env) ;
+                        System.out.println("***********************************************************00");
+                        logMessage(result.toString());
                         // To avoid perturbing the potential mutual
                         // exclusion properties of the component, the
                         // continuation must be run by a component
@@ -216,9 +224,9 @@ public class Supervisor extends AbstractComponent{
                 //	DesktopRoomOutboundPort d = new DesktopRoomOutboundPort(this);
             
             System.out.println("************************************************************");
-            System.out.println("*    		        **********                             *");
-            System.out.println("*     		        Supervisor                             *");
-            System.out.println("*    		        **********                             *");
+            System.out.println("*                   **********                             *");
+            System.out.println("*                   Supervisor                             *");
+            System.out.println("*                   **********                             *");
             System.out.println("************************************************************");
             String[] parameters = new String[] {Utils.DESKTOPROOM_101_URI, Utils.DESKTOPROOM_102_URI};
             //callFunction("fire",parameters);
@@ -229,15 +237,25 @@ public class Supervisor extends AbstractComponent{
                 public void run() {
                     try {
                         ((Supervisor)this.getTaskOwner()).
-                            callFunction(env); ;
+                            callFunction(env);
+                            System.out.println("***********************************************************11");;
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
             }) ;
+            System.out.println("***********************************************************22");
 
                             }
         
-        
+        @Override
+        public String toString() {
+            String s = "coordonatorIBPURIs = [";
+            for (int i = 0; i < coordonatorIBPURIs.length; i++) {
+                s += coordonatorIBPURIs[i] + ", ";
+            }
+            s += "]";
+            return "Supervisor " + reflectionInboundPortURI + " " + s + "";
+        }
 
 }
