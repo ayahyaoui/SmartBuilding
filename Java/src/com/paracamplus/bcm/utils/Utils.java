@@ -43,6 +43,7 @@ public class Utils {
 	public static String[] coords = null;
 	public static HashMap<String, String[]> roomsNeighbours = null;
 	public static HashMap<String, String[]> roomsCoordonators = null;
+	public static HashMap<String, String[]> graphCoordonators = null; // directed graph of coordonators
 	
 
 
@@ -56,6 +57,7 @@ public class Utils {
 		coords = new String[] {COORDONATOR_01_URI, COORDONATOR_02_URI};
 		roomsNeighbours = new HashMap<String, String[]>();
 		roomsCoordonators = new HashMap<String, String[]>();
+		graphCoordonators = new HashMap<String, String[]>();
 		for (String r : rooms) {
 			roomsNeighbours.put(r, new String[] {});
 		}
@@ -67,6 +69,8 @@ public class Utils {
 		roomsNeighbours.put(DESKTOPROOM_101_URI, new String[] {DESKTOPROOM_102_URI});
 		roomsNeighbours.put(DESKTOPROOM_102_URI, new String[] {DESKTOPROOM_101_URI, DESKTOPROOM_103_URI});
 		roomsNeighbours.put(DESKTOPROOM_103_URI, new String[] {DESKTOPROOM_102_URI});
+		graphCoordonators.put(COORDONATOR_01_URI, new String[] {COORDONATOR_02_URI});
+		graphCoordonators.put(COORDONATOR_02_URI, new String[] {COORDONATOR_01_URI});
 		isInit = true;
 	}
 	
@@ -78,6 +82,7 @@ public class Utils {
 		coords = new String[] {COORDONATOR_01_URI};
 		roomsNeighbours = new HashMap<String, String[]>();
 		roomsCoordonators = new HashMap<String, String[]>();
+		graphCoordonators = new HashMap<String, String[]>();
 		for (String r : rooms) {
 			roomsNeighbours.put(r, new String[] {});
 		}
@@ -87,6 +92,7 @@ public class Utils {
 		roomsCoordonators.put(COORDONATOR_01_URI, new String[] {DESKTOPROOM_101_URI, DESKTOPROOM_102_URI});
 		roomsNeighbours.put(DESKTOPROOM_101_URI, new String[] {DESKTOPROOM_102_URI});
 		roomsNeighbours.put(DESKTOPROOM_102_URI, new String[] {DESKTOPROOM_101_URI});
+		graphCoordonators.put(COORDONATOR_01_URI, new String[] {});
 		isInit = true;
 	}
 

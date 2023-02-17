@@ -16,12 +16,14 @@ import java.util.Map;
 
 public class GlobalEnvFile implements ISmartEnvironment{
 
+		protected final String id;
 		protected int indexNode;
 		protected String nameFunction;
 		protected String nextComponentUri;
 		protected boolean isFinished;
 		protected boolean isAccepted;
 		protected boolean found;
+
 		protected HashMap<String, Boolean> visited;
 		private final Map<String, Object> globalVariableEnvironment;
 
@@ -70,10 +72,11 @@ public class GlobalEnvFile implements ISmartEnvironment{
 		}
 
 
-		public GlobalEnvFile(String nameFunction, HashMap<String, String> parameters) {
+		public GlobalEnvFile(String id, String nameFunction, HashMap<String, String> parameters) {
 			if (!checkFormat(nameFunction, parameters)) {
 				throw new IllegalArgumentException("Wrong format");
 			}
+			this.id = id;
 			this.globalVariableEnvironment = new HashMap<>();
 			this.indexNode = 0;
 			this.nameFunction = nameFunction;
@@ -84,10 +87,11 @@ public class GlobalEnvFile implements ISmartEnvironment{
 			found = false;
 		}
 		
-		public GlobalEnvFile(String nameFunction, String []parameters) {
+		public GlobalEnvFile(String id, String nameFunction, String []parameters) {
 			if (!checkFormat(nameFunction, parameters)) {
 				throw new IllegalArgumentException("Wrong format");
 			}
+			this.id = id;
 			this.globalVariableEnvironment = new HashMap<>();
 			this.indexNode = 0;
 			this.nameFunction = nameFunction;
@@ -101,6 +105,11 @@ public class GlobalEnvFile implements ISmartEnvironment{
 			found = false;
 		}
 
+		public String getId() {
+			return id;
+		}
+
+	
 		public String getNameFunction() {
 			return nameFunction;
 		}
@@ -152,6 +161,10 @@ public class GlobalEnvFile implements ISmartEnvironment{
 				return false;
 			}
 			return visited.get(key);
+		}
+
+		public void clearVisited() {
+			visited.clear();
 		}
 		
 		@Override

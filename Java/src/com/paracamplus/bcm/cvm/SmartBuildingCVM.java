@@ -25,17 +25,10 @@ public class SmartBuildingCVM extends AbstractCVM{
         //TODO Auto-generated constructor stub
     }
 
-    public void buildingPlan() throws Exception {
-        HashMap<String, String[]> roomsNeighbours = new HashMap<String, String[]>();
-        String[] rooms = new String[] {Utils.DESKTOPROOM_101_URI, Utils.DESKTOPROOM_102_URI};
-        roomsNeighbours.put(Utils.DESKTOPROOM_101_URI, new String[] {Utils.DESKTOPROOM_102_URI});
-        roomsNeighbours.put(Utils.DESKTOPROOM_102_URI, new String[] {Utils.DESKTOPROOM_101_URI});
-    }
-
     public void deploy() throws Exception {
         System.out.println("Deploying components...");
         
-        Utils.buildingPlan2();
+        Utils.buildingPlan1();
 
         AbstractComponent.createComponent(
 				ClockServer.class.getCanonicalName(),
@@ -51,15 +44,7 @@ public class SmartBuildingCVM extends AbstractCVM{
         for (String coord : Utils.coords) {
             AbstractComponent.createComponent(
                     Coordonator.class.getCanonicalName(),
-                    new Object[] {coord, Utils.roomsCoordonators.get(coord)});
-            /*
-            Object[] constructorParams = new Object[] {coord, Utils.roomsCoordonators.get(coord)};
-                    Class<?>[] actualsTypes = new Class[constructorParams.length] ;
-            for (int i = 0 ; i < constructorParams.length ; i++) {
-                actualsTypes[i] = constructorParams[i].getClass() ;
-                System.out.println("Param " + i + " is " + constructorParams[i] + " of type " + actualsTypes[i]);
-            }
-            */
+                    new Object[] {coord,Utils.SUPERVISOR_URI ,Utils.roomsCoordonators.get(coord),Utils.graphCoordonators.get(coord)});
         }
 
         for (String room : Utils.rooms) {

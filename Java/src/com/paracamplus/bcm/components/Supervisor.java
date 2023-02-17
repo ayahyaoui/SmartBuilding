@@ -11,8 +11,9 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import com.paracamplus.bcm.connector.CoordonatorConnector;
-import com.paracamplus.bcm.ibp.CoordonatorIBP;
+import com.paracamplus.bcm.ibp.SupervisorIBP;
 import com.paracamplus.bcm.interfaces.ScriptManagementCI;
+import com.paracamplus.bcm.interfaces.SupervisorManagementCI;
 import com.paracamplus.bcm.obp.DesktopRoomOBP;
 import com.paracamplus.bcm.obp.CoordonatorOBP;
 import com.paracamplus.bcm.utils.Utils;
@@ -43,24 +44,28 @@ import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
+import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 
 @RequiredInterfaces(required = {ScriptManagementCI.class})
-
+@OfferedInterfaces(offered = {SupervisorManagementCI.class})
 public class Supervisor extends AbstractComponent{
     protected static String[] samplesDirName = { "SamplesRequest" }; 
     protected static String pattern = ".*\\.ilpml";
     protected static String XMLgrammarFile = "XMLGrammars/grammar1.rng";
     protected Interpreter interpreter;
+
+    protected SupervisorIBP supervisorIBP;
     protected CoordonatorOBP supervisorOBP;
-    protected DesktopRoomOBP deskOBP;
-    protected GlobalFunctionAst allGlobalFuction;
     protected String[] coordonatorIBPURIs;
+    protected GlobalFunctionAst allGlobalFuction;
     
     protected Supervisor(String reflectionInboundPortURI, String[] coordonatorIBPURIs) throws Exception  {
         super(reflectionInboundPortURI, 2, 1);
         assert	coordonatorIBPURIs != null && coordonatorIBPURIs.length > 0 ;
         this.supervisorOBP = new CoordonatorOBP(this);
         this.supervisorOBP.publishPort();
+        this.supervisorIBP = new SupervisorIBP(reflectionInboundPortURI, this);
+        this.supervisorIBP.publishPort();
         this.coordonatorIBPURIs = coordonatorIBPURIs;
         allGlobalFuction = GlobalFunctionAst.getInstance();
         this.tracer.get().setTitle("Supervisor component " + this.reflectionInboundPortURI);
@@ -72,7 +77,7 @@ public class Supervisor extends AbstractComponent{
     }
     
     
-    public static Collection<File[]> getFileList(
+public static Collection<File[]> getFileList(
             String[] samplesDirNames,
             String pattern
             ) throws Exception {
@@ -116,7 +121,7 @@ public class Supervisor extends AbstractComponent{
     {
           try {
               System.out.println("callFunction supervisors");
-              GlobalEnvFile env = new GlobalEnvFile(functionName, parameters);
+              GlobalEnvFile env = new GlobalEnvFile("test", functionName, parameters);
               DesktopRoom room = new DesktopRoom("qwerty", "ss",null, null);
               room.executeScript(env);
               //variables[0].setExpression(new ASTstring(Utils.DESKTOPROOM_101_ID +" firstParam" ));
@@ -230,7 +235,7 @@ public class Supervisor extends AbstractComponent{
             System.out.println("************************************************************");
             String[] parameters = new String[] {Utils.DESKTOPROOM_101_URI, Utils.DESKTOPROOM_102_URI};
             //callFunction("fire",parameters);
-            GlobalEnvFile env = new GlobalEnvFile("fire", parameters);
+            GlobalEnvFile env = new GlobalEnvFile("fire__1", "fire", parameters);
             this.runTask(
             new AbstractComponent.AbstractTask() {
                 @Override
@@ -238,15 +243,29 @@ public class Supervisor extends AbstractComponent{
                     try {
                         ((Supervisor)this.getTaskOwner()).
                             callFunction(env);
-                            System.out.println("***********************************************************11");;
+                            
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
             }) ;
-            System.out.println("***********************************************************22");
+            
 
-                            }
+            String parameters2[] = new String[] {Utils.DESKTOPROOM_101_URI, Utils.DESKTOPROOM_102_URI};
+            GlobalEnvFile env2 = new GlobalEnvFile("test3__1","test03", parameters2);
+            this.runTask(
+                new AbstractComponent.AbstractTask() {
+                    @Override
+                    public void run() {
+                        try {
+                            ((Supervisor)this.getTaskOwner()).
+                                callFunction(env2);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }) ;
+            }
         
         @Override
         public String toString() {
@@ -256,6 +275,16 @@ public class Supervisor extends AbstractComponent{
             }
             s += "]";
             return "Supervisor " + reflectionInboundPortURI + " " + s + "";
+        }
+
+
+        public void receiveResult(String id, boolean result) {
+            System.out.println("receiveResult " + id + " " + result);
+            if (result) {
+                System.out.println("receiveResult " + id + " " + result);
+                //this.callFunction("fire", parameters);
+            }
+            logMessage("Resultat " + id + " " + result);
         }
 
 }

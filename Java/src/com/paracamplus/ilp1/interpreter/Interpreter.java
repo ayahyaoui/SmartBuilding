@@ -285,7 +285,7 @@ implements IASTvisitor<Object, ILexicalEnvironment, EvaluationException> {
 		{
             cibleUri =  (String)data.getValue(new ASTvariable(asTreadField.getFieldName()));
             System.out.println(" infos");
-            System.out.println(" " + asTreadField.getFieldName() + "-> " + asTreadField.getTarget());
+            System.out.println(" " + asTreadField.getFieldName() + "== " + cibleUri);
             //ASTvariable target = (ASTvariable)asTreadField.getTarget();
 			System.out.println(" " + asTreadField.getFieldName() + "-> " + ((IASTstring)(asTreadField.getTarget())).getValue());
             if (owner != null)

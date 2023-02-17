@@ -54,4 +54,17 @@ implements IASTfunctionDefinition {
         System.out.println(start + "  BODY");
         body.show(start + Utils.PADDING);
     }
+
+    public String toString(String start) {
+        String s = super.toString(start);
+        s += start + "  VARIABLES\n";
+        for ( IASTvariable v : variables ) {
+            s += v.toString(start +  Utils.PADDING);
+        }
+        s += start + "  BODY\n";
+        s += body.toString(start + Utils.PADDING);
+        return s;
+    }
+
+ 
 }

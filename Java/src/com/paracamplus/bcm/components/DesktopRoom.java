@@ -41,6 +41,9 @@ import fr.sorbonne_u.components.cyphy.tools.aclocks.ClockServer;
 import fr.sorbonne_u.components.cyphy.tools.aclocks.ClockServerCI;
 import fr.sorbonne_u.components.cyphy.tools.aclocks.ClockServerConnector;
 import fr.sorbonne_u.components.cyphy.tools.aclocks.ClockServerOutboundPort;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+
 /*
  * 
  import fr.sorbonne_u.components.cyphy.tools.aclocks.AcceleratedClock;
@@ -52,6 +55,7 @@ import fr.sorbonne_u.components.cyphy.tools.aclocks.ClockServerOutboundPort;
  */
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
+import fr.sorbonne_u.components.helpers.TracerWindow;
 
 @OfferedInterfaces(offered = {ScriptManagementCI.class})
 @RequiredInterfaces(required={ClockServerCI.class})
@@ -92,10 +96,15 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI, Scr
 		}
 		this.sensors = new HashMap<String, ISensor>();
 		this.initialiseInterpreter();
-		this.tracer.get().setTitle("DesktopRoom component " + this.reflectionInboundPortURI);
+
+		// create tracing windows
+		
 		int tmp = reflectionInboundPortURI.charAt(reflectionInboundPortURI.length()-1) - 1;
-		int x = tmp >= '0' && tmp <= '9' ? (tmp - '0') % 3 : 0;
-		this.tracer.get().setRelativePosition(1 + x, 3);
+		int xRelativePos = tmp >= '0' && tmp < '9' ? (tmp - '0') % 4 : 0;
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		int screenWidth = screenSize.width / 4;
+		int screenHeight = screenSize.height * 2 / 5;
+		this.tracer.set(new TracerWindow("DesktopRoom component " + this.reflectionInboundPortURI, 0, 0, screenWidth, screenHeight, xRelativePos, 3));
 		this.toggleTracing();
 		logMessage(this.toString());
     }
@@ -123,8 +132,6 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI, Scr
 		super.start();
 
 		try {
-			if (Utils.DEBUG_MODE_BCM)
-			this.logMessage("[DesktopRoom] start()" + "connextion" + this.coordinatorOBP.getPortURI() + " " + coordonatorIBPURI);
 			
 			// connect to his coordinator
 			this.doPortConnection(
@@ -206,17 +213,18 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI, Scr
 	*	I am calling coordinatorOBP executeScript to find the next component to execute the script 
 	*/
 	/*
-		* Second version, when the script has to be executed by the next component in the graph 
-		* I am just returning the env and let the coordinator check if he need to find the next component to execute the script
-		*/
+	* Second version, when the script has to be executed by the next component in the graph 
+	* I am just returning the env and let the coordinator check if he need to find the next component to execute the script
+	*/
+	// function must be called by the coordinator or an other room with a thread to execute a script so it can be executed in parallel and not block the coordinator!
 	public GlobalEnvFile executeScript(GlobalEnvFile env) throws EvaluationException
 	{
-		
 		env.setNextComponentUri(reflectionInboundPortURI);
+		env.clearVisited();
 		IASTsequence sequence = GlobalFunctionAst.getInstance().getBody(env.getNameFunction());
 		this.logMessage("executeScript()" + " had to execute script " + env.getNameFunction() + " index: " + env.getIndexNode()  + " / " + sequence.getExpressions().length);
 		if (Utils.DEBUG_MODE_BCM)
-			sequence.show(env.getNameFunction());
+			{sequence.show(env.getNameFunction());logMessage(sequence.toString(env.getNameFunction()));}
 		logMessage(env.toString());
 		Object result = sequence.accept(this.interpreter, env);
 		logMessage("executeScript()" + " has executed script " + env.getNameFunction() + " index: " + env.getIndexNode()  + " / " + sequence.getExpressions().length);
@@ -230,10 +238,34 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI, Scr
 					if (this.neighboursURI[i].equals(env.getNextComponentUri()))
 					{
 						this.logMessage("executeScript() found the next component as a neighbour don't need to ask the coordinator !");
-						return this.neighboursOBP.get(i).executeScript(env);
+						final int j = i;
+						this.runTask(
+						new AbstractComponent.AbstractTask() {
+							@Override
+							public void run() {
+								try {
+									((DesktopRoom)this.getTaskOwner()).neighboursOBP.get(j).executeScript(env);
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+                    }
+                }) ;
+						return env;
 					}
 				// to change => maybe just return env and let the coordinator check if he need to find the next component to execute the script
-				this.coordinatorOBP.executeScript(env, env.getNextComponentUri());
+				// do the same with a scedule task
+				this.runTask(
+                new AbstractComponent.AbstractTask() {
+                    @Override
+                    public void run() {
+                        try {
+                            ((DesktopRoom)this.getTaskOwner()).coordinatorOBP.executeScript(env, env.getNextComponentUri());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }) ;
+				//this.coordinatorOBP.executeScript(env, env.getNextComponentUri());
 			}
 			catch(Exception e)
 			{
@@ -242,8 +274,21 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI, Scr
 			}
 		}
 		if (env.isFinished() && result instanceof Boolean)
+		{
 			env.setIsAccepted((Boolean)result);
-		
+			this.runTask(
+                new AbstractComponent.AbstractTask() {
+                    @Override
+                    public void run() {
+                        try {
+                            ((DesktopRoom)this.getTaskOwner()).coordinatorOBP.executeScript(env, env.getNextComponentUri());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }) ;
+		}
+		logMessage("is finished ? " + env.isFinished() + " is accepted ? " + env.isAccepted() + "next component uri : " + env.getNextComponentUri());
 		return env;
 	}
 	

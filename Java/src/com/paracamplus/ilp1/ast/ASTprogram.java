@@ -42,5 +42,17 @@ public class ASTprogram extends AST implements IASTprogram {
     	System.out.println("Fin Sequence>>>>");
     }
 
+    
+    public String toString(String start) {
+        String s =super.toString(start);
+        s += start + "<<<<Start Fonction\n";
+        s += function.toString(start + Utils.PADDING);
+        s += start + "Fin Fonction>>>>\n";
+        s += expression.toString(start + Utils.PADDING);
+        s += start + "Fin Sequence>>>>\n";
+            
+        return s;
+
+    }
 
 }

@@ -48,4 +48,15 @@ public class ASTsequence extends ASTexpression implements IASTsequence {
     			System.out.println(start + Utils.PADDING + "AST None");
          }
     }
+
+    public String toString(String start) {
+        String s = super.toString(start);
+        for (IASTexpression e : this.expressions) {
+            if (e != null)
+                s += e.toString(start + Utils.PADDING);
+            else
+                s += start + Utils.PADDING + "AST None\n";
+            }
+        return s;
+    }
 }

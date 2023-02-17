@@ -17,4 +17,13 @@ public abstract class AST implements IAST {
     	System.out.println(start + "" + getClassShortName());
 
     }
+    
+    public String toString(String start) {
+        return start + getClassShortName() + "\n";
+    }
+
+    @Override
+    public String toString() {
+        return getClassShortName();
+    }
 }
