@@ -4,6 +4,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.StringWriter;
 import java.math.BigInteger;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
@@ -18,6 +19,9 @@ import com.paracamplus.bcm.interfaces.ScriptManagementCI;
 import com.paracamplus.bcm.obp.CoordonatorOBP;
 import com.paracamplus.bcm.obp.RoomOBP;
 import com.paracamplus.bcm.sensor.ISensor;
+import com.paracamplus.bcm.sensor.SensorWindowInstant;
+import com.paracamplus.bcm.sensor.SensorWindowRecent;
+import com.paracamplus.bcm.simul.WindowSimul;
 import com.paracamplus.bcm.utils.Utils;
 import com.paracamplus.ilp1.ast.ASTstring;
 import com.paracamplus.ilp1.interfaces.IASTsequence;
@@ -56,6 +60,7 @@ import java.awt.Toolkit;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.helpers.TracerWindow;
+import fr.sorbonne_u.exceptions.PreconditionException;
 
 @OfferedInterfaces(offered = {ScriptManagementCI.class})
 @RequiredInterfaces(required={ClockServerCI.class})
@@ -63,25 +68,26 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI, Scr
 		GlobalEnvFile env;
 	    protected  Interpreter interpreter;
 		protected final String reflectionInboundPortURI;
-		//protected FenetreInstantanee FenetreInstantanee;
+
 		protected final String				clockURI;
 		protected AcceleratedClock			clock;
 		protected ClockServerOutboundPort	clockServerOBP;
 		
-
 		protected final DesktopRoomIBP		desktopRoomIBP;
 		protected String coordonatorIBPURI;
 		protected CoordonatorOBP coordinatorOBP;
 		protected String[] neighboursURI;
 		protected ArrayList<RoomOBP> neighboursOBP;
 		protected HashMap<String, ISensor> sensors;
+		
+		protected WindowSimul windowSimul;
+
 
 		
     protected DesktopRoom(String reflectionInboundPortURI, String clockURI, String coordonatorIBPURI, String []neighboursURI) throws Exception {
     	super(reflectionInboundPortURI,1, 1);
-    	//assert	clockURI != null && !clockURI.isEmpty() :
-		//	new PreconditionException(
-		//			"clockURI != null && !clockURI.isEmpty()");
+    	assert	clockURI != null && !clockURI.isEmpty() :
+			new PreconditionException("clockURI != null && !clockURI.isEmpty()");
 		this.clockURI = clockURI;
 		this.reflectionInboundPortURI = reflectionInboundPortURI;
 		this.desktopRoomIBP = new DesktopRoomIBP(reflectionInboundPortURI, this);
@@ -95,7 +101,7 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI, Scr
 			this.neighboursOBP.add(new RoomOBP(this));
 			this.neighboursOBP.get(i).publishPort();
 		}
-		this.sensors = new HashMap<String, ISensor>();
+		this.initialiseSensors();
 		this.initialiseInterpreter();
 
 		// create tracing windows
@@ -110,6 +116,13 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI, Scr
 		logMessage(this.toString());
     }
 	
+	private void initialiseSensors() throws Exception {
+		this.sensors = new HashMap<String, ISensor>();
+		this.windowSimul = new WindowSimul(clock);
+		this.addSensor("windowOpen", new SensorWindowInstant(clock,windowSimul));
+		this.addSensor("windowRecentlyOpen", new SensorWindowRecent(clock, windowSimul , Utils.MARG_WINDOW_RECENTLY_OPEN));
+	}
+
 	private void initialiseInterpreter() throws EvaluationException {
 		StringWriter stdout = new StringWriter();
 		IGlobalVariableEnvironment gve = new GlobalVariableEnvironment();
@@ -154,6 +167,8 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI, Scr
 					this.clockServerOBP.getPortURI(),
 					ClockServer.STANDARD_INBOUNDPORT_URI,
 					ClockServerConnector.class.getCanonicalName());
+			this.clock = this.clockServerOBP.getClock(this.clockURI);
+			initialiseSensors();
 			} catch (Exception e) {
 				throw new ComponentStartException(e) ;
 			}
@@ -162,6 +177,39 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI, Scr
 		
 	public void			execute() throws Exception
 	{
+		super.execute();
+
+		Instant i0 = this.clock.getStartInstant();
+		Instant i1 = i0.plusSeconds(Utils.DEFAULT_SLEEP_TIME_SIMUL * 120);
+		long start = this.clock.delayToAcceleratedInstantInNanos(i1);
+		this.scheduleTaskAtFixedRate(
+			new AbstractComponent.AbstractTask() {
+				@Override
+				public void run() {
+					try {
+						long seconds = (clock.getStartInstant().toEpochMilli() + (long)(clock.getStartEpochNanos() * clock.getAccelerationFactor())) / 1000000000;
+						logMessage(STANDARD_REQUEST_HANDLER_URI + " : " + seconds + "s refresh sensors");
+						// refresh sensors
+						for (ISensor sensor : sensors.values()) {
+							sensor.eval();
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			},
+			start,
+			Utils.DEFAULT_SLEEP_TIME_SIMUL,
+			TimeUnit.SECONDS);
+
+		Instant i2 = i0.plusSeconds(Utils.DEFAULT_SLEEP_TIME_SIMUL * 2);
+		long startTask = this.clock.delayToAcceleratedInstantInNanos(i2);
+		this.scheduleTask(
+			o -> {
+				windowSimul.openWindow();
+				long seconds = (clock.getStartInstant().toEpochMilli() + (long)(clock.getStartEpochNanos() * clock.getAccelerationFactor())) / 1000000000;
+				logMessage( seconds + " : " + "open window");
+			},startTask, TimeUnit.SECONDS);
 		/*
 		this.clock = this.clockServerOBP.getClock(this.clockURI);
 		System.out.println("clock = " + this.clock + " " + this.clock.getStartEpochNanos());

@@ -1,6 +1,6 @@
 package com.paracamplus.bcm.obp;
 
-import com.paracamplus.bcm.components.DesktopRoom;
+
 import com.paracamplus.bcm.interfaces.RoomI;
 import com.paracamplus.bcm.interfaces.ScriptManagementCI;
 import com.paracamplus.ilp1.interpreter.GlobalEnvFile;

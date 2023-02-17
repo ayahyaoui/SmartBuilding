@@ -128,9 +128,6 @@ public class Supervisor extends AbstractComponent{
     @Override
     public void execute() throws Exception {
         super.execute();
-        // do conction with component deskoptroom with Utils.DESKTOPROOM_101_ID
-            //	DesktopRoomOutboundPort d = new DesktopRoomOutboundPort(this);
-        
         System.out.println("************************************************************");
         System.out.println("*                        **********                        *");
         System.out.println("*                        Supervisor                        *");
@@ -150,13 +147,13 @@ public class Supervisor extends AbstractComponent{
             long start = testRequete.start;
             if (testRequete.start < minimumStart || testRequete.start > maximumEnd)
                 start = minimumStart;
-            GlobalEnvFile env = new GlobalEnvFile(testRequete.fonction, testRequete.fonction, testRequete.args);
                 this.scheduleTaskAtFixedRate(
                     new AbstractComponent.AbstractTask() {
                         @Override
                         public void run() {
                             try {
-                                logMessage("executeScript + " + testRequete.fonction);
+                                GlobalEnvFile env = new GlobalEnvFile(testRequete.fonction, testRequete.fonction, testRequete.args);
+                                logMessage("executeScript loop + " + env.toString());
                                 vc.supervisorOBP.executeScript(env);
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -167,41 +164,7 @@ public class Supervisor extends AbstractComponent{
                     testRequete.period,
                     TimeUnit.MICROSECONDS);
         }
-        /* 
-         * 
-         String[] parameters = new String[] {Utils.DESKTOPROOM_101_URI, Utils.DESKTOPROOM_102_URI};
-         GlobalEnvFile env = new GlobalEnvFile("FIRE", "fire", parameters);
-         //callFunction(env);
-         
-         
-         
-         
-         Instant i0 = clock.getStartInstant();
-         Instant i1 = i0.plusSeconds(3600);
-         
-         
-         long d1 = clock.delayToAcceleratedInstantInNanos(i1) / 1000;
-         
-         this.scheduleTaskAtFixedRate(
-             new AbstractComponent.AbstractTask() {
-                 @Override
-                 public void run() {logMessage(env.toString());
-                    try {
-                        logMessage("executeScript + " + env.getId());
-                        vc.supervisorOBP.executeScript(env);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            },
-            d1,
-            2000000,
-            TimeUnit.MICROSECONDS);
-            */
-            
-            //String parameters2[] = new String[] {Utils.DESKTOPROOM_101_URI, Utils.DESKTOPROOM_102_URI};
-            //callFunction(new GlobalEnvFile("test3__1","test03", parameters2));
-    }
+ }
         
     @Override
     public String toString() {

@@ -1,23 +1,21 @@
 package com.paracamplus.bcm.sensor;
 
-import java.time.Instant;
-
-import com.paracamplus.bcm.simul.WindowSimul;
+import com.paracamplus.bcm.simul.PresenceSimul;
 
 import fr.sorbonne_u.components.cyphy.tools.aclocks.AcceleratedClock;
 
-public class SensorWindowRecent extends AbstractSensor implements ISensor{
-
+public class SensorPresenceRecent extends AbstractSensor implements ISensor{
+    
     protected boolean value;
     protected boolean nextValue;
-    protected WindowSimul windowSim;
+    protected PresenceSimul presenceSim;
     protected final long marge;
-
-    public SensorWindowRecent(AcceleratedClock clock, WindowSimul windowSim, long marge){
+    
+    public SensorPresenceRecent(AcceleratedClock clock, PresenceSimul presenceSim, long marge){
         super(clock);
         this.value = false;
         this.nextValue = false;
-        this.windowSim = windowSim;
+        this.presenceSim = presenceSim;
         this.marge = marge;
     }
 
@@ -32,7 +30,8 @@ public class SensorWindowRecent extends AbstractSensor implements ISensor{
     }
 
     @Override
-	public void eval(){
-        nextValue = windowSim.isOpen() && windowSim.getLastOpen() + marge > getAccelerateClockTime();
+    public void eval(){
+        nextValue = presenceSim.isPresent() && presenceSim.getLastPresence() + marge > getAccelerateClockTime();
     }
+    
 }

@@ -18,8 +18,9 @@ public class Utils {
 	public static final boolean DEBUG_MODE_BCM = true;
 	public static final boolean DEBUG_MODE_ilp = false;
 
+	public static final long SECONDS_TO_NANO = 1000000000L;
     public static final long DEFAULT_SLEEP_TIME = 1000L;
-	public static final long DEFAULT_SLEEP_TIME_SIMUL = 1000L;
+	public static final long DEFAULT_SLEEP_TIME_SIMUL = 30;
     public static final long DEFAULT_LIFE_CYCLE = 100000L;
     public static final long DEFAULT_STARTUP_TIME = 0L;
 	public static final String	CLOCK_URI = "a-clock";
@@ -40,6 +41,7 @@ public class Utils {
 	public static final String	DESKTOPROOM_103_URI = "bureau-103";
 	public static final String	DESKTOPROOM_201_URI = "bureau-201";
 	public static final String	DESKTOPROOM_202_URI = "bureau-202";
+	public static final long MARG_WINDOW_RECENTLY_OPEN = 3600000000000L;
 
 	public static String[] rooms = null;
 	public static String[] coords = null;

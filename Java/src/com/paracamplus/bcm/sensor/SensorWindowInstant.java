@@ -4,15 +4,18 @@ import java.time.Instant;
 
 import com.paracamplus.bcm.simul.WindowSimul;
 
-public class SensorWindowInstant implements ISensor{
+import fr.sorbonne_u.components.cyphy.tools.aclocks.AcceleratedClock;
+
+public class SensorWindowInstant  extends AbstractSensor implements ISensor{
 
 	protected boolean value;
 	protected boolean nextValue;
 	protected WindowSimul windowSim;
 	
-	SensorWindowInstant(WindowSimul windowSim){
-		this.value = false;
-		this.nextValue = false;
+	public SensorWindowInstant(AcceleratedClock clock, WindowSimul windowSim){
+		super(clock);
+		this.value = windowSim.isOpen();
+		this.nextValue = windowSim.isOpen();
 		this.windowSim = windowSim;
 	}
 
@@ -26,18 +29,13 @@ public class SensorWindowInstant implements ISensor{
 		return value;
 	}
 
-	
 	public void setValue(boolean b) {
 		nextValue = b;
 	}
 
-
-
 	@Override
-	public void eval(Instant now) {
-		
-		
+	public void eval() {
+		nextValue = windowSim.isOpen();
 	}
-    
 
 }

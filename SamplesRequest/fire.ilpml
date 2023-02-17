@@ -1,6 +1,8 @@
 def fire(P,C)
 {
 	3+3;
+	let w = P.windowOpen
+	if w
 	let a = P.test
 	let b = 5
 	if a > b

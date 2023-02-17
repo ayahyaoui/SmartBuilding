@@ -1,36 +1,37 @@
 package com.paracamplus.bcm.sensor;
 
-public class SensorHeat implements ISensor{
-	protected float nextValue;
-	protected float heat;
+import org.antlr.v4.parse.ANTLRParser.prequelConstruct_return;
+
+import com.paracamplus.bcm.simul.HeatSimul;
+
+import fr.sorbonne_u.components.cyphy.tools.aclocks.AcceleratedClock;
+
+public class SensorHeat extends AbstractSensor implements ISensor{
+	protected int nextValue;
+	protected int value;
+	protected AcceleratedClock clock;
+	protected HeatSimul heatSim;
 
 
-
-	SensorHeat(float heat){
-		this.nextValue = 0;
-		this.heat = heat;
+	SensorHeat(AcceleratedClock clock, 		HeatSimul heatSim){
+		super(clock);
+		this.clock = clock;
+		this.heatSim = heatSim;
+		this.value = heatSim.getHeat();
 	}
 
 	@Override
 	public void updateValue() {
-		heat = nextValue;
+		value = nextValue;
 	}
 
 	@Override
-	public void eval(java.time.Instant now) {
-		nextValue = (float) (Math.sin(now.getEpochSecond())*10);
-		System.out.println("Heat: " + nextValue + " " + now.getEpochSecond());
+	public void eval() {
+		nextValue = heatSim.getHeat();
 	}
 
 	@Override
-	public Float getValue() {
-		return heat;
+	public Integer getValue() {
+		return value;
 	}
-
-	
-	public void setValue(Float f) {
-		nextValue = f;
-		
-	}
-
 }

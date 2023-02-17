@@ -1,20 +1,29 @@
 package com.paracamplus.bcm.simul;
+import fr.sorbonne_u.components.cyphy.tools.aclocks.AcceleratedClock;
+
 
 public class WindowSimul {
 	
 	protected boolean isOpen;
 	protected long lastOpen;
-	private final int scenario;
+	private final AcceleratedClock clock;
 	
-	public  WindowSimul(int scenario) {
-		this.scenario = scenario;
+	public  WindowSimul(AcceleratedClock clock) {
+		this.clock = clock;
+		isOpen = false;
+		lastOpen = -1;
 	}
 	
 	public void closeWindow() {
 		isOpen = false;
+		lastOpen = -1;
 	}
+
 	public void openWindow() {
+		if (isOpen)
+			return;
 		isOpen = true;
+		lastOpen = clock.getStartInstant().toEpochMilli() + (long)(clock.getStartEpochNanos() * clock.getAccelerationFactor());
 	}
 	public boolean isOpen() {
 		return isOpen;
@@ -22,43 +31,4 @@ public class WindowSimul {
 	public long getLastOpen() {
 		return lastOpen;
 	}
-	
-	// TODO : add accelerate time
-	void scenario1() {
-		long time = System.currentTimeMillis();
-		if (isOpen) {
-			if (time - lastOpen > 1000) {
-				closeWindow();
-			}
-		}
-		else {
-			if (time - lastOpen > 1000) {
-				openWindow();
-				lastOpen = time;
-			}
-		}
-	}
-	
-	void scenario2() {
-		long time = System.currentTimeMillis();
-		if (time > 2000) {
-			closeWindow();
-		}else
-			isOpen = true;
-	}
-
-	// default
-	public void routine() {
-		switch (scenario) {
-		case 1:
-			scenario1();
-			break;
-		case 2:
-			scenario2();
-			break;
-		default:
-			scenario1();
-		}
-	}
-
 }

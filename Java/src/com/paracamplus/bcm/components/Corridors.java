@@ -3,6 +3,7 @@ package com.paracamplus.bcm.components;
 
 import java.util.HashMap;
 import com.paracamplus.bcm.connector.CoordonatorConnector;
+import com.paracamplus.bcm.connector.RoomConnector;
 import com.paracamplus.bcm.sensor.ISensor;
 import com.paracamplus.bcm.utils.Utils;
 import com.paracamplus.ilp1.interpreter.GlobalEnvFile;
