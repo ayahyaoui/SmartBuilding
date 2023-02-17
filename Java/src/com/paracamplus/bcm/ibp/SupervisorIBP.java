@@ -26,7 +26,6 @@ public class SupervisorIBP extends AbstractInboundPort implements SupervisorMana
 				new AbstractComponent.AbstractService<Void>() {
 					@Override
 					public Void call() throws Exception {
-						System.out.println("supervisorIBP receiveResult["+id+"]");
 						((Supervisor)this.getServiceOwner()).receiveResult(id, result);
 						return null;
 					}

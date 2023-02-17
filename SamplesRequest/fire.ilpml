@@ -1,4 +1,4 @@
-def test02(P,C)
+def fire(P,C)
 {
 	3+3;
 	let a = P.test

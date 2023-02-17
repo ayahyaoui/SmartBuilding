@@ -28,7 +28,7 @@ public class SmartBuildingCVM extends AbstractCVM{
     public void deploy() throws Exception {
         System.out.println("Deploying components...");
         
-        Utils.buildingPlan1();
+        Utils.testBasic();
 
         AbstractComponent.createComponent(
 				ClockServer.class.getCanonicalName(),
@@ -39,7 +39,7 @@ public class SmartBuildingCVM extends AbstractCVM{
                              
         AbstractComponent.createComponent(
                 Supervisor.class.getCanonicalName(),
-                new Object[] {Utils.SUPERVISOR_URI, Utils.coords});
+                new Object[] {Utils.SUPERVISOR_URI, Utils.CLOCK_URI, Utils.coords});
         
         for (String coord : Utils.coords) {
             AbstractComponent.createComponent(

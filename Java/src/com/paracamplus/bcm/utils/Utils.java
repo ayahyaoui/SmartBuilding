@@ -4,6 +4,8 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
@@ -45,14 +47,31 @@ public class Utils {
 	public static HashMap<String, String[]> roomsCoordonators = null;
 	public static HashMap<String, String[]> graphCoordonators = null; // directed graph of coordonators
 	
+	public static String FONCTION_fire = "fire";
+	public static String FONCTION_1 = "test01";
+	public static String FONCTION_2 = "test02";
+	public static String FONCTION_3 = "test03";
+	public static String FONCTION_4 = "test04";
+	public static String FONCTION_5 = "test05";
 
-
+	public static ArrayList<testRequete> requetes = new ArrayList<testRequete>();
 	private static boolean isInit = false;
 	
-	public static void buildingPlan1() {
-		if (isInit) {
-			return;
+	public static class testRequete {
+		public String fonction;
+		public String[] args;
+		public long start;
+		public long period;
+		public testRequete(String fonction, String[] args, long start, long period) {
+			this.fonction = fonction;
+			this.args = args;
+			this.start = start;
+			this.period = period;
 		}
+	}
+
+
+	private static void buildingPlan2() {
 		rooms = new String[] {DESKTOPROOM_101_URI, DESKTOPROOM_102_URI, DESKTOPROOM_103_URI, DESKTOPROOM_201_URI, DESKTOPROOM_202_URI};
 		coords = new String[] {COORDONATOR_01_URI, COORDONATOR_02_URI};
 		roomsNeighbours = new HashMap<String, String[]>();
@@ -71,13 +90,10 @@ public class Utils {
 		roomsNeighbours.put(DESKTOPROOM_103_URI, new String[] {DESKTOPROOM_102_URI});
 		graphCoordonators.put(COORDONATOR_01_URI, new String[] {COORDONATOR_02_URI});
 		graphCoordonators.put(COORDONATOR_02_URI, new String[] {COORDONATOR_01_URI});
-		isInit = true;
 	}
 	
-	public static void buildingPlan2()	{
-		if (isInit) {
-			return;
-		}
+	private static void buildingPlan1() {
+	
 		rooms = new String[] {DESKTOPROOM_101_URI, DESKTOPROOM_102_URI};
 		coords = new String[] {COORDONATOR_01_URI};
 		roomsNeighbours = new HashMap<String, String[]>();
@@ -93,49 +109,34 @@ public class Utils {
 		roomsNeighbours.put(DESKTOPROOM_101_URI, new String[] {DESKTOPROOM_102_URI});
 		roomsNeighbours.put(DESKTOPROOM_102_URI, new String[] {DESKTOPROOM_101_URI});
 		graphCoordonators.put(COORDONATOR_01_URI, new String[] {});
+
+	}
+
+	private static void scnenario1() {
+		if (isInit) {
+			return;
+		}
+		requetes.add(new testRequete(FONCTION_fire, new String[] {DESKTOPROOM_101_URI, DESKTOPROOM_102_URI}, 0, 2000000));
+		
+	}
+
+	public static void testBasic() throws Exception {
+		if (isInit) {
+			return;
+		}
+		buildingPlan1();
+		scnenario1();
+		isInit = true;
+	}
+
+	public static void testIntermediary1() throws Exception {
+		if (isInit) {
+			return;
+		}
+		buildingPlan2();
+		scnenario1();
 		isInit = true;
 	}
 
 
-	public static File[] getFileList(
-			String samplesDirName,
-			String pattern
-			) throws Exception {
-		final Pattern p = Pattern.compile("^" + pattern + "$");
-		final FilenameFilter ff = new FilenameFilter() {
-			@Override
-			public boolean accept (File dir, String name) {
-				final Matcher m = p.matcher(name);
-				return m.matches();
-			}
-		};
-		File samplesDir = new File(samplesDirName);
-		final File[] testFiles = samplesDir.listFiles(ff);
-		if (testFiles == null) {
-			throw new IllegalArgumentException("Directory does not exist : " + samplesDirName);
-		}
-		assertNotNull(testFiles);
-		
-		if ( testFiles.length == 0 ) {
-			final String msg = "Cannot find a single test like " + pattern + " in " + samplesDirName;
-			throw new IllegalArgumentException(msg);
-		}
-		java.util.Arrays.sort(testFiles,
-				(f1, f2) -> f1.getName().compareTo(f2.getName()));
-		return testFiles;
-	}
-
-
-	public static File[] getFileList(
-    		String[] samplesDirNames,
-    		String pattern
-    		) throws Exception {
-    	List<File> files = new Vector<File>();
-    	for (String d : samplesDirNames) {
-    		for (File f : getFileList(d, pattern)) {
-    			files.add(f);
-    		}
-    	}
-    	return files.toArray(new File[0]);
-    }
 }

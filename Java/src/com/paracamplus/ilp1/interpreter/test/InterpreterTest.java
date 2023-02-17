@@ -9,7 +9,10 @@ package com.paracamplus.ilp1.interpreter.test;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
+
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +21,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 import com.paracamplus.ilp1.ast.ASTfactory;
 import com.paracamplus.ilp1.interfaces.IASTfactory;
+import com.paracamplus.ilp1.interfaces.IASTprogram;
 import com.paracamplus.ilp1.interpreter.GlobalVariableEnvironment;
 import com.paracamplus.ilp1.interpreter.GlobalVariableStuff;
 import com.paracamplus.ilp1.interpreter.Interpreter;
@@ -34,7 +38,7 @@ import com.paracamplus.ilp1.parser.xml.XMLParser;
 @RunWith(Parameterized.class)
 public class InterpreterTest {
     
-    protected static String[] samplesDirName = { "SamplesILP1" }; 
+    protected static String[] samplesDirName = { "SamplesRequest" }; 
     protected static String pattern = ".*\\.ilpml";
     protected static String XMLgrammarFile = "XMLGrammars/grammar1.rng";
     
@@ -81,4 +85,30 @@ public class InterpreterTest {
     	return InterpreterRunner.getFileList(samplesDirName, pattern);
     }    	
     
+    /**
+     * @throws Exception
+     */
+    public static ArrayList<IASTprogram> lexerParserPrograms() throws Exception {
+        Collection<File[]> testFiles;
+        InterpreterRunner run = new InterpreterRunner();
+        ArrayList<IASTprogram> programs = new ArrayList<IASTprogram>();
+        configureRunner(run);
+        try {
+            testFiles = InterpreterRunner.getFileList(samplesDirName, pattern);
+            for (Iterator<File[]> iterator = testFiles.iterator(); iterator.hasNext();) {
+                File[] files = (File[]) iterator.next();
+                for (int i = 0; i < files.length; i++) {
+                    System.out.println("File:" + files[i].getName());
+                    assert files[i].exists();
+                    System.out.println("Starting Parsing file:" + files[i].getName());
+                    IASTprogram program = run.getParser().parse(files[i]);
+                    programs.add(program);
+                }
+            }
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        return programs;
+    }
+
 }

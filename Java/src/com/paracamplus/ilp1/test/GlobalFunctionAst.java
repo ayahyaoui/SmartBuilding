@@ -55,4 +55,17 @@ public class GlobalFunctionAst {
 	public Boolean contains(String name) {
 		return functions.containsKey(name);
 	}
+
+	/*
+	 * Verify if the function exist and if the number of parameters is correct
+	 * todo: verify if the type of parameters is correct too
+	 */
+	public boolean verifyFunctionParameters(String name, String[] parameters) {
+		if (!functions.containsKey(name))
+			return false;
+		if (functions.get(name).parameters.length != parameters.length)
+			return false;
+		
+		return true;
+	}
 }

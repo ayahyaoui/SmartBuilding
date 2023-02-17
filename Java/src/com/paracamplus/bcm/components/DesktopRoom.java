@@ -64,7 +64,7 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI, Scr
 	    protected  Interpreter interpreter;
 		protected final String reflectionInboundPortURI;
 		//protected FenetreInstantanee FenetreInstantanee;
-		protected final String				clockURI = Utils.CLOCK_URI; // todo : change it initialise in the constructor
+		protected final String				clockURI;
 		protected AcceleratedClock			clock;
 		protected ClockServerOutboundPort	clockServerOBP;
 		
@@ -82,6 +82,7 @@ public class DesktopRoom extends AbstractComponent implements DesktopRoomCI, Scr
     	//assert	clockURI != null && !clockURI.isEmpty() :
 		//	new PreconditionException(
 		//			"clockURI != null && !clockURI.isEmpty()");
+		this.clockURI = clockURI;
 		this.reflectionInboundPortURI = reflectionInboundPortURI;
 		this.desktopRoomIBP = new DesktopRoomIBP(reflectionInboundPortURI, this);
 		this.desktopRoomIBP.publishPort();
