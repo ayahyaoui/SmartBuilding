@@ -19,6 +19,10 @@ import com.paracamplus.ilp1.interpreter.interfaces.IOperatorEnvironment;
 import com.paracamplus.ilp1.test.GlobalFunctionAst;
 
 import fr.sorbonne_u.components.AbstractComponent;
+import fr.sorbonne_u.components.cyphy.tools.aclocks.AcceleratedClock;
+import fr.sorbonne_u.components.cyphy.tools.aclocks.ClockServerOutboundPort;
+import fr.sorbonne_u.exceptions.PreconditionException;
+
 import com.paracamplus.bcm.obp.RoomOBP;
 import com.paracamplus.bcm.utils.Utils;
 /*
@@ -29,20 +33,28 @@ public abstract class AbstractRoom extends AbstractComponent implements RoomI{
     protected  Interpreter interpreter;
     protected final String reflectionInboundPortURI;
 
+    protected final String				clockURI;
+    protected AcceleratedClock			clock;
+    protected ClockServerOutboundPort	clockServerOBP;
+
+    
     // hasmap of string and function
-    protected final RoomIBP roomIBP;
+    //protected final RoomIBP roomIBP;
     protected String coordonatorIBPURI;
 	protected CoordonatorOBP coordinatorOBP;
 	protected String[] neighboursURI;
 	protected ArrayList<RoomOBP> neighboursOBP;
       
 
-    protected AbstractRoom(int nbThreads, int nbSchedulableThreads, String reflectionInboundPortURI, 
+    protected AbstractRoom(int nbThreads, int nbSchedulableThreads, String reflectionInboundPortURI, String clockURI, 
             String coordinatorInboundPortURI, String []neighboursURI) throws Exception {
         super(nbThreads, nbSchedulableThreads);
+        assert	clockURI != null && !clockURI.isEmpty() :
+			new PreconditionException("clockURI != null && !clockURI.isEmpty()");
+        this.clockURI = clockURI;
         this.reflectionInboundPortURI = reflectionInboundPortURI;
-        this.roomIBP = new RoomIBP(this);
-        this.roomIBP.publishPort();
+        //this.roomIBP = new RoomIBP(this);
+        //this.roomIBP.publishPort();
         this.coordonatorIBPURI = coordinatorInboundPortURI;
         this.coordinatorOBP = new CoordonatorOBP(this);
         this.coordinatorOBP.publishPort();
@@ -51,6 +63,7 @@ public abstract class AbstractRoom extends AbstractComponent implements RoomI{
         for (int i = 0; i < neighboursURI.length; i++) {
 			this.neighboursOBP.add(new RoomOBP(this));
 			this.neighboursOBP.get(i).publishPort();
+            System.out.println("Room " + reflectionInboundPortURI + " has neighbour " + neighboursURI[i]);
 		}
         this.initialiseInterpreter();
     }
@@ -104,9 +117,9 @@ public abstract class AbstractRoom extends AbstractComponent implements RoomI{
         return this.reflectionInboundPortURI;
     }
 
-    public RoomIBP getRoomIBP() {
+    /* public RoomIBP getRoomIBP() {
         return this.roomIBP;
-    }
+    }*/
 
     public String getCoordonatorIBPURI() {
         return this.coordonatorIBPURI;

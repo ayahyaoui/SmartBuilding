@@ -1,8 +1,6 @@
 package com.paracamplus.bcm.cvm;
 
 import java.time.Instant;
-import java.util.AbstractCollection;
-import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import com.paracamplus.bcm.components.Coordonator;
@@ -22,7 +20,6 @@ public class SmartBuildingCVM extends AbstractCVM{
 
     public SmartBuildingCVM() throws Exception {
         super();
-        //TODO Auto-generated constructor stub
     }
 
     public void deploy() throws Exception {
@@ -64,61 +61,19 @@ public class SmartBuildingCVM extends AbstractCVM{
                 throw new Exception("Room " + room + " is not assigned to any coordinator");
             }
             System.out.println("Creating room " + room + " with coord " + myCoord + " and neighbours " + Utils.roomsNeighbours.get(room) + "class " +  DesktopRoom.class.getCanonicalName());
-            /*Object[] constructorParams = new Object[] {room, Utils.CLOCK_URI, myCoord, Utils.roomsNeighbours.get(room)};
-            if (constructorParams[3]!= null) {
-                System.out.println("Adding neighbours " + Utils.roomsNeighbours.get(room)[0]);
-            }
-            Class<?>[] actualsTypes = new Class[constructorParams.length] ;
-            for (int i = 0 ; i < constructorParams.length ; i++) {
-                actualsTypes[i] = constructorParams[i].getClass() ;
-                System.out.println("Param " + i + " is " + constructorParams[i] + " of type " + actualsTypes[i]);
-            }*/
             AbstractComponent.createComponent(
                     DesktopRoom.class.getCanonicalName(),
                     new Object[] {room, Utils.CLOCK_URI, myCoord, Utils.roomsNeighbours.get(room)});
         }
     }
-    /*
-    @Override
-    public void deploy() throws Exception {
-        System.out.println("Deploying components..." +  DesktopRoom.class.getCanonicalName() );
-        
-        AbstractComponent.createComponent(
-				ClockServer.class.getCanonicalName(),
-				new Object[]{Utils.CLOCK_URI,		// create the centralised clock
-							 TimeUnit.MILLISECONDS.toNanos(System.currentTimeMillis() + Utils.DEFAULT_STARTUP_TIME),
-							 Instant.parse(Utils.START_INSTANT),
-							 Utils.ACC_FACTOR});
-                             
-        String[] rooms = new String[] {Utils.DESKTOPROOM_101_URI, Utils.DESKTOPROOM_102_URI};
-        String[] coords = new String[] {Utils.COORDONATOR_01_URI};
-        
-        AbstractComponent.createComponent(
-        		DesktopRoom.class.getCanonicalName(),
-        		new Object[] {Utils.DESKTOPROOM_101_URI, Utils.CLOCK_URI,Utils.COORDONATOR_01_URI});
-
-        AbstractComponent.createComponent(
-        		DesktopRoom.class.getCanonicalName(),
-        		new Object[] {Utils.DESKTOPROOM_102_URI, Utils.CLOCK_URI,Utils.COORDONATOR_01_URI});
-        
-        AbstractComponent.createComponent(
-                Coordonator.class.getCanonicalName(),
-                  new Object[] {Utils.COORDONATOR_01_URI, rooms});
-
-        AbstractComponent.createComponent(
-                Supervisor.class.getCanonicalName(),
-                  new Object[] {Utils.SUPERVISOR_URI, coords});
-        
-    }*/
 
     public static void main(String[] args) {
         try {
             SmartBuildingCVM cvm = new SmartBuildingCVM();
-            cvm.startStandardLifeCycle(Utils.DEFAULT_LIFE_CYCLE + Utils.DEFAULT_STARTUP_TIME);
-            Thread.sleep(5000L);
+            cvm.startStandardLifeCycle(Utils.EXECUTION_DURATION + Utils.DEFAULT_STARTUP_TIME);
+            Thread.sleep(500L);
             System.exit(0);
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }

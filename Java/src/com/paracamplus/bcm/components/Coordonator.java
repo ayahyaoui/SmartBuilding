@@ -70,14 +70,12 @@ public class Coordonator extends AbstractComponent{
 		super.start();
 		try {
 			for (int i = 0; i < roomInboundPortURIs.length; i++) {
-				System.out.println("do port connection " + i + " " + roomOBPList.get(i).getPortURI() + " " + roomInboundPortURIs[i] + " " + RoomConnector.class.getCanonicalName());
 				this.doPortConnection(
 						roomOBPList.get(i).getPortURI(),
 						roomInboundPortURIs[i],
 						RoomConnector.class.getCanonicalName());
 			}
 			for	(int i = 0; i < coordonatorInboundPortURIs.length; i++) {
-				System.out.println("do port connection " + i + " " + coordonatorOBPList.get(i).getPortURI() + " " + coordonatorInboundPortURIs[i] + " " + RoomConnector.class.getCanonicalName());
 				this.doPortConnection(
 						coordonatorOBPList.get(i).getPortURI(),
 						coordonatorInboundPortURIs[i],
@@ -102,9 +100,15 @@ public class Coordonator extends AbstractComponent{
 	@Override
 	public void			shutdown() throws ComponentShutdownException
 	{
-		// the shutdown is a good place to unpublish inbound ports.
 		try {
 			this.coordonatorIBP.unpublishPort() ;
+			for (int i = 0; i < roomInboundPortURIs.length; i++) {
+				this.doPortDisconnection(roomOBPList.get(i).getPortURI());
+			}
+			for	(int i = 0; i < coordonatorInboundPortURIs.length; i++) {
+				this.doPortDisconnection(coordonatorOBPList.get(i).getPortURI());
+			}
+			this.doPortDisconnection(supervisorOBP.getPortURI());
 		} catch (Exception e) {
 			throw new ComponentShutdownException(e) ;
 		};
@@ -114,9 +118,15 @@ public class Coordonator extends AbstractComponent{
 	@Override
 	public void			shutdownNow() throws ComponentShutdownException
 	{
-		// the shutdown is a good place to unpublish inbound ports.
 		try {
 			this.coordonatorIBP.unpublishPort() ;
+			for (int i = 0; i < roomInboundPortURIs.length; i++) {
+				this.doPortDisconnection(roomOBPList.get(i).getPortURI());
+			}
+			for	(int i = 0; i < coordonatorInboundPortURIs.length; i++) {
+				this.doPortDisconnection(coordonatorOBPList.get(i).getPortURI());
+			}
+			this.doPortDisconnection(supervisorOBP.getPortURI());
 		} catch (Exception e) {
 			throw new ComponentShutdownException(e) ;
 		};
@@ -125,7 +135,6 @@ public class Coordonator extends AbstractComponent{
 
 	public GlobalEnvFile executeScript(GlobalEnvFile env) throws Exception {
 		logMessage("[executeScript] " + " HAS TO EXECUTE FILE with " + env.getNameFunction() + " as name function");
-		
 		String firstVaribleName = GlobalFunctionAst.getInstance().getParameters(env.getNameFunction())[0].getName();
 		return executeScript(env, (String)env.getGlobalVariableEnvironment().get(firstVaribleName));
 	}
@@ -137,7 +146,6 @@ public class Coordonator extends AbstractComponent{
 		if (env.isFinished())
 		{
 			logMessage("[executeScript: " + env.getId() + "] env is finished and the result is " + env.isAccepted());
-			// TODO: send the result to the supervisor with runTask
 			final GlobalEnvFile finishEnv = env;
 			this.runTask(new AbstractComponent.AbstractTask() {
 				@Override
@@ -153,7 +161,7 @@ public class Coordonator extends AbstractComponent{
 		}
 
 		for (int i = 0; i < roomInboundPortURIs.length; i++) {
-			System.out.println("uri: " + uri + " RoomInboundPortURIs[i]: " + roomInboundPortURIs[i]);
+			
 			if (roomInboundPortURIs[i].equals(uri)) {
 				logMessage("[executeScript: " + env.getId() + "] found the uri " + uri + " in the list of RoomInboundPortURIs");
 				env.setFound(true);
@@ -179,7 +187,6 @@ public class Coordonator extends AbstractComponent{
 		env.setVisited(reflectionInboundPortURI, true);
 		// DFS (Depth First Search) of the graph of the coordonators
 		for (int i = 0; i < coordonatorInboundPortURIs.length; i++) {
-			System.out.println("uri: " + uri + " CoordonatorInboundPortURIs[i]: " + coordonatorInboundPortURIs[i]);
 			if (!env.isVisited(coordonatorInboundPortURIs[i])) {
 				
 				logMessage("[executeScript] " + " ask if " + coordonatorInboundPortURIs[i] + " ");
@@ -190,7 +197,6 @@ public class Coordonator extends AbstractComponent{
 				}
 			}
 		}
-
 		return env;
 	}
 
