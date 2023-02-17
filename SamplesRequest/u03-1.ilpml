@@ -1,0 +1,8 @@
+def test03(P,C)
+{
+    let anas = 5
+    let val =  P.fct1
+    if val > anas
+    let val2 = C.fct1
+    if val2 < anas
+}

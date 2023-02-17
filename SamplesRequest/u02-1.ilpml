@@ -1,0 +1,8 @@
+def test02(P,C)
+{
+	3+3;
+	let a = P.windowOpen
+	let b = 5
+	if a
+	if 25 > 50.0;
+}
