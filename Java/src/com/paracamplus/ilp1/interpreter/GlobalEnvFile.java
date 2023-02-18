@@ -230,7 +230,7 @@ public class GlobalEnvFile implements ISmartEnvironment{
 				globalVariableEnvironment.put(key.getName(), value);
 			else
 			{
-				System.out.println("Variable don't even exist !");
+				System.out.println("Variable don't exist ! New variable create !");
 				globalVariableEnvironment.put(key.getName(), value);
 			}
 		}

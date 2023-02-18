@@ -24,13 +24,13 @@ import java.awt.Toolkit;
 
 @OfferedInterfaces(offered = {ScriptManagementCI.class})
 @RequiredInterfaces(required={ClockServerCI.class})
-public class Corridors extends  AbstractRoom{
+public class ClassRoom extends  AbstractRoom{
 	protected GlobalEnvFile env;
     protected HashMap<String, ISensor> sensors;
 	protected RoomIBP RoomIBP;
 
 
-    protected Corridors(String reflectionInboundPortURI, String clockURI, String coordonatorIBPURI, String []neighboursURI) throws Exception {
+    protected ClassRoom(String reflectionInboundPortURI, String clockURI, String coordonatorIBPURI, String []neighboursURI) throws Exception {
 		super(3,3, reflectionInboundPortURI, clockURI, coordonatorIBPURI, neighboursURI);
 		assert	clockURI != null && !clockURI.isEmpty() :
 				new PreconditionException("clockURI != null && !clockURI.isEmpty()");
@@ -43,7 +43,7 @@ public class Corridors extends  AbstractRoom{
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int screenWidth = screenSize.width / 4;
 		int screenHeight = screenSize.height * 2 / 5;
-		this.tracer.set(new TracerWindow("Corridors component " + this.reflectionInboundPortURI, 0, 0, screenWidth, screenHeight, xRelativePos, 3));
+		this.tracer.set(new TracerWindow("ClassRoom component " + this.reflectionInboundPortURI, 0, 0, screenWidth, screenHeight, xRelativePos, 3));
 		this.toggleTracing();
 		logMessage(this.toString());
 
@@ -117,7 +117,7 @@ public class Corridors extends  AbstractRoom{
 
 	@Override
 	public String toString(){
-		return "Corridors" + super.toString();
+		return "ClassRoom" + super.toString();
 	}
 
 } 

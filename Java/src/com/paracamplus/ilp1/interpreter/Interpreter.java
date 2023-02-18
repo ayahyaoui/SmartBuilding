@@ -9,8 +9,6 @@ package com.paracamplus.ilp1.interpreter;
 import java.util.List;
 import java.util.Vector;
 
-import org.antlr.v4.parse.ANTLRParser.sync_return;
-
 import com.paracamplus.bcm.interfaces.RoomI;
 import com.paracamplus.ilp1.ast.ASTvariable;
 import com.paracamplus.ilp1.interfaces.IASTalternative;
@@ -41,9 +39,12 @@ import com.paracamplus.ilp1.interpreter.interfaces.IOperator;
 import com.paracamplus.ilp1.interpreter.interfaces.IOperatorEnvironment;
 import com.paracamplus.ilp1.interpreter.interfaces.Invocable;
 
+//todo Verbose
 public class Interpreter
 implements IASTvisitor<Object, ILexicalEnvironment, EvaluationException> {
     
+    protected static final boolean VERBOSE = false;
+
     public Interpreter (IGlobalVariableEnvironment globalVariableEnvironment,
                         IOperatorEnvironment operatorEnvironment ) {
         this.globalVariableEnvironment = globalVariableEnvironment;
@@ -70,8 +71,6 @@ implements IASTvisitor<Object, ILexicalEnvironment, EvaluationException> {
         return globalVariableEnvironment;
     }
     
-    // 
-    
     public Object visit(IASTprogram iast, ILexicalEnvironment lexenv) 
             throws EvaluationException {
         try {
@@ -80,7 +79,6 @@ implements IASTvisitor<Object, ILexicalEnvironment, EvaluationException> {
             return exc;
         }
     }
-   
     
     @Override
     public Object visit(IASTfunctionDefinition iast, ILexicalEnvironment data)
@@ -91,35 +89,29 @@ implements IASTvisitor<Object, ILexicalEnvironment, EvaluationException> {
     	return fun;
     }
     
-    // 
-    
     private static Object whatever = "whatever";
             
     @Override
 	public Object visit(IASTalternative iast, ILexicalEnvironment lexenv) 
             throws EvaluationException {
-    	System.out.println("Visit...alternatssive");
+    	if (VERBOSE) System.out.println("Visit...alternatssive");
         Object c = iast.getCondition().accept(this, lexenv);
-        System.out.println("Visit...alternative...condition" + c);
+        if (VERBOSE) System.out.println("Visit...alternative...condition" + c);
         if ( c != null && c instanceof Boolean ) {
             Boolean b = (Boolean) c;
-            System.out.println("result if" + b);
+            if (VERBOSE) System.out.println("result if" + b);
 
-            if ( b.booleanValue() ) { // if true just continue
+            if (b.booleanValue() ) { // if true just continue
                 return true; //return iast.getConsequence().accept(this, lexenv);
-            }/* else if ( iast.isTernary() ) {
-                return iast.getAlternant().accept(this, lexenv);                
-            }*/ else {
+            } else {
                 return whatever; // try to finish the block
             }
         } else {
-        	System.out.println("Condition bad format..");
+        	if (VERBOSE) System.out.println("Condition bad format..");
         	 return whatever;
-        	//return iast.getConsequence().accept(this, lexenv);
+
         }
     }
-    
-
 
     @Override
 	public Object visit(IASTunaryOperation iast, ILexicalEnvironment lexenv) 
@@ -137,7 +129,7 @@ implements IASTvisitor<Object, ILexicalEnvironment, EvaluationException> {
         Object rightOperand = iast.getRightOperand().accept(this, lexenv);
         IASToperator operator = iast.getOperator();	
         IOperator op = getOperatorEnvironment().getBinaryOperator(operator);
-        System.out.println("visit binary operation" + leftOperand + " " + rightOperand + " " + operator + " " + op);
+        if (VERBOSE) System.out.println("visit binary operation" + leftOperand + " " + rightOperand + " " + operator + " " + op);
         return op.apply(leftOperand, rightOperand);
     }
 
@@ -150,26 +142,26 @@ implements IASTvisitor<Object, ILexicalEnvironment, EvaluationException> {
             throws EvaluationException {
         IASTexpression[] expressions = iast.getExpressions();
         Object lastValue = null;
-        System.out.println("visit Sequence..." + expressions);
+        if (VERBOSE) System.out.println("visit Sequence..." + expressions);
         for (int i = lexenv.getIndexNode() ; i < expressions.length; i++) {
         	lexenv.setIndexNode(i);
-        	System.out.println("visit Sequence will accept loop" + expressions[i] + "index: " + i + " or " + lexenv.getIndexNode());
+        	if (VERBOSE) System.out.println("visit Sequence will accept loop" + expressions[i] + "index: " + i + " or " + lexenv.getIndexNode());
         	lastValue = expressions[i].accept(this, lexenv);
-        	System.out.println("visit Sequence has accepted loop");
+        	if (VERBOSE) System.out.println("visit Sequence has accepted loop");
             if (!lexenv.getNextComponentUri().equals(owner.getReflectionInboundPortURI())) // has to change component
             {
-                System.out.println("[Interpreter] visit Sequence has to change component " + owner.getReflectionInboundPortURI() + " -> " + lexenv.getNextComponentUri() + " (" + lexenv.getIndexNode() + ")");
+                if (VERBOSE) System.out.println("[Interpreter] visit Sequence has to change component " + owner.getReflectionInboundPortURI() + " -> " + lexenv.getNextComponentUri() + " (" + lexenv.getIndexNode() + ")");
                 return lastValue;
             }
         	if ((lastValue != null && lastValue.equals(whatever)))
             {   
-                System.out.println("visit Sequence will return false" + lexenv.getIndexNode() + " " + lexenv.getNextComponentUri() + " " + owner.getReflectionInboundPortURI() + " ");
+                if (VERBOSE) System.out.println("visit Sequence will return false" + lexenv.getIndexNode() + " " + lexenv.getNextComponentUri() + " " + owner.getReflectionInboundPortURI() + " ");
                 lexenv.setIsFinished(true);
                 return (Boolean)false;
             }
 		}
         lexenv.setIsFinished(true);
-        System.out.println("visit Sequence after loop");
+        if (VERBOSE) System.out.println("visit Sequence after loop");
         return (Boolean)true;
     }
     
@@ -194,7 +186,7 @@ implements IASTvisitor<Object, ILexicalEnvironment, EvaluationException> {
     @Override
 	public Object visit(IASTinteger iast, ILexicalEnvironment lexenv) 
             throws EvaluationException {
-    	System.out.println("find value " + iast.getValue());
+    	if (VERBOSE) System.out.println("find value " + iast.getValue());
         return iast.getValue();
     }
     
@@ -214,8 +206,8 @@ implements IASTvisitor<Object, ILexicalEnvironment, EvaluationException> {
 	public Object visit(IASTvariable iast, ILexicalEnvironment lexenv) 
             throws EvaluationException {
         try {
-            System.out.println("visit variable");
-            System.out.println("find value " + iast.getName() + " " + lexenv.getValue(iast));
+            if (VERBOSE) System.out.println("visit variable");
+            if (VERBOSE) System.out.println("find value " + iast.getName() + " " + lexenv.getValue(iast));
             return lexenv.getValue(iast);
         } catch (EvaluationException exc) {
             return getGlobalVariableEnvironment()
@@ -258,9 +250,9 @@ implements IASTvisitor<Object, ILexicalEnvironment, EvaluationException> {
 	public Object visit(IASTassignment iast, ILexicalEnvironment lexenv) 
             throws EvaluationException {
         IASTvariable variable = iast.getVariable();
-        System.out.println("++visit assign " + variable.getName());
+        if (VERBOSE) System.out.println("++visit assign " + variable.getName());
         Object value = iast.getExpression().accept(this, lexenv);
-        System.out.println("==visit assign " + variable.getName() + " value " + value + " " + value.getClass());
+        if (VERBOSE) System.out.println("==visit assign " + variable.getName() + " value " + value + " " + value.getClass());
         try {
             lexenv.update(variable, value);
         } catch (EvaluationException exc) {
@@ -272,22 +264,22 @@ implements IASTvisitor<Object, ILexicalEnvironment, EvaluationException> {
 
 	@Override
 	public Object visit(IASTvariableAssign asTassignment, ILexicalEnvironment data) throws EvaluationException {
-		System.out.println("Not implemented yet");
+		if (VERBOSE) System.out.println("Not implemented yet");
 		return null;
 	}
 
 	@Override
 	public Object visit(IASTreadField asTreadField, ILexicalEnvironment data) throws EvaluationException {
-		System.out.println("Visit readField");
+		if (VERBOSE) System.out.println("Visit readField");
 		Object res;
         String cibleUri;
 		if (asTreadField != null)
 		{
             cibleUri =  (String)data.getValue(new ASTvariable(asTreadField.getFieldName()));
-            System.out.println(" infos");
-            System.out.println(" " + asTreadField.getFieldName() + "== " + cibleUri);
+            if (VERBOSE) System.out.println(" infos");
+            if (VERBOSE) System.out.println(" " + asTreadField.getFieldName() + "== " + cibleUri);
             //ASTvariable target = (ASTvariable)asTreadField.getTarget();
-			System.out.println(" " + asTreadField.getFieldName() + "-> " + ((IASTstring)(asTreadField.getTarget())).getValue());
+			if (VERBOSE) System.out.println(" " + asTreadField.getFieldName() + "-> " + ((IASTstring)(asTreadField.getTarget())).getValue());
             if (owner != null)
 			{
 				if (owner.getReflectionInboundPortURI().equals(cibleUri))
@@ -301,7 +293,7 @@ implements IASTvisitor<Object, ILexicalEnvironment, EvaluationException> {
 			}
 			
 		}
-        System.out.println("Visit readField failed");
+        if (VERBOSE) System.out.println("Visit readField failed");
 		return null;
 	}
 

@@ -73,7 +73,6 @@ public class InterpreterTest {
     
     @Test
     public void processFile() throws EvaluationException, ParseException, IOException {
-    	System.out.println("***********************************");
     	InterpreterRunner run = new InterpreterRunner();
     	configureRunner(run);
     	run.testFile(file);
@@ -98,9 +97,7 @@ public class InterpreterTest {
             for (Iterator<File[]> iterator = testFiles.iterator(); iterator.hasNext();) {
                 File[] files = (File[]) iterator.next();
                 for (int i = 0; i < files.length; i++) {
-                    System.out.println("File:" + files[i].getName());
                     assert files[i].exists();
-                    System.out.println("Starting Parsing file:" + files[i].getName());
                     IASTprogram program = run.getParser().parse(files[i]);
                     programs.add(program);
                 }

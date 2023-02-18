@@ -1,0 +1,5 @@
+def co2Alert(Z)
+{
+    let ppm = Z.co2s
+    if ppm > 1000
+}

@@ -1,0 +1,9 @@
+def buildingIntrusion(P, C)
+{
+    let o = P.windowRecentlyOpen
+    let p = P.recentPresence
+    let v = P.doorRecentlyOpen
+    if o & p & v
+    let pc = C.recentPresence
+    if pc
+}

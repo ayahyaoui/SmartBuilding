@@ -1,0 +1,7 @@
+def roomIntrusion(P)
+{
+    let o = P.windowRecentlyOpen
+    let p = P.recentPresence
+    let v = P.doorLocked
+    if o & p & v
+}

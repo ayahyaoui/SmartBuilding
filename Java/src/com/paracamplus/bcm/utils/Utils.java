@@ -36,6 +36,14 @@ public class Utils {
 	public static final String	DESKTOPROOM_103_URI = "bureau-103";
 	public static final String	DESKTOPROOM_201_URI = "bureau-201";
 	public static final String	DESKTOPROOM_202_URI = "bureau-202";
+
+	public static final String	CLASSROOM_101_URI = "SalleDeCours-101";
+	public static final String CLASSROOM_102_URI = "SalleDeCours-102";
+	public static final String CLASSROOM_103_URI = "SalleDeCours-103";
+
+	public static final String	CORRIDOR_101_URI = "couloir-101";
+	public static final String	CORRIDOR_102_URI = "couloir-102";
+
 	public static final long MARG_WINDOW_RECENTLY_OPEN = 3600000000000L;
 
 	public static String[] rooms = null;
@@ -50,6 +58,11 @@ public class Utils {
 	public static String FONCTION_3 = "test03";
 	public static String FONCTION_4 = "test04";
 	public static String FONCTION_5 = "test05";
+
+	public static String FORGOTTENLIGHTON = "forgottenLightOn";
+	public static String ROOMINTRUSION = "roomIntrusion";
+	public static String bUILDINGINTRUSION = "buildingIntrusion";
+	public static String CO2ALERT = "co2Alert";
 
 	public static ArrayList<testRequete> requetes = new ArrayList<testRequete>();
 	private static boolean isInit = false;
@@ -67,7 +80,7 @@ public class Utils {
 		}
 	}
 
-
+	
 	private static void buildingPlan2() {
 		rooms = new String[] {DESKTOPROOM_101_URI, DESKTOPROOM_102_URI, DESKTOPROOM_103_URI, DESKTOPROOM_201_URI, DESKTOPROOM_202_URI};
 		coords = new String[] {COORDONATOR_01_URI, COORDONATOR_02_URI};
@@ -88,6 +101,31 @@ public class Utils {
 		graphCoordonators.put(COORDONATOR_01_URI, new String[] {COORDONATOR_02_URI});
 		graphCoordonators.put(COORDONATOR_02_URI, new String[] {COORDONATOR_01_URI});
 	}
+	
+	private static void buildingPlan3() {
+		rooms = new String[] {DESKTOPROOM_101_URI, DESKTOPROOM_102_URI, CLASSROOM_101_URI, CLASSROOM_102_URI, CORRIDOR_101_URI, CORRIDOR_102_URI};
+		coords = new String[] {COORDONATOR_01_URI, COORDONATOR_02_URI};
+		roomsNeighbours = new HashMap<String, String[]>();
+		roomsCoordonators = new HashMap<String, String[]>();
+		graphCoordonators = new HashMap<String, String[]>();
+		for (String r : rooms) {
+			roomsNeighbours.put(r, new String[] {});
+		}
+		for (String c : coords) {
+			roomsCoordonators.put(c, new String[] {});
+		}
+		roomsCoordonators.put(COORDONATOR_01_URI, new String[] {DESKTOPROOM_101_URI, CLASSROOM_101_URI, CORRIDOR_101_URI});
+		roomsCoordonators.put(COORDONATOR_02_URI, new String[] {DESKTOPROOM_102_URI, CLASSROOM_102_URI, CORRIDOR_102_URI});
+		roomsNeighbours.put(DESKTOPROOM_101_URI, new String[] {CORRIDOR_101_URI});
+		roomsNeighbours.put(CORRIDOR_101_URI, new String[] {DESKTOPROOM_101_URI, CLASSROOM_101_URI});
+		roomsNeighbours.put(CLASSROOM_101_URI, new String[] {CORRIDOR_101_URI});
+		roomsNeighbours.put(DESKTOPROOM_102_URI, new String[] {CORRIDOR_102_URI});
+		roomsNeighbours.put(CORRIDOR_102_URI, new String[] {DESKTOPROOM_102_URI, CLASSROOM_102_URI});
+		roomsNeighbours.put(CLASSROOM_102_URI, new String[] {CORRIDOR_102_URI});
+		graphCoordonators.put(COORDONATOR_01_URI, new String[] {COORDONATOR_02_URI});
+		graphCoordonators.put(COORDONATOR_02_URI, new String[] {COORDONATOR_01_URI});
+	}
+	
 	
 	private static void buildingPlan1() {
 	
@@ -132,6 +170,25 @@ public class Utils {
 		}
 		buildingPlan2();
 		scnenario1();
+		isInit = true;
+	}
+
+	private static void scnenario3(){
+		if (isInit) {
+			return;
+		}
+		requetes.add(new testRequete(bUILDINGINTRUSION, new String[] {DESKTOPROOM_101_URI, CORRIDOR_101_URI}, 0, 2000000));
+		requetes.add(new testRequete(bUILDINGINTRUSION, new String[] {DESKTOPROOM_102_URI, CORRIDOR_102_URI}, 0, 2000000));
+		requetes.add(new testRequete(bUILDINGINTRUSION, new String[] {CLASSROOM_101_URI, CORRIDOR_101_URI}, 0, 2000000));
+		requetes.add(new testRequete(CO2ALERT, new String[] {CLASSROOM_102_URI}, 0, 2000000));
+	}
+
+	public static void testIntermediary2() throws Exception {
+		if (isInit) {
+			return;
+		}
+		buildingPlan3();
+		scnenario3();
 		isInit = true;
 	}
 

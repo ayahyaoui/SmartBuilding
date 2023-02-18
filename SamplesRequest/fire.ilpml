@@ -1,6 +1,7 @@
 def fire(P,C)
 {
-	3+3;
+	if true | true & false | false
+	/*3+3;
 	let w = P.windowOpen
 	if w
 	let a = P.test
@@ -9,4 +10,5 @@ def fire(P,C)
 	if 25 > 50.0;
 	C.test;
 	if true;
+	*/
 }

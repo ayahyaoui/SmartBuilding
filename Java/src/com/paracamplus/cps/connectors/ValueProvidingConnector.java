@@ -63,7 +63,6 @@ implements	ValueProvidingCI
 	@Override
 	public int			getValue(int a) throws Exception
 	{
-		System.out.println("ValueProvidingConnector::getValue()");
 		return ((ValueProvidingCI)this.offering).getValue(a);
 	}
 }

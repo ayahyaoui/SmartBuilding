@@ -68,7 +68,6 @@ public class InterpreterRunner {
     		throw new EvaluationException("interpreter not set");
     	}
         ILexicalEnvironment lexenv = new EmptyLexicalEnvironment();
-        System.out.println("first visit");
         
         result = interpreter.visit(program, lexenv);
         printing = stdout.toString();
@@ -85,10 +84,8 @@ public class InterpreterRunner {
         System.out.println("Starting Parsing");
 
         IASTprogram program = parser.parse(file);
-        //interpretProgram(program);
         program.show("[SHOW]: ");
         System.out.println("finishing Parsing");
-        //GlobalEnvFile b = new GlobalEnvFile(program);
         System.out.println(program);
     }
     
@@ -127,7 +124,6 @@ public class InterpreterRunner {
                     value.toString());
         }else if (value == null)
         {
-        	System.out.println("Value est null");
         	assertEquals("exit Failed",1,2); 
         }
         else {

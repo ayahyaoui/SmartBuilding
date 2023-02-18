@@ -9,13 +9,11 @@ public class RoomConnector extends AbstractConnector implements ScriptManagement
 
 	@Override
 	public GlobalEnvFile executeScript(GlobalEnvFile env) throws Exception {
-		System.out.println("DesktopConnector execute >>");
 		return ((ScriptManagementCI)this.offering).executeScript(env);
 	}
 
 	@Override
 	public GlobalEnvFile executeScript(GlobalEnvFile env, String uri) throws Exception {
-		System.out.println("DesktopConnector execute >>" + uri);
 		return ((ScriptManagementCI)this.offering).executeScript(env, uri);
 	}
 	

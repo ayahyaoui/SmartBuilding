@@ -23,8 +23,6 @@ implements IASTfunctionDefinition {
         this.functionVariable = functionVariable;
         this.variables = variables;
         this.body = body;
-		
-		System.out.println("function def " + variables[0].getName());
     }
     private final IASTvariable functionVariable;
     private final IASTvariable[] variables;

@@ -27,26 +27,10 @@ implements IASTalternative {
 		return condition;
 	}
 
-	/*@Override
-	public IASTexpression getConsequence() {
-		return consequence;
-	}
-
-	@Override @OrNull
-	public IASTexpression getAlternant() {
-		return alternant;
-	}
-	@Override
-	public boolean isTernary () {
-	    return this.alternant != null;
-	}
-	 */
-
     @Override
 	public <Result, Data, Anomaly extends Throwable> 
     Result accept(IASTvisitor<Result, Data, Anomaly> visitor, Data data)
             throws Anomaly {
-    	System.out.println("accept if ");
         return visitor.visit(this, data);
     }
 }

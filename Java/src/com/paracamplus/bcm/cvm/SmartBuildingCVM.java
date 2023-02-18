@@ -25,7 +25,7 @@ public class SmartBuildingCVM extends AbstractCVM{
     public void deploy() throws Exception {
         System.out.println("Deploying components...");
         
-        Utils.testBasic();
+        Utils.testIntermediary2();
 
         AbstractComponent.createComponent(
 				ClockServer.class.getCanonicalName(),
@@ -60,7 +60,6 @@ public class SmartBuildingCVM extends AbstractCVM{
             if (myCoord == null) {
                 throw new Exception("Room " + room + " is not assigned to any coordinator");
             }
-            System.out.println("Creating room " + room + " with coord " + myCoord + " and neighbours " + Utils.roomsNeighbours.get(room) + "class " +  DesktopRoom.class.getCanonicalName());
             AbstractComponent.createComponent(
                     DesktopRoom.class.getCanonicalName(),
                     new Object[] {room, Utils.CLOCK_URI, myCoord, Utils.roomsNeighbours.get(room)});

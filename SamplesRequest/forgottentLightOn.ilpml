@@ -1,0 +1,6 @@
+def forgottentLightOn(P)
+{
+    let l = P.lightOn
+    let v = P.doorLocked
+    if l & v
+}

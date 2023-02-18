@@ -83,7 +83,6 @@ implements	ValueProvidingCI
 	 */
 	@Override
 	public int getValue(int a) throws Exception {
-		System.out.println("ValueProvidingOutboundPort: getValue()");
 		return ((ValueProvidingCI)this.getConnector()).getValue(a) ;
 	}
 }

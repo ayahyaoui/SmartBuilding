@@ -17,6 +17,7 @@ public class Or extends BinaryOperator {
     @Override
 	public Object apply (Object arg1, Object arg2) 
             throws EvaluationException {
+        System.out.println("Or.apply(" + arg1 + ", " + arg2 + ")");
         if ( arg1 instanceof Boolean ) {
             Boolean b1 = (Boolean) arg1;
             if ( ! b1.booleanValue() ) {
