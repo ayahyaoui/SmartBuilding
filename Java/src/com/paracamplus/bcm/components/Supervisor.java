@@ -13,7 +13,8 @@ import com.paracamplus.bcm.interfaces.ScriptManagementCI;
 import com.paracamplus.bcm.interfaces.SupervisorManagementCI;
 import com.paracamplus.bcm.obp.CoordonatorOBP;
 import com.paracamplus.bcm.utils.Utils;
-import com.paracamplus.bcm.utils.Utils.testRequete;
+import com.paracamplus.bcm.utils.testRequest;
+import com.paracamplus.bcm.utils.testRequest.Request;
 import com.paracamplus.ilp1.interfaces.IASTfunctionDefinition;
 import com.paracamplus.ilp1.interfaces.IASTprogram;
 import com.paracamplus.ilp1.interfaces.IASTsequence;
@@ -142,7 +143,7 @@ public class Supervisor extends AbstractComponent{
         long maximumEnd = clock.delayToAcceleratedInstantInNanos(iEnd) / 1000;
 
         final Supervisor vc = this;
-        for (testRequete testRequete : Utils.requetes) {
+        for (Request testRequete : testRequest.request) {
             assert (allGlobalFuction.verifyFunctionParameters(testRequete.fonction, testRequete.args));
             long start = testRequete.start;
             if (testRequete.start < minimumStart || testRequete.start > maximumEnd)

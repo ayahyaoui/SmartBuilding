@@ -137,8 +137,9 @@ public class DesktopRoom extends AbstractRoom{
 		this.scheduleTask(
 			o -> {
 				windowSimul.openWindow();
-				long seconds = (clock.getStartInstant().toEpochMilli() + (long)(clock.getStartEpochNanos() * clock.getAccelerationFactor())) / 1000000000;
-				logMessage( seconds + " : " + "open window");
+				long seconds = (clock.getStartInstant().toEpochMilli() +
+				 (long)(clock.getStartEpochNanos() * clock.getAccelerationFactor())) / 1000000000;
+				logMessage(seconds + " : " + "open window");
 			},startTask, TimeUnit.SECONDS);
 
 	}
